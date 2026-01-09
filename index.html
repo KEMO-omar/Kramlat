@@ -11,36 +11,51 @@
       --p: #ff007f; --s: #00d4ff; --a: #ccff00; --bg: #050508;
       --glass: rgba(255, 255, 255, 0.05);
     }
-    * { box-sizing: border-box; transition: 0.4s ease; }
+    * { box-sizing: border-box; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     body { margin: 0; background: var(--bg); color: #fff; font-family: 'Cairo', sans-serif; overflow-x: hidden; }
     canvas { position: fixed; inset: 0; z-index: 0; opacity: 0.6; }
 
+    /* نظام التنقل السفلي الاحترافي */
     nav.bottom-nav {
       position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
       background: rgba(15, 15, 20, 0.8); backdrop-filter: blur(15px);
       padding: 10px 25px; border-radius: 50px; border: 1px solid var(--p);
-      display: flex; gap: 20px; z-index: 1000;
+      display: flex; gap: 20px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
     .nav-item { cursor: pointer; font-weight: 900; color: #888; font-size: 0.9rem; }
     .nav-item.active { color: var(--s); text-shadow: 0 0 10px var(--s); }
 
     .container { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 40px 20px 120px; }
 
+    /* الهيدر */
     .hero { height: 85vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
     .hero img { width: 160px; height: 160px; border-radius: 50%; border: 4px solid var(--p); box-shadow: 0 0 40px var(--p); margin-bottom: 20px; }
-    .title-main { font-family: 'Orbitron'; font-size: clamp(40px, 10vw, 90px); margin: 0;
-      background: linear-gradient(45deg, #fff, var(--s), var(--p));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
+    .title-main { font-family: 'Orbitron'; font-size: clamp(50px, 12vw, 110px); margin: 0; background: linear-gradient(45deg, #fff, var(--s), var(--p)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-    .mega-btn { background: linear-gradient(90deg, var(--p), var(--s)); color: #fff;
-      padding: 20px 50px; border-radius: 100px; text-decoration: none; font-weight: 900;
-      font-size: 1.5rem; display: inline-block; box-shadow: 0 0 40px var(--p);
-      animation: bounce 2s infinite;
-    }
+    /* الأقسام (Pages) */
+    .page { display: none; animation: slideUp 0.6s ease forwards; }
+    .page.active { display: block; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* كروت المحتوى */
+    .card { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; padding: 30px; margin-bottom: 25px; backdrop-filter: blur(10px); }
+    .card:hover { border-color: var(--a); transform: scale(1.02); }
+    .card h3 { color: var(--a); font-size: 1.8rem; margin-top: 0; }
+    .card p { font-size: 1.15rem; line-height: 1.8; color: #ddd; }
+
+    /* شبكة المميزات */
+    .feat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+    .feat-item { background: rgba(0,0,0,0.3); padding: 20px; border-radius: 20px; border-right: 4px solid var(--s); }
+
+    /* الفريق */
+    .team-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 30px; }
+    .member-card { background: var(--glass); padding: 30px; border-radius: 30px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
+    .member-card img { width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--s); margin-bottom: 15px; }
+    .btn-wa { display: block; background: #25d366; color: #fff; text-decoration: none; padding: 12px; border-radius: 15px; font-weight: 700; margin-top: 15px; }
+
+    /* زر الانضمام العظيم */
+    .mega-btn { background: linear-gradient(90deg, var(--p), var(--s)); color: #fff; padding: 20px 50px; border-radius: 100px; text-decoration: none; font-weight: 900; font-size: 1.5rem; display: inline-block; box-shadow: 0 0 40px var(--p); animation: bounce 2s infinite; }
     @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-
-    footer { text-align: center; margin-top: 50px; opacity: 0.5; }
   </style>
 </head>
 <body>
@@ -58,50 +73,84 @@
   <section id="home" class="page active">
     <div class="hero">
       <img src="logo.png" alt="Logo">
-      <h1 class="title-main">قريبًا الوصول لـ ٥٠٠ متابع 🎉</h1>
+      <h1 class="title-main" id="counter">0</h1>
       <p style="font-size: 1.4rem; color: var(--a); font-weight: 900; letter-spacing: 4px;">KRAMLAT WORLD 🍭</p>
       <br>
       <a href="https://whatsapp.com/channel/0029VbAqgz23WHTOe8lXeM1N" class="mega-btn">انضم للإمبراطورية 🚀</a>
     </div>
   </section>
 
-  <section id="journey" class="page" style="display:none;">
-    <div class="hero">
-      <h2>🌀 الرحلة بدأت</h2>
-      <p>كرملات مش مجرد قناة.. ده عالم موازي مليان ضحك وغموض وإبداع!</p>
+  <section id="journey" class="page">
+    <div class="card">
+      <h3>"مرحبًا بك في الجانب الآخر من الإنترنت.. 😎🔥"</h3>
+      <p>لو بتدور على التقليدي يبقى أنت في المكان الغلط، لأن كرملات مش مجرد قناة، دي عالم موازي فيه كل حاجة وأي حاجة تخطر (أو متخطريش) على بالك!</p>
+    </div>
+
+    <div class="feat-grid">
+      <div class="feat-item"><h3>😹 ركن الضحك</h3><p>ميمز خرافية ومواقف هتفصلك ضحك وتنسيك همومك.</p></div>
+      <div class="feat-item"><h3>👻 الغموض</h3><p>قصص مرعبة وحاجات هتخلي الأدرينالين يوصل للسما!</p></div>
+      <div class="feat-item"><h3>🎥 إبداع بصري</h3><p>إيديتس مجنونة ومحتوى معمول بمزاج عالي جداً.</p></div>
+      <div class="feat-item"><h3>🎮 تحديات</h3><p>مساحة للناس اللي دماغها خفيفة وبتحب المغامرة.</p></div>
+    </div>
+
+    <div class="card" style="margin-top: 30px; border-left: 5px solid var(--p);">
+      <h3>💎 ليه إحنا مختلفين؟</h3>
+      <p>✅ <b>تجدد مستمر:</b> محتوى جديد يوميًا يخليك دايمًا في قلب الحدث.<br>
+      ✅ <b>دماغ عالية:</b> كل بوست بيتم اختياره بعناية عشان يناسب المبدعين.<br>
+      ✅ <b>مفاجآت حصرية:</b> محتوى مش هتلاقيه في أي مكان تاني!</p>
     </div>
   </section>
 
-  <section id="team" class="page" style="display:none;">
-    <h2 style="text-align:center; font-size:2.5rem; color:var(--s);">Founders Team 👑</h2>
-    <div style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin-top:30px;">
-      <div style="background:var(--glass); padding:20px; border-radius:20px; text-align:center;">
-        <h3>KAREEM 👑</h3><p>المؤسس ومهندس الأكواد</p>
+  <section id="team" class="page">
+    <h2 style="text-align: center; font-size: 2.5rem; color: var(--s);">Founders Team 👑</h2>
+    <div class="team-box">
+      <div class="member-card">
+        <img src="logo.png" alt="Kareem">
+        <h3>KAREEM 👑</h3>
+        <p>مؤسس الإمبراطورية ومهندس الأكواد</p>
+        <a href="https://wa.me/201159562785" class="btn-wa">تواصل مع الكينج</a>
       </div>
-      <div style="background:var(--glass); padding:20px; border-radius:20px; text-align:center;">
-        <h3>SHREEF ⚡</h3><p>قائد العمليات</p>
+      <div class="member-card">
+        <img src="logo.png" alt="Shreef">
+        <h3>SHREEF ⚡</h3>
+        <p>قائد العمليات وضابط إيقاع العالم الموازي</p>
+        <a href="https://wa.me/201060843290" class="btn-wa">تواصل مع القائد</a>
       </div>
-      <div style="background:var(--glass); padding:20px; border-radius:20px; text-align:center;">
-        <h3>ABQARIENO 🧪</h3><p>رئيس الإبداع</p>
+      <div class="member-card">
+        <img src="logo.png" alt="Abqarieno">
+        <h3>ABQARIENO 🧪</h3>
+        <p>رئيس مختبر الإبداع وملك الإيديتس</p>
+        <a href="https://wa.me/201158606601" class="btn-wa">تواصل مع العبقري</a>
       </div>
     </div>
   </section>
 
-  <footer>
+  <footer style="text-align: center; margin-top: 50px; opacity: 0.5;">
     <p>© 2026 إمبراطورية كرملات | كل الحقوق محفوظة</p>
   </footer>
 </div>
 
 <script>
+  // نظام التنقل
   function showPage(id, el) {
-    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-    document.getElementById(id).style.display = 'block';
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
     el.classList.add('active');
     window.scrollTo(0,0);
   }
 
-  // مؤثرات الألعاب النارية
+  // عداد الـ 500
+  let count = 0;
+  const countEl = document.getElementById('counter');
+  const timer = setInterval(() => {
+    if(count < 500) {
+      count += 5; countEl.innerText = count;
+      if(count%100==0) firework(Math.random()*window.innerWidth, Math.random()*window.innerHeight);
+    } else { clearInterval(timer); }
+  }, 30);
+
+  // الألعاب النارية
   const canvas = document.getElementById('fire');
   const ctx = canvas.getContext('2d');
   let ps = [];
@@ -111,8 +160,8 @@
   class Particle {
     constructor(x, y) {
       this.x = x; this.y = y;
-      this.c = `hsl(${Math.random()*360},100%,60%)`;
-      this.v = {x:(Math.random()-0.5)*10, y:(Math.random()-0.5)*10};
+      this.c = `hsl(${Math.random()*360}, 100%, 60%)`;
+      this.v = {x: (Math.random()-0.5)*10, y: (Math.random()-0.5)*10};
       this.a = 1;
     }
     draw() {
@@ -122,16 +171,13 @@
     update() { this.x += this.v.x; this.y += this.v.y; this.v.y += 0.05; this.a -= 0.01; }
   }
 
-  function firework(x,y){ for(let i=0;i<30;i++) ps.push(new Particle(x,y)); }
-  function anim(){
-    ctx.fillStyle='rgba(5,5,8,0.2)'; ctx.fillRect(0,0,canvas.width,canvas.height);
-    for(let i=ps.length-1;i>=0;i--){ ps[i].update(); ps[i].draw(); if(ps[i].a<=0) ps.splice(i,1); }
+  function firework(x, y) { for(let i=0; i<30; i++) ps.push(new Particle(x, y)); }
+  function anim() {
+    ctx.fillStyle = 'rgba(5, 5, 8, 0.2)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    ps.forEach((p, i) => { p.update(); p.draw(); if(p.a <= 0) ps.splice(i, 1); });
     requestAnimationFrame(anim);
   }
   anim();
-
-  // انفجار ترحيبي عند فتح الصفحة
-  setTimeout(()=>firework(window.innerWidth/2, window.innerHeight/2),1000);
 </script>
 
 </body>
