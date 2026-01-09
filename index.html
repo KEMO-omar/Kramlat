@@ -29,7 +29,6 @@
 
         .main-container { max-width:900px; margin:0 auto; padding:20px; }
 
-        /* القسم الرئيسي - تم حذف الصورة من هنا لتظهر الألعاب النارية بوضوح */
         #hero {
             height:100vh;
             display:flex;
@@ -37,10 +36,9 @@
             justify-content:center;
             align-items:center;
             text-align:center;
-            background: var(--bg); /* العودة للون الأسود الصافي */
+            background: var(--bg);
         }
 
-        /* صورة الشعار التي تنبض */
         .hero-logo {
             width: 130px;
             height: 130px;
@@ -50,7 +48,6 @@
             object-fit: cover;
             animation: pulse 2s infinite;
             box-shadow: 0 0 20px var(--secondary);
-            z-index: 10; /* للتأكد من أنها فوق العداد */
         }
 
         @keyframes pulse {
@@ -67,7 +64,6 @@
             -webkit-text-fill-color: transparent;
             filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.4));
             margin:0;
-            position: relative;
         }
 
         .content-card {
@@ -144,7 +140,6 @@
 <div class="main-container">
     <section id="hero">
         <img src="logo.png" class="hero-logo" alt="Kramlat Logo">
-        
         <h2 style="color: var(--secondary)">🎉 كرملات | Kramlat 🎉</h2>
         <h1 class="count-num" id="main-counter">0</h1>
         <p style="font-size: 1.5rem;">متابع في عالمنا الموازي 🍭</p>
@@ -153,28 +148,38 @@
 
     <div class="content-card" id="card1">
         <h2 style="color: var(--primary)">🌀 مرحباً بك في الجانب الآخر</h2>
+        <p>"حيث لا مكان للملل!" 😎🔥 لو بتدور على التقليدي يبقى أنت في المكان الغلط.</p>
+        
+        <h3>📦 إيه اللي مستنيك؟</h3>
         <div class="grid-features">
             <div class="feature-box"><b>😹 الضحك:</b> ميمز ومواقف تفصلك ضحك.</div>
             <div class="feature-box"><b>👻 الغموض:</b> فيديوهات وقصص مرعبة.</div>
             <div class="feature-box"><b>🎥 الإبداع:</b> إيديتس مجنونة بمزاج عالي.</div>
-            <div class="feature-box)<b>🧠 كبسولات:</b> معلومات صدمة وممتعة.</div>
+            <div class="feature-box"><b>🧠 كبسولات:</b> معلومات صدمة وممتعة.</div>
         </div>
     </div>
 
     <div class="content-card" id="card3">
         <h2 style="color: var(--secondary); text-align: center;">Founder Team 👑</h2>
+        <p style="text-align: center; opacity: 0.7;">اضغط على الاسم للتواصل واتساب</p>
+        
         <div class="team-grid">
             <a href="https://wa.me/201159562785" target="_blank" class="team-member">
-                <b>KAREEM</b>
-                <p style="color: var(--accent); font-size: 0.9rem;">كريم عمر سيد (البلدوزر)</p>
+                <div style="font-size:2rem;">👑</div> <b>KAREEM</b>
+                <p style="color: var(--accent); margin: 5px 0;">كريم عمر سيد (البلدوزر)</p>
+                <small>01159562785</small>
             </a>
+
             <a href="https://wa.me/201060843290" target="_blank" class="team-member">
-                <b>SHREEF</b>
-                <p style="color: var(--accent); font-size: 0.9rem;">شريف سيد حسن</p>
+                <div style="font-size:2rem;">⚡</div> <b>SHREEF</b>
+                <p style="color: var(--accent); margin: 5px 0;">شريف سيد حسن</p>
+                <small>01060843290</small>
             </a>
+
             <a href="https://wa.me/201158606601" target="_blank" class="team-member">
-                <b>ABQARIENO</b>
-                <p style="color: var(--accent); font-size: 0.9rem;">مصطفى محمد مصطفى</p>
+                <div style="font-size:2rem;">🧪</div> <b>ABQARIENO</b>
+                <p style="color: var(--accent); margin: 5px 0;">مصطفى محمد مصطفى</p>
+                <small>01158606601</small>
             </a>
         </div>
     </div>
@@ -191,7 +196,6 @@
 </div>
 
 <script>
-    // كود الألعاب النارية المحسن للوضوح
     const canvas=document.getElementById('canvas');
     const ctx=canvas.getContext('2d');
     let particles=[];
@@ -254,4 +258,4 @@
     startSequence(); animate();
 </script>
 </body>
-    </html>
+</html>
