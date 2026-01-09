@@ -198,3 +198,123 @@
 </body>
   </html>
       
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>إمبراطورية كرملات | المسابقة الكبرى 🏆</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Orbitron:wght@900&display=swap" rel="stylesheet" />
+  <style>
+    :root { --p: #ff007f; --s: #00d4ff; --a: #ccff00; --bg: #010103; }
+    body { margin: 0; background: var(--bg); color: #fff; font-family: 'Cairo', sans-serif; overflow-x: hidden; }
+    canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+    .container { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; padding: 100px 20px; }
+
+    /* نافبار */
+    nav { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.9); padding: 10px 25px; border-radius: 50px; border: 1px solid var(--p); display: flex; gap: 15px; z-index: 1000; }
+    nav a { color: #fff; text-decoration: none; font-weight: 900; font-size: 0.8rem; cursor: pointer; }
+
+    /* قسم المسابقة */
+    .contest-card { background: rgba(255,255,255,0.05); border: 2px solid var(--a); border-radius: 40px; padding: 40px; text-align: center; backdrop-filter: blur(15px); box-shadow: 0 0 30px rgba(204, 255, 0, 0.2); }
+    input { width: 100%; padding: 15px; margin: 15px 0; border-radius: 15px; border: 1px solid var(--s); background: rgba(0,0,0,0.6); color: #fff; font-size: 1.1rem; text-align: center; }
+    .reg-btn { background: linear-gradient(45deg, var(--a), var(--s)); color: #000; padding: 15px; border-radius: 50px; border: none; font-weight: 900; font-size: 1.2rem; cursor: pointer; width: 100%; transition: 0.3s; }
+    .reg-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px var(--a); }
+
+    /* رسالة النجاح والأزرار */
+    #success-box { display: none; margin-top: 30px; animation: slideUp 0.5s ease forwards; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .admin-btns { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 20px; }
+    .wa-btn { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; border-radius: 15px; text-decoration: none; color: #fff; font-weight: bold; font-size: 0.9rem; transition: 0.3s; }
+    .k-btn { background: #25d366; } /* كريم */
+    .s-btn { background: #128c7e; } /* شريف */
+    .m-btn { background: #075e54; } /* مصطفى */
+    .wa-btn:hover { filter: brightness(1.2); transform: scale(1.02); }
+
+    .rights { text-align: center; margin-top: 50px; font-weight: 900; color: var(--s); }
+  </style>
+</head>
+<body>
+
+<canvas id="cosmos"></canvas>
+
+<nav>
+  <a onclick="location.href='index.html'">🏠 الرئيسية</a>
+  <a style="color:var(--a)">🏆 المسابقة</a>
+</nav>
+
+<div class="container">
+  <div class="contest-card" id="main-card">
+    <h2 style="font-family:'Orbitron'; color:var(--a); margin-bottom: 5px;">CONTEST REGISTRATION</h2>
+    <p style="font-size: 0.9rem; opacity: 0.8;">سجل اسمك دلوقتي عشان تدخل سحب الـ 500 أسطورة</p>
+    
+    <form id="contestForm">
+      <input type="text" id="userName" placeholder="اكتب اسمك الثلاثي هنا" required>
+      <input type="text" id="userContact" placeholder="رقم واتساب أو يوزر تليجرام" required>
+      <button type="submit" class="reg-btn">تسجيل الدخول للمسابقة 🚀</button>
+    </form>
+
+    <div id="success-box">
+      <h3 style="color:var(--s)">✅ تم التسجيل بنجاح يا بطل!</h3>
+      <p style="background: var(--p); padding: 10px; border-radius: 10px; font-weight: bold;">
+        📸 خد الشاشة دي "سكرين شوت" فوراً وابعثها لواحد من المديرين تحت عشان نأكد دخولك!
+      </p>
+      
+      <div class="admin-btns">
+        <a href="https://wa.me/201159562785?text=تم+التسجيل+في+المسابقة+يا+بلدوزر" class="wa-btn k-btn">👑 ابعت السكرين للكينج كريم</a>
+        <a href="https://wa.me/201060843290?text=تم+التسجيل+في+المسابقة+يا+قائد" class="wa-btn s-btn">⚡ ابعت السكرين للقائد شريف</a>
+        <a href="https://wa.me/201158606601?text=تم+التسجيل+في+المسابقة+يا+عبقري" class="wa-btn m-btn">🧪 ابعت السكرين للعبقري مصطفى</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="rights">جميع الحقوق محفوظة للبلدوزر كريم عمر سيد © 2026</div>
+</div>
+
+<script>
+  // كود الانفجارات الكونية
+  const canvas = document.getElementById('cosmos');
+  const ctx = canvas.getContext('2d');
+  let ps = [];
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  window.addEventListener('resize', resize); resize();
+
+  class P {
+    constructor(x,y) {
+      this.x=x; this.y=y; 
+      this.v={x:(Math.random()-0.5)*25, y:(Math.random()-0.5)*25};
+      this.a=1; this.s=Math.random()*6+2;
+      this.c=`hsl(${Math.random()*360},100%,60%)`;
+    }
+    update() { this.x+=this.v.x; this.y+=this.v.y; this.a-=0.012; }
+    draw() { ctx.globalAlpha=this.a; ctx.fillStyle=this.c; ctx.beginPath(); ctx.arc(this.x,this.y,this.s,0,Math.PI*2); ctx.fill(); }
+  }
+
+  function explode(x,y) { for(let i=0; i<150; i++) ps.push(new P(x,y)); }
+  function animate() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ps.forEach((p,i) => { p.update(); p.draw(); if(p.a<=0) ps.splice(i,1); });
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  // نظام التسجيل
+  document.getElementById('contestForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // إخفاء الفورم وإظهار رسالة النجاح
+    document.getElementById('contestForm').style.display = 'none';
+    document.getElementById('success-box').style.display = 'block';
+    
+    // تأثير الانفجار
+    explode(window.innerWidth/2, window.innerHeight/2);
+    
+    // هنا ممكن تضيف كود Formspree لو عايز البيانات تجيلك إيميل كمان
+    console.log("تم تسجيل المتسابق: " + document.getElementById('userName').value);
+  });
+</script>
+
+</body>
+</html>
