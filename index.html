@@ -13,7 +13,6 @@
     }
     * { box-sizing: border-box; cursor: crosshair; }
     
-    /* خلفية الفضاء الثابتة */
     body { 
       margin: 0; 
       background: var(--bg) url('https://www.transparenttextures.com/patterns/stardust.png'); 
@@ -40,10 +39,10 @@
     .page.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-    .hero { text-align: center; min-height: 60vh; display: flex; flex-direction: column; justify-content: center; }
+    .hero { text-align: center; min-height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
     .hero-title { font-family: 'Orbitron'; font-size: clamp(50px, 15vw, 120px); margin: 0; background: linear-gradient(to right, var(--p), #fff, var(--s)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 20px var(--p)); }
 
-    /* تحسين وصف القناة */
+    /* وصف القناة */
     .journey-box { 
       background: var(--glass); 
       padding: 40px; 
@@ -53,8 +52,8 @@
       backdrop-filter: blur(10px);
       box-shadow: 0 20px 50px rgba(0,0,0,0.5);
     }
-    .journey-box h2 { color: var(--a); font-size: 2.5rem; text-shadow: 0 0 15px var(--a); }
-    .highlight { color: var(--p); font-weight: 900; text-shadow: 0 0 5px var(--p); }
+    .journey-box h2 { color: var(--a); font-size: 2.5rem; }
+    .highlight { color: var(--p); font-weight: 900; }
     .feature-tag { background: rgba(255,255,255,0.1); padding: 5px 15px; border-radius: 10px; font-size: 0.9rem; border-right: 3px solid var(--s); margin: 5px; display: inline-block; }
 
     /* كروت القادة */
@@ -65,17 +64,23 @@
     }
     .leader-img { width: 140px; height: 140px; border-radius: 50%; border: 4px solid var(--p); margin-bottom: 20px; object-fit: cover; }
     .leader-name { font-family: 'Orbitron'; font-size: 1.8rem; color: #fff; margin: 10px 0; }
-    .leader-title { color: var(--s); font-weight: 700; font-size: 1rem; display: block; margin-bottom: 20px; line-height: 1.6; }
     
     .contact-btn {
       display: inline-flex; align-items: center; background: #25d366; color: #fff; 
       padding: 12px 25px; border-radius: 50px; text-decoration: none; font-weight: 900;
     }
 
+    /* زر القناة الرئيسي */
+    .channel-btn {
+      background: linear-gradient(90deg, var(--p), var(--s));
+      color: #fff; padding: 20px 50px; border-radius: 100px;
+      text-decoration: none; font-weight: 900; font-size: 1.5rem;
+      box-shadow: 0 0 40px var(--p); display: inline-block;
+      margin-top: 20px;
+    }
+
     footer { text-align: center; padding: 60px 20px; margin-top: 50px; background: rgba(0,0,0,0.4); }
     .rights { font-size: 1.2rem; font-weight: 900; color: var(--a); }
-
-    .boom-btn { background: var(--p); color: #fff; border: none; padding: 18px 45px; border-radius: 50px; font-weight: 900; font-size: 1.3rem; box-shadow: 0 0 30px var(--p); cursor: pointer; }
   </style>
 </head>
 <body>
@@ -93,31 +98,25 @@
   <section id="home" class="page active">
     <div class="hero">
       <h1 class="hero-title" id="counter">0</h1>
-      <p style="font-size: 2rem; font-weight: 900; color: var(--a); letter-spacing: 12px; margin: 10px 0;">KRAMLAT</p>
-      <p style="font-size: 1.2rem; opacity: 0.9;">"حيث تتحول الكلمات إلى انفجارات كونية" 💥</p>
-      <br>
-      <button class="boom-btn" onclick="explode(window.innerWidth/2, window.innerHeight/2, 250)">فجر الأدرينالين! 🍭</button>
+      <p style="font-size: 2rem; font-weight: 900; color: var(--a); letter-spacing: 12px;">KRAMLAT</p>
+      <a href="https://whatsapp.com/channel/0029VbAqgz23WHTOe8lXeM1N" class="channel-btn">🚀 انضم للقناة الآن</a>
+      <p style="margin-top: 20px; opacity: 0.7;">اضغط فوق للدخول إلى قلب الإمبراطورية</p>
     </div>
   </section>
 
   <section id="journey" class="page">
     <div class="journey-box">
-      <h2>🎉 مرحباً بك في الجانب الآخر من الإنترنت.. 😎🔥</h2>
+      <h2>🎉 مرحباً بك في الجانب الآخر.. 😎🔥</h2>
       <p>
-        لو بتدور على التقليدي يبقى أنت في المكان الغلط، لأن <span class="highlight">كرملات (Kramlat)</span> مش مجرد قناة، دي عالم موازي وقارة إبداعية غامضة فيها كل حاجة وأي حاجة تخطر (أو متخطريش) على بالك! 🌀✨
+        لو بتدور على التقليدي يبقى أنت في المكان الغلط، لأن <span class="highlight">كرملات (Kramlat)</span> مش مجرد قناة، دي عالم موازي وقارة إبداعية غامضة فيها كل حاجة وأي حاجة تخطر على بالك! 🌀✨
         <br><br>
-        <b style="font-size: 1.4rem; color: var(--s);">📦 إيه اللي مستنيك جوه عالمنا؟</b><br>
-        <span class="feature-tag">😹 ركن الضحك الهستيري</span> ميمز خرافية ومواقف هتفصلك ضحك وتنسيك همومك في ثانية.<br>
-        <span class="feature-tag">👻 الغموض والإثارة</span> فيديوهات غريبة، قصص مرعبة من أعماق الويب، وحاجات هتخلي الأدرينالين يوصل للسما! 🚨<br>
-        <span class="feature-tag">🎥 إبداع بصري</span> إيديتس مجنونة ومحتوى سينمائي معمول بمزاج عالي جداً يخطف عينك من أول ثانية.<br>
-        <span class="feature-tag">🧠 كبسولات معرفية</span> معلومات ممتعة وعشوائية هتصدمك وتخليك تقول "إزاي مكنتش أعرف ده؟" 😲<br>
-        <span class="feature-tag">🎮 ألعاب وتحديات</span> مساحة للناس اللي دماغها خفيفة وبتحب التفاعل والمغامرة والمنافسة.<br><br>
-
-        <b style="font-size: 1.4rem; color: var(--s);">📌 مميزات عيلة كرملات:</b><br>
-        إحنا بنتميز بـ <span class="highlight">التجدد المستمر</span>؛ محتوى جديد يوميًا يخليك دايمًا في قلب الحدث. كل بوست بيتم نحته بعناية عشان يناسب <span class="highlight">الدماغ العالية</span> والمبدعين اللي زيكم. 🧠💣<br><br>
-        تفاعلنا مش مجرد لايك، إحنا بنسمعكم وبنتفاعل مع آراءكم وبنحولها لمحتوى حقيقي. استعد لـ <span class="highlight">مفاجآت حصرية</span> مش هتلاقيها في أي ركن تاني في المجرة غير هنا! 🚀<br><br>
-        لو دماغك بتحب الاختلاف، وبتحب الحاجات اللي بتخض وتفاجئ وتضحك في نفس الوقت.. فأنت رسميًا واحد مننا! ✅💥<br>
-        <center><b style="font-size: 1.5rem;">أهلاً بيك في رحلة الإبداع المجنون.. أهلاً بيك في كرملات. 😍🙌</b></center>
+        <span class="feature-tag">😹 ركن الضحك</span> <span class="feature-tag">👻 الغموض</span> <span class="feature-tag">🎥 إبداع بصري</span> <span class="feature-tag">🧠 كبسولات معرفية</span>
+        <br><br>
+        إحنا بنتميز بـ <span class="highlight">التجدد المستمر</span>؛ محتوى جديد يوميًا يخليك دايمًا في قلب الحدث.
+        <br><br>
+        <center>
+          <a href="https://whatsapp.com/channel/0029VbAqgz23WHTOe8lXeM1N" style="color:var(--a); font-weight:900; font-size:1.3rem;">👉 اضغط هنا للانتقال للقناة 👈</a>
+        </center>
       </p>
     </div>
   </section>
@@ -125,96 +124,65 @@
   <section id="team" class="page">
     <h2 style="text-align: center; font-size: 3rem; margin-bottom: 50px; font-family: 'Orbitron'; color: var(--s);">FOUNDER TEAM</h2>
     <div class="team-grid">
-      
       <div class="leader-card">
-        <img src="logo.png" class="leader-img" alt="Kareem">
-        <div class="leader-name">KAREEM(البلدوزر) 👑</div>
-        <div class="leader-title">كريم عمر سيد<br>مؤسس الإمبراطورية • ملك الأكواد • صانع اللوجوز الاحترافي • مصنع الأفكار</div>
+        <img src="logo.png" class="leader-img">
+        <div class="leader-name">KAREEM 👑</div>
+        <div style="font-size:0.9rem; margin-bottom:15px;">(البلدوزر)كريم عمر سيد<br>مؤسس الإمبراطورية • ملك الأكواد • صانع اللوجوز</div>
         <a href="https://wa.me/201159562785" class="contact-btn">💬 واتساب الكينج</a>
       </div>
-
       <div class="leader-card">
-        <img src="logo.png" class="leader-img" alt="Shreef" style="border-color: var(--s);">
+        <img src="logo.png" class="leader-img">
         <div class="leader-name">SHREEF ⚡</div>
-        <div class="leader-title">شريف سيد حسن<br>العميل المؤثر • قائد العمليات الميدانية</div>
+        <div style="font-size:0.9rem; margin-bottom:15px;">شريف سيد حسن<br>العميل المؤثر • قائد العمليات</div>
         <a href="https://wa.me/201060843290" class="contact-btn">💬 واتساب القائد</a>
       </div>
-
       <div class="leader-card">
-        <img src="logo.png" class="leader-img" alt="Abqarieno" style="border-color: var(--a);">
+        <img src="logo.png" class="leader-img">
         <div class="leader-name">ABQARIENO 🧪</div>
-        <div class="leader-title">مصطفى محمد مصطفى<br>العبقري • ممول القناة • رئيس مختبر الإبداع</div>
+        <div style="font-size:0.9rem; margin-bottom:15px;">مصطفى محمد مصطفى<br>العبقري • ممول القناة</div>
         <a href="https://wa.me/201158606601" class="contact-btn">💬 واتساب العبقري</a>
       </div>
-
     </div>
   </section>
 
   <footer>
-    <div class="rights">جميع الحقوق محفوظة للإمبراطور © كريم عمر سيد-مبرمج مصري 2026</div>
-    <p style="opacity: 0.6; font-weight: bold;">KRAMLAT: The Future of Creative Media</p>
+    <div class="rights">جميع الحقوق محفوظة للإمبراطور © كريم عمر سيد- مبرمج مصري 2026</div>
   </footer>
 
 </div>
 
 <script>
-  function nav(pageId, el) {
+  function nav(id, el) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-    document.getElementById(pageId).classList.add('active');
+    document.getElementById(id).classList.add('active');
     el.classList.add('active');
-    window.scrollTo({top: 0, behavior: 'smooth'});
-    explode(window.innerWidth/2, window.innerHeight/2, 40);
   }
 
   const canvas = document.getElementById('cosmos');
   const ctx = canvas.getContext('2d');
-  let particles = [];
-
+  let ps = [];
   function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
   window.addEventListener('resize', resize); resize();
 
-  class Particle {
-    constructor(x, y, color, size, speed) {
-      this.x = x; this.y = y;
-      this.color = color;
-      this.size = size;
-      this.vx = (Math.random() - 0.5) * speed;
-      this.vy = (Math.random() - 0.5) * speed;
-      this.alpha = 1;
+  class P {
+    constructor(x,y) {
+      this.x=x; this.y=y; this.v={x:(Math.random()-0.5)*10, y:(Math.random()-0.5)*10};
+      this.a=1; this.c=`hsl(${Math.random()*360},100%,60%)`;
     }
-    update() { this.x += this.vx; this.y += this.vy; this.alpha -= 0.01; }
-    draw() {
-      ctx.save(); ctx.globalAlpha = this.alpha;
-      ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
-      ctx.fillStyle = this.color; ctx.fill();
-      ctx.restore();
-    }
+    draw() { ctx.globalAlpha=this.a; ctx.fillStyle=this.c; ctx.beginPath(); ctx.arc(this.x,this.y,2,0,Math.PI*2); ctx.fill(); }
+    update() { this.x+=this.v.x; this.y+=this.v.y; this.a-=0.02; }
   }
 
-  function explode(x, y, amt) {
-    const colors = ['#ff007f', '#00d4ff', '#ccff00', '#ffffff'];
-    for(let i=0; i<amt; i++) {
-      particles.push(new Particle(x, y, colors[Math.floor(Math.random()*colors.length)], Math.random()*3, Math.random()*12));
-    }
-  }
-
+  function explode(x,y) { for(let i=0; i<30; i++) ps.push(new P(x,y)); }
   function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach((p, i) => {
-      p.update(); p.draw();
-      if(p.alpha <= 0) particles.splice(i, 1);
-    });
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ps.forEach((p,i) => { p.update(); p.draw(); if(p.a<=0) ps.splice(i,1); });
     requestAnimationFrame(animate);
   }
   animate();
 
-  let c = 0;
-  const timer = setInterval(() => {
-    if(c < 500) { c += 5; document.getElementById('counter').innerText = c; } 
-    else { clearInterval(timer); }
-  }, 40);
+  let c=0; setInterval(() => { if(c<500){c+=5; document.getElementById('counter').innerText=c;} }, 40);
 </script>
-
 </body>
 </html>
