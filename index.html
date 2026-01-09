@@ -6,7 +6,6 @@
     <title>كرملات | Kramlat - 500 Followers 🎉</title>
     
     <link rel="icon" type="image/png" href="logo.png">
-    <link rel="apple-touch-icon" href="logo.png">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
@@ -15,7 +14,7 @@
             --secondary: #00d4ff;
             --accent: #ccff00;
             --bg: #050507;
-            --glass: rgba(255, 255, 255, 0.05);
+            --glass: rgba(255, 255, 255, 0.08);
         }
         body {
             margin:0; padding:0;
@@ -25,9 +24,22 @@
             overflow-x:hidden;
             scroll-behavior: smooth;
         }
-        canvas { position: fixed; top:0; left:0; z-index:-1; pointer-events:none; }
 
-        .main-container { max-width:900px; margin:0 auto; padding:20px; }
+        /* تعديل الـ Canvas ليكون شفافاً ويسمح برؤية الألعاب النارية */
+        canvas { 
+            position: fixed; 
+            top:0; left:0; 
+            z-index: 0; /* خلف المحتوى ولكن فوق الخلفية السوداء الجامدة */
+            pointer-events:none; 
+        }
+
+        .main-container { 
+            position: relative;
+            z-index: 1; 
+            max-width:900px; 
+            margin:0 auto; 
+            padding:20px; 
+        }
 
         #hero {
             height:100vh;
@@ -36,7 +48,6 @@
             justify-content:center;
             align-items:center;
             text-align:center;
-            background: var(--bg);
         }
 
         .hero-logo {
@@ -48,6 +59,7 @@
             object-fit: cover;
             animation: pulse 2s infinite;
             box-shadow: 0 0 20px var(--secondary);
+            z-index: 2;
         }
 
         @keyframes pulse {
@@ -64,6 +76,7 @@
             -webkit-text-fill-color: transparent;
             filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.4));
             margin:0;
+            line-height: 1;
         }
 
         .content-card {
@@ -72,7 +85,7 @@
             border-radius:30px;
             padding:30px;
             margin:40px 0;
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(10px);
             opacity:0;
             transform:translateY(50px);
             transition: 0.8s all ease;
@@ -114,11 +127,7 @@
             text-align: center;
             padding: 40px 20px 120px 20px;
             font-size: 0.9rem;
-            color: rgba(255,255,255,0.4);
-        }
-        .dev-name {
-            color: var(--secondary);
-            font-weight: bold;
+            opacity: 0.5;
         }
 
         .cta-fixed {
@@ -140,52 +149,44 @@
 <div class="main-container">
     <section id="hero">
         <img src="logo.png" class="hero-logo" alt="Kramlat Logo">
-        <h2 style="color: var(--secondary)">🎉 كرملات | Kramlat 🎉</h2>
+        <h2 style="color: var(--secondary); margin:0;">🎉 كرملات | Kramlat 🎉</h2>
         <h1 class="count-num" id="main-counter">0</h1>
-        <p style="font-size: 1.5rem;">متابع في عالمنا الموازي 🍭</p>
+        <p style="font-size: 1.5rem; margin:10px 0;">متابع في عالمنا الموازي 🍭</p>
         <p style="opacity: 0.7;">مرر لأسفل لرؤية المفاجآت ↓</p>
     </section>
 
     <div class="content-card" id="card1">
         <h2 style="color: var(--primary)">🌀 مرحباً بك في الجانب الآخر</h2>
-        <p>"حيث لا مكان للملل!" 😎🔥 لو بتدور على التقليدي يبقى أنت في المكان الغلط.</p>
+        <p>"حيث لا مكان للملل!" 😎🔥</p>
         
-        <h3>📦 إيه اللي مستنيك؟</h3>
         <div class="grid-features">
-            <div class="feature-box"><b>😹 الضحك:</b> ميمز ومواقف تفصلك ضحك.</div>
-            <div class="feature-box"><b>👻 الغموض:</b> فيديوهات وقصص مرعبة.</div>
-            <div class="feature-box"><b>🎥 الإبداع:</b> إيديتس مجنونة بمزاج عالي.</div>
-            <div class="feature-box"><b>🧠 كبسولات:</b> معلومات صدمة وممتعة.</div>
+            <div class="feature-box"><b>😹 الضحك:</b> ميمز تفصلك ضحك.</div>
+            <div class="feature-box"><b>👻 الغموض:</b> فيديوهات مرعبة.</div>
+            <div class="feature-box"><b>🎥 الإبداع:</b> إيديتس بمزاج عالي.</div>
+            <div class="feature-box"><b>🧠 كبسولات:</b> معلومات صدمة.</div>
         </div>
     </div>
 
     <div class="content-card" id="card3">
         <h2 style="color: var(--secondary); text-align: center;">Founder Team 👑</h2>
-        <p style="text-align: center; opacity: 0.7;">اضغط على الاسم للتواصل واتساب</p>
-        
         <div class="team-grid">
             <a href="https://wa.me/201159562785" target="_blank" class="team-member">
                 <div style="font-size:2rem;">👑</div> <b>KAREEM</b>
-                <p style="color: var(--accent); margin: 5px 0;">كريم عمر سيد (البلدوزر)</p>
-                <small>01159562785</small>
+                <p style="color: var(--accent);">كريم عمر سيد</p>
             </a>
-
             <a href="https://wa.me/201060843290" target="_blank" class="team-member">
                 <div style="font-size:2rem;">⚡</div> <b>SHREEF</b>
-                <p style="color: var(--accent); margin: 5px 0;">شريف سيد حسن</p>
-                <small>01060843290</small>
+                <p style="color: var(--accent);">شريف سيد حسن</p>
             </a>
-
             <a href="https://wa.me/201158606601" target="_blank" class="team-member">
                 <div style="font-size:2rem;">🧪</div> <b>ABQARIENO</b>
-                <p style="color: var(--accent); margin: 5px 0;">مصطفى محمد مصطفى</p>
-                <small>01158606601</small>
+                <p style="color: var(--accent);">مصطفى محمد</p>
             </a>
         </div>
     </div>
 
     <footer>
-        <p>© جميع الحقوق محفوظة لـ <span class="dev-name">KAREEM</span> - مبرمج مصري 🇪🇬</p>
+        <p>© جميع الحقوق محفوظة لـ <span style="color:var(--secondary)">KAREEM</span> 🇪🇬</p>
     </footer>
 </div>
 
@@ -196,66 +197,89 @@
 </div>
 
 <script>
-    const canvas=document.getElementById('canvas');
-    const ctx=canvas.getContext('2d');
-    let particles=[];
-    function resize(){canvas.width=window.innerWidth; canvas.height=window.innerHeight;}
-    window.addEventListener('resize',resize); resize();
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
 
-    class Particle{
-        constructor(x,y,color){
-            this.x=x; this.y=y; this.color=color;
-            this.size=Math.random()*3+1;
-            this.velocity={x:(Math.random()-0.5)*12,y:(Math.random()-0.5)*12};
-            this.gravity=0.06; this.alpha=1;
-            this.decay=Math.random()*0.01+0.005;
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Particle {
+        constructor(x, y, color) {
+            this.x = x; this.y = y; this.color = color;
+            this.size = Math.random() * 3 + 1;
+            this.velocity = { x: (Math.random() - 0.5) * 12, y: (Math.random() - 0.5) * 12 };
+            this.gravity = 0.05; this.alpha = 1;
+            this.decay = Math.random() * 0.015 + 0.01;
         }
-        draw(){
-            ctx.save(); ctx.globalAlpha=this.alpha; ctx.beginPath();
-            ctx.arc(this.x,this.y,this.size,0,Math.PI*2); ctx.fillStyle=this.color;
-            ctx.shadowBlur=15; ctx.shadowColor=this.color; ctx.fill(); ctx.restore();
+        draw() {
+            ctx.save();
+            ctx.globalAlpha = this.alpha;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = this.color;
+            ctx.fill();
+            ctx.restore();
         }
-        update(){
-            this.velocity.y+=this.gravity; this.x+=this.velocity.x; this.y+=this.velocity.y;
-            this.alpha-=this.decay;
+        update() {
+            this.velocity.y += this.gravity;
+            this.x += this.velocity.x;
+            this.y += this.velocity.y;
+            this.alpha -= this.decay;
         }
     }
 
-    let count=0;
-    const counterEl=document.getElementById('main-counter');
+    let count = 0;
+    const counterEl = document.getElementById('main-counter');
 
-    function startSequence(){
-        let interval=setInterval(()=>{
-            if(count<500){
-                count+=5; counterEl.innerText=count;
-                if(count%100===0) createExplosion(Math.random()*canvas.width,Math.random()*canvas.height);
-            }else{
-                count=500; counterEl.innerText="500"; clearInterval(interval);
-                document.querySelectorAll('.content-card').forEach(c=>c.classList.add('show'));
-                createExplosion(canvas.width/2,canvas.height/2,150);
+    function startSequence() {
+        let interval = setInterval(() => {
+            if (count < 500) {
+                count += 5;
+                counterEl.innerText = count;
+                if (count % 100 === 0) createExplosion(Math.random() * canvas.width, Math.random() * canvas.height);
+            } else {
+                count = 500;
+                counterEl.innerText = "500";
+                clearInterval(interval);
+                document.querySelectorAll('.content-card').forEach(c => c.classList.add('show'));
+                createExplosion(canvas.width / 2, canvas.height / 2, 100);
             }
-        },20);
+        }, 30);
     }
 
-    function createExplosion(x,y,amount=40){
-        for(let i=0;i<amount;i++){
-            const color=`hsl(${Math.random()*360},100%,60%)`;
-            particles.push(new Particle(x,y,color));
+    function createExplosion(x, y, amount = 50) {
+        for (let i = 0; i < amount; i++) {
+            const color = `hsl(${Math.random() * 360}, 100%, 60%)`;
+            particles.push(new Particle(x, y, color));
         }
     }
 
-    function animate(){
-        ctx.fillStyle='rgba(5,5,7,0.2)'; 
-        ctx.fillRect(0,0,canvas.width,canvas.height);
-        particles.forEach((p,i)=>{ 
-            p.update(); p.draw(); 
-            if(p.alpha<=0) particles.splice(i,1); 
+    function animate() {
+        // تم تغيير الشفافية هنا (0.15) لضمان عدم اسوداد الشاشة تماماً وظهور الألعاب النارية
+        ctx.fillStyle = 'rgba(5, 5, 7, 0.15)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        particles.forEach((p, i) => {
+            p.update();
+            p.draw();
+            if (p.alpha <= 0) particles.splice(i, 1);
         });
-        if(count>=500 && Math.random()<0.08) createExplosion(Math.random()*canvas.width, Math.random()*canvas.height);
+        
+        if (count >= 500 && Math.random() < 0.05) {
+            createExplosion(Math.random() * canvas.width, Math.random() * canvas.height);
+        }
         requestAnimationFrame(animate);
     }
 
-    startSequence(); animate();
+    startSequence();
+    animate();
 </script>
 </body>
 </html>
