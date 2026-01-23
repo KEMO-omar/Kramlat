@@ -33,9 +33,17 @@
     .page.active { display: block; }
     @keyframes zoomIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
-    /* الهيرو */
+    /* الهيرو + تعديل اللوجو للدوران */
     .hero { text-align: center; min-height: 50vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-    .main-logo { width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--p); box-shadow: 0 0 30px var(--p); margin-bottom: 20px; }
+    
+    .main-logo { 
+      width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--p); 
+      box-shadow: 0 0 30px var(--p); margin-bottom: 20px;
+      transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1); /* دوران انسيابي */
+      cursor: pointer;
+    }
+    .main-logo.rotate { transform: rotate(360deg); }
+
     .hero-title { font-family: 'Orbitron'; font-size: clamp(70px, 25vw, 130px); margin: 0; background: linear-gradient(to bottom, #fff, var(--s), var(--p)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 15px var(--s)); line-height: 1; }
     
     .ad-banner { margin-top: 20px; border: 2px solid var(--a); border-radius: 20px; padding: 8px; background: rgba(0,0,0,0.5); width: 100%; max-width: 350px; box-shadow: 0 0 20px var(--a); }
@@ -43,7 +51,7 @@
 
     .main-btn { background: linear-gradient(45deg, var(--p), var(--s)); color: #fff; padding: 15px 30px; border-radius: 50px; text-decoration: none; font-weight: 900; font-size: 1rem; display: inline-block; box-shadow: 0 0 25px var(--p); margin-top: 15px; border:none; text-align: center; cursor: pointer; }
 
-    /* خريطة القناة - المربعات التفاعلية */
+    /* المربعات التفاعلية */
     .journey-box { background: var(--glass); padding: 25px; border-radius: 30px; border: 2px solid var(--p); line-height: 1.8; backdrop-filter: blur(15px); text-align: right; }
     .feature-tag { 
       background: rgba(255, 0, 127, 0.2); padding: 10px 15px; border-radius: 12px; 
@@ -53,7 +61,6 @@
     }
     .feature-tag:active { transform: scale(0.98); background: var(--p); }
 
-    /* ايموجي طائر */
     .floating-emoji {
       position: fixed; pointer-events: none; z-index: 9999;
       animation: flyUp 0.8s ease-out forwards; font-size: 2rem;
@@ -63,7 +70,7 @@
       100% { transform: translateY(-150px) rotate(20deg) scale(1.5); opacity: 0; }
     }
 
-    /* الاحتفالات والقادة */
+    /* الشبكات */
     .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; }
     .gallery-item { border-radius: 15px; overflow: hidden; border: 2px solid var(--s); position: relative; height: 200px; background: #000; }
     .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
@@ -97,7 +104,7 @@
   
   <section id="home" class="page active">
     <div class="hero">
-      <img src="logo.png" class="main-logo">
+      <img src="logo.png" class="main-logo" id="logoImg" onclick="rotateLogo()">
       <h1 class="hero-title" id="counter">0</h1>
       <div style="color:var(--a); font-weight:900; letter-spacing:5px; font-size: 1.1rem;">KRAMLAT</div>
       <div class="ad-banner"><img src="kesa.png"></div>
@@ -114,11 +121,11 @@
       </p>
       
       <b style="color: var(--p);">📦 إيه اللي مستنيك؟ (دوس على المربع):</b>
-      <div class="feature-tag" onclick="spawnEmoji('😂 ضحك', event)">😹 ركن الضحك الهستيري: ميمز خرافية هتفصلك ضحك.</div>
+      <div class="feature-tag" onclick="spawnEmoji(' ههههه 😂 ضحك', event)">😹 ركن الضحك الهستيري: ميمز خرافية هتفصلك ضحك.</div>
       <div class="feature-tag" onclick="spawnEmoji('👻 رعب', event)">👻 الغموض والإثارة: حاجات هتخلي الأدرينالين يوصل للسما! 🚨</div>
       <div class="feature-tag" onclick="spawnEmoji('🎥 WoW', event)">🎥 إبداع بصري: إيديتس مجنونة معمول بمزاج عالي.</div>
       <div class="feature-tag" onclick="spawnEmoji('😲 OMG', event)">🧠 كبسولات معرفية: معلومات ممتعة هتصدمك بجد.</div>
-      <div class="feature-tag" onclick="spawnEmoji('🎮 Weee', event)">🎮 ألعاب وتحديات: مساحة للتفاعل والمغامرة.</div>
+      <div class="feature-tag" onclick="spawnEmoji('🎮 Weeee', event)">🎮 ألعاب وتحديات: مساحة للتفاعل والمغامرة.</div>
 
       <div style="margin-top: 20px; border-top: 1px solid var(--glass); padding-top: 15px;">
         <b style="color: var(--a);">📌 مميزات عيلة كرملات:</b>
@@ -164,7 +171,7 @@
       <div class="leader-card">
         <img src="Kareem.png" class="leader-pic">
         <div style="font-family:'Orbitron'; color:var(--a); font-size:1.3rem;">KAREEM 👑</div>
-        <p style="font-size:0.85rem;">كريم عمر (البلدوزر)<br>(الكل في الكل)المؤسس والمبرمج</p>
+        <p style="font-size:0.85rem;">كريم عمر👑 (البلدوزر)<br>المؤسس والمبرمج والكل في الكل</p>
         <a href="https://wa.me/201159562785" class="contact-wa">ارسل السكرين لكريم 📩</a>
       </div>
       <div class="leader-card">
@@ -186,6 +193,17 @@
 </div>
 
 <script>
+  // وظيفة دوران اللوجو
+  function rotateLogo() {
+    const logo = document.getElementById('logoImg');
+    if(!logo.classList.contains('rotate')) {
+      logo.classList.add('rotate');
+      setTimeout(() => {
+        logo.classList.remove('rotate');
+      }, 700);
+    }
+  }
+
   // وظيفة الايموجي التفاعلي
   function spawnEmoji(emoji, event) {
     const x = event.clientX || (event.touches ? event.touches[0].clientX : 0);
