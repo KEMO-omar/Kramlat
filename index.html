@@ -33,13 +33,13 @@
     .page.active { display: block; }
     @keyframes zoomIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
-    /* الهيرو + تعديل اللوجو للدوران */
+    /* الهيرو */
     .hero { text-align: center; min-height: 50vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
     
     .main-logo { 
       width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--p); 
       box-shadow: 0 0 30px var(--p); margin-bottom: 20px;
-      transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1); /* دوران انسيابي */
+      transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
       cursor: pointer;
     }
     .main-logo.rotate { transform: rotate(360deg); }
@@ -63,11 +63,12 @@
 
     .floating-emoji {
       position: fixed; pointer-events: none; z-index: 9999;
-      animation: flyUp 0.8s ease-out forwards; font-size: 2rem;
+      animation: flyUp 0.8s ease-out forwards; font-size: 1.5rem;
+      white-space: nowrap; font-weight: 900; text-shadow: 0 0 10px #fff;
     }
     @keyframes flyUp {
       0% { transform: translateY(0) scale(0.5); opacity: 1; }
-      100% { transform: translateY(-150px) rotate(20deg) scale(1.5); opacity: 0; }
+      100% { transform: translateY(-150px) rotate(20deg) scale(1.2); opacity: 0; }
     }
 
     /* الشبكات */
@@ -87,7 +88,7 @@
     footer { text-align: center; padding: 30px 10px; color: var(--p); font-weight: 900; font-size: 0.8rem; border-top: 1px solid var(--glass); margin-top: 20px; }
   </style>
 </head>
-<body ontouchstart="">
+<body>
 
 <canvas id="cosmos"></canvas>
 
@@ -108,6 +109,7 @@
       <h1 class="hero-title" id="counter">0</h1>
       <div style="color:var(--a); font-weight:900; letter-spacing:5px; font-size: 1.1rem;">KRAMLAT</div>
       <div class="ad-banner"><img src="kesa.png"></div>
+      <h3>القصه نزلت دلوقتي يلا خش اقراها</h3>
       <a href="https://whatsapp.com/channel/0029VbAqgz23WHTOe8lXeM1N" class="main-btn">دخول البوابة الرسمية 🚀🍭</a>
     </div>
   </section>
@@ -137,8 +139,8 @@
 
   <section id="contest" class="page">
     <div style="text-align: center; background: rgba(0,0,0,0.6); padding: 25px; border-radius: 30px; border: 2px solid var(--a); backdrop-filter: blur(10px);">
-      <h2 style="color:var(--a); font-size: 1.5rem;">🥇 سحب المسابقة الكبرى</h2>
-      <p style="font-size: 0.85rem; margin-bottom: 15px;">سجل بياناتك وخد سكرين شوت فوراً!</p>
+      <h2 style="color:var(--a); font-size: 1.5rem;">🥇 سحب المسابقة الكونيه الكبرى</h2>
+      <p style="font-size: 0.85rem; margin-bottom: 15px;">لما تسجل بياناتك خد سكرين شوت فوراً! وابعتها لحد من المديرين عشان اسمك يدخل السحب يلا مستني ايه مش عايز اسمك يكون في لوحة الشرف زي اخواتك</p>
       <input type="text" placeholder="الاسم الثلاثي" style="width:100%; padding:14px; margin:8px 0; border-radius:12px; border:2px solid var(--s); background:#000; color:#fff; text-align:center;">
       <input type="tel" placeholder="رقم الواتساب" style="width:100%; padding:14px; margin:8px 0; border-radius:12px; border:2px solid var(--s); background:#000; color:#fff; text-align:center;">
       <button class="main-btn" style="width: 100%;" onclick="alert('سجلنا يا بطل! ابعت السكرين للمديرين')">دخول السحب 🏁</button>
@@ -193,29 +195,26 @@
 </div>
 
 <script>
-  // وظيفة دوران اللوجو
   function rotateLogo() {
     const logo = document.getElementById('logoImg');
     if(!logo.classList.contains('rotate')) {
       logo.classList.add('rotate');
-      setTimeout(() => {
-        logo.classList.remove('rotate');
-      }, 700);
+      setTimeout(() => logo.classList.remove('rotate'), 700);
     }
   }
 
-  // وظيفة الايموجي التفاعلي
-  function spawnEmoji(emoji, event) {
+  function spawnEmoji(text, event) {
     const x = event.clientX || (event.touches ? event.touches[0].clientX : 0);
     const y = event.clientY || (event.touches ? event.touches[0].clientY : 0);
     
-    for(let i=0; i<6; i++) {
+    for(let i=0; i<5; i++) {
       const el = document.createElement('div');
       el.className = 'floating-emoji';
-      el.innerText = emoji;
+      el.innerText = text;
       el.style.left = x + 'px';
       el.style.top = y + 'px';
-      el.style.setProperty('--dx', (Math.random() - 0.5) * 100 + 'px');
+      // تشتيت الألوان والعشوائية
+      el.style.color = `hsl(${Math.random()*360}, 100%, 70%)`;
       document.body.appendChild(el);
       setTimeout(() => el.remove(), 800);
     }
