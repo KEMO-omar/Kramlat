@@ -17,7 +17,7 @@
     }
     canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 
-    /* نافبار مرن للموبايل */
+    /* نافبار */
     nav.cosmic-nav {
       position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
       background: rgba(0,0,0,0.92); backdrop-filter: blur(20px);
@@ -41,32 +41,46 @@
     .ad-banner { margin-top: 20px; border: 2px solid var(--a); border-radius: 20px; padding: 8px; background: rgba(0,0,0,0.5); width: 100%; max-width: 350px; box-shadow: 0 0 20px var(--a); }
     .ad-banner img { width: 100%; border-radius: 10px; display: block; }
 
-    .main-btn { background: linear-gradient(45deg, var(--p), var(--s)); color: #fff; padding: 15px 30px; border-radius: 50px; text-decoration: none; font-weight: 900; font-size: 1rem; display: inline-block; box-shadow: 0 0 25px var(--p); margin-top: 15px; border:none; text-align: center; }
+    .main-btn { background: linear-gradient(45deg, var(--p), var(--s)); color: #fff; padding: 15px 30px; border-radius: 50px; text-decoration: none; font-weight: 900; font-size: 1rem; display: inline-block; box-shadow: 0 0 25px var(--p); margin-top: 15px; border:none; text-align: center; cursor: pointer; }
 
-    /* خريطة القناة - الوصف الأسطوري */
-    .journey-box { background: var(--glass); padding: 25px; border-radius: 30px; border: 2px solid var(--p); line-height: 1.8; backdrop-filter: blur(15px); text-align: right; word-wrap: break-word; }
-    .feature-tag { background: rgba(255, 0, 127, 0.2); padding: 4px 10px; border-radius: 8px; margin: 3px; display: inline-block; border: 1px solid var(--p); font-weight: 900; color: var(--a); font-size: 0.8rem; }
-    
-    /* الاحتفالات - شبكة متجاوبة */
+    /* خريطة القناة - المربعات التفاعلية */
+    .journey-box { background: var(--glass); padding: 25px; border-radius: 30px; border: 2px solid var(--p); line-height: 1.8; backdrop-filter: blur(15px); text-align: right; }
+    .feature-tag { 
+      background: rgba(255, 0, 127, 0.2); padding: 10px 15px; border-radius: 12px; 
+      margin: 8px 0; display: block; border: 1px solid var(--p); 
+      font-weight: 900; color: #fff; font-size: 0.9rem; transition: 0.3s;
+      cursor: pointer; position: relative; overflow: hidden;
+    }
+    .feature-tag:active { transform: scale(0.98); background: var(--p); }
+
+    /* ايموجي طائر */
+    .floating-emoji {
+      position: fixed; pointer-events: none; z-index: 9999;
+      animation: flyUp 0.8s ease-out forwards; font-size: 2rem;
+    }
+    @keyframes flyUp {
+      0% { transform: translateY(0) scale(0.5); opacity: 1; }
+      100% { transform: translateY(-150px) rotate(20deg) scale(1.5); opacity: 0; }
+    }
+
+    /* الاحتفالات والقادة */
     .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; }
     .gallery-item { border-radius: 15px; overflow: hidden; border: 2px solid var(--s); position: relative; height: 200px; background: #000; }
     .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
     .gallery-label { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.8); padding: 8px; text-align: center; color: var(--a); font-weight: 900; font-size: 0.75rem; }
 
-    /* القادة - ترتيب عمودي للموبايل */
     .leader-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
     .leader-card { background: var(--glass); border: 2px solid var(--p); border-radius: 30px; padding: 25px; text-align: center; }
     .leader-pic { width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--s); margin-bottom: 10px; object-fit: cover; }
     .contact-wa { background: #25d366; color: #fff; padding: 12px 20px; border-radius: 50px; text-decoration: none; font-weight: 900; display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem; margin-top: 10px; }
 
-    /* لوحة الشرف */
     .winner-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
     @media (min-width: 600px) { .winner-grid { grid-template-columns: repeat(4, 1fr); } }
 
     footer { text-align: center; padding: 30px 10px; color: var(--p); font-weight: 900; font-size: 0.8rem; border-top: 1px solid var(--glass); margin-top: 20px; }
   </style>
 </head>
-<body>
+<body ontouchstart="">
 
 <canvas id="cosmos"></canvas>
 
@@ -74,7 +88,7 @@
   <a class="nav-link active" onclick="nav('home', this)">الرئيسية</a>
   <a class="nav-link" onclick="nav('journey', this)">عن كرملات</a>
   <a class="nav-link" onclick="nav('contest', this)">المسابقة</a>
-  <a class="nav-link" onclick="nav('hall-of-fame', this)">الشرف</a>
+  <a class="nav-link" onclick="nav('hall-of-fame', this)">لوحة الشرف</a>
   <a class="nav-link" onclick="nav('events', this)">الاحتفالات</a>
   <a class="nav-link" onclick="nav('team', this)">القادة</a>
 </nav>
@@ -95,16 +109,22 @@
     <div class="journey-box">
       <h2 style="color:var(--s); text-align:center; font-size: 1.5rem;">🍭 إمبراطورية كرملات</h2>
       <p style="text-align: center; font-weight: bold; color: var(--a);">"حيث لا مكان للملل!" 😎🔥</p>
-      <p style="font-size: 0.9rem; text-align: center;">عالم موازي فيه كل حاجة تخطر على بالك! 🌀✨</p>
+      <p style="font-size: 0.95rem; text-align: right; border-bottom: 1px solid var(--glass); padding-bottom: 10px;">
+        لو بتدور على التقليدي يبقى أنت في المكان الغلط، لأن كرملات مش مجرد قناة، دي عالم موازي فيه كل حاجة وأي حاجة تخطر على بالك! 🌀✨
+      </p>
       
-      <b>📦 إيه اللي مستنيك؟</b><br>
-      <span class="feature-tag">😹 ركن الضحك</span><br>
-      <span class="feature-tag">👻 الغموض والإثارة</span><br>
-      <span class="feature-tag">🎥 إبداع بصري (إيديتس)</span><br>
-      <span class="feature-tag">🧠 كبسولات معرفية</span><br>
-      <span class="feature-tag">🎮 ألعاب وتحديات</span><br><br>
+      <b style="color: var(--p);">📦 إيه اللي مستنيك؟ (دوس على المربع):</b>
+      <div class="feature-tag" onclick="spawnEmoji('😂 ضحك', event)">😹 ركن الضحك الهستيري: ميمز خرافية هتفصلك ضحك.</div>
+      <div class="feature-tag" onclick="spawnEmoji('👻 رعب', event)">👻 الغموض والإثارة: حاجات هتخلي الأدرينالين يوصل للسما! 🚨</div>
+      <div class="feature-tag" onclick="spawnEmoji('🎥 WoW', event)">🎥 إبداع بصري: إيديتس مجنونة معمول بمزاج عالي.</div>
+      <div class="feature-tag" onclick="spawnEmoji('😲 OMG', event)">🧠 كبسولات معرفية: معلومات ممتعة هتصدمك بجد.</div>
+      <div class="feature-tag" onclick="spawnEmoji('🎮 Weee', event)">🎮 ألعاب وتحديات: مساحة للتفاعل والمغامرة.</div>
 
-      <b style="color: var(--s);">📌 مميزاتنا:</b> تجدد مستمر، دماغ عالية، وتفاعل حقيقي! ✅💥
+      <div style="margin-top: 20px; border-top: 1px solid var(--glass); padding-top: 15px;">
+        <b style="color: var(--a);">📌 مميزات عيلة كرملات:</b>
+        <p style="font-size: 0.85rem;">• تجدد مستمر يوميًا 🔄 • دماغ عالية في اختيار البوستات 🧠 • تفاعل حقيقي ومفاجآت حصرية! 🚀</p>
+        <p style="text-align: center; font-weight: 900; color: var(--s);">أهلًا بيك في رحلة الإبداع المجنون.. أنت واحد مننا! 😍🙌</p>
+      </div>
     </div>
   </section>
 
@@ -112,8 +132,8 @@
     <div style="text-align: center; background: rgba(0,0,0,0.6); padding: 25px; border-radius: 30px; border: 2px solid var(--a); backdrop-filter: blur(10px);">
       <h2 style="color:var(--a); font-size: 1.5rem;">🥇 سحب المسابقة الكبرى</h2>
       <p style="font-size: 0.85rem; margin-bottom: 15px;">سجل بياناتك وخد سكرين شوت فوراً!</p>
-      <input type="text" placeholder="الاسم الثلاثي" style="width:100%; padding:14px; margin:8px 0; border-radius:12px; border:2px solid var(--s); background:#000; color:#fff; text-align:center; font-size: 1rem;">
-      <input type="tel" placeholder="رقم الواتساب" style="width:100%; padding:14px; margin:8px 0; border-radius:12px; border:2px solid var(--s); background:#000; color:#fff; text-align:center; font-size: 1rem;">
+      <input type="text" placeholder="الاسم الثلاثي" style="width:100%; padding:14px; margin:8px 0; border-radius:12px; border:2px solid var(--s); background:#000; color:#fff; text-align:center;">
+      <input type="tel" placeholder="رقم الواتساب" style="width:100%; padding:14px; margin:8px 0; border-radius:12px; border:2px solid var(--s); background:#000; color:#fff; text-align:center;">
       <button class="main-btn" style="width: 100%;" onclick="alert('سجلنا يا بطل! ابعت السكرين للمديرين')">دخول السحب 🏁</button>
     </div>
   </section>
@@ -144,7 +164,7 @@
       <div class="leader-card">
         <img src="Kareem.png" class="leader-pic">
         <div style="font-family:'Orbitron'; color:var(--a); font-size:1.3rem;">KAREEM 👑</div>
-        <p style="font-size:0.85rem;">كريم عمر (البلدوزر)<br>المؤسس والمبرمج</p>
+        <p style="font-size:0.85rem;">كريم عمر (البلدوزر)<br>(الكل في الكل)المؤسس والمبرمج</p>
         <a href="https://wa.me/201159562785" class="contact-wa">ارسل السكرين لكريم 📩</a>
       </div>
       <div class="leader-card">
@@ -166,6 +186,23 @@
 </div>
 
 <script>
+  // وظيفة الايموجي التفاعلي
+  function spawnEmoji(emoji, event) {
+    const x = event.clientX || (event.touches ? event.touches[0].clientX : 0);
+    const y = event.clientY || (event.touches ? event.touches[0].clientY : 0);
+    
+    for(let i=0; i<6; i++) {
+      const el = document.createElement('div');
+      el.className = 'floating-emoji';
+      el.innerText = emoji;
+      el.style.left = x + 'px';
+      el.style.top = y + 'px';
+      el.style.setProperty('--dx', (Math.random() - 0.5) * 100 + 'px');
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 800);
+    }
+  }
+
   function nav(id, el) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
@@ -184,7 +221,7 @@
   class P {
     constructor(x,y) {
       this.x=x; this.y=y; 
-      this.v={x:(Math.random()-0.5)*20, y:(Math.random()-0.5)*20}; 
+      this.v={x:(Math.random()-0.5)*15, y:(Math.random()-0.5)*15}; 
       this.a=1; this.s=Math.random()*4+1; 
       this.c=`hsl(${Math.random()*360},100%,60%)`;
     }
