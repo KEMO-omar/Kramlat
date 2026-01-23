@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
   <title>إمبراطورية كرملات | Kramlat Ultimate 🍭</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Orbitron:wght@900&display=swap" rel="stylesheet" />
   <style>
@@ -10,61 +10,56 @@
       --p: #ff007f; --s: #00d4ff; --a: #ccff00; --bg: #010103;
       --glass: rgba(255, 255, 255, 0.08);
     }
-    * { box-sizing: border-box; cursor: crosshair; scroll-behavior: smooth; }
+    * { box-sizing: border-box; cursor: crosshair; scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
     body { 
       margin: 0; background: var(--bg) url('https://www.transparenttextures.com/patterns/stardust.png'); 
       color: #fff; font-family: 'Cairo', sans-serif; overflow-x: hidden; background-attachment: fixed;
     }
     canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 
+    /* نافبار ذكي للموبايل */
     nav.cosmic-nav {
-      position: fixed; top: 15px; left: 50%; transform: translateX(-50%);
-      background: rgba(0,0,0,0.9); backdrop-filter: blur(20px);
-      padding: 10px 20px; border-radius: 100px; border: 1px solid var(--p);
-      display: flex; gap: 10px; z-index: 1000; box-shadow: 0 0 20px var(--p);
+      position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
+      background: rgba(0,0,0,0.92); backdrop-filter: blur(20px);
+      padding: 8px 12px; border-radius: 25px; border: 1px solid var(--p);
+      display: flex; gap: 5px; z-index: 1000; box-shadow: 0 0 20px var(--p);
+      width: 95%; max-width: 600px; justify-content: center; flex-wrap: wrap;
     }
-    .nav-link { color: #fff; text-decoration: none; font-weight: 900; font-size: 0.75rem; cursor: pointer; white-space: nowrap; transition: 0.3s; }
+    .nav-link { color: #fff; text-decoration: none; font-weight: 900; font-size: 0.65rem; cursor: pointer; white-space: nowrap; transition: 0.3s; padding: 5px 6px; }
     .nav-link.active { color: var(--a); text-shadow: 0 0 10px var(--a); }
 
-    .container { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 100px 20px; }
+    .container { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 100px 15px 40px 15px; }
     .page { display: none; animation: zoomIn 0.5s ease forwards; }
     .page.active { display: block; }
     @keyframes zoomIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 
     /* الهيرو */
-    .hero { text-align: center; min-height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-    .main-logo { width: 140px; height: 140px; border-radius: 50%; border: 4px solid var(--p); box-shadow: 0 0 30px var(--p); margin-bottom: 20px; transition: 0.5s; }
-    .main-logo:hover { transform: rotate(360deg) scale(1.1); }
-    .hero-title { font-family: 'Orbitron'; font-size: clamp(80px, 15vw, 150px); margin: 0; background: linear-gradient(to bottom, #fff, var(--s), var(--p)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 30px var(--s)); }
-    .main-btn { background: linear-gradient(45deg, var(--p), var(--s)); color: #fff; padding: 15px 40px; border-radius: 50px; text-decoration: none; font-weight: 900; font-size: 1.2rem; display: inline-block; box-shadow: 0 0 30px var(--p); margin-top: 20px; transition: 0.3s; }
-    .main-btn:hover { transform: scale(1.1); box-shadow: 0 0 50px var(--s); }
+    .hero { text-align: center; min-height: 50vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+    .main-logo { width: 110px; height: 110px; border-radius: 50%; border: 4px solid var(--p); box-shadow: 0 0 30px var(--p); margin-bottom: 20px; }
+    .hero-title { font-family: 'Orbitron'; font-size: clamp(60px, 18vw, 130px); margin: 0; background: linear-gradient(to bottom, #fff, var(--s), var(--p)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 20px var(--s)); line-height: 1; }
+    
+    .ad-banner { margin-top: 20px; border: 2px solid var(--a); border-radius: 20px; padding: 8px; background: rgba(0,0,0,0.5); width: 100%; max-width: 350px; box-shadow: 0 0 20px var(--a); }
+    .ad-banner img { width: 100%; border-radius: 10px; display: block; }
 
-    /* الوصف الأسطوري */
-    .journey-box { background: var(--glass); padding: 50px; border-radius: 40px; border: 2px solid var(--p); line-height: 2.2; backdrop-filter: blur(15px); text-align: right; border-left: 10px solid var(--s); }
-    .journey-box h2 { font-size: 2.5rem; text-shadow: 0 0 15px var(--s); margin-bottom: 30px; }
-    .feature-tag { background: rgba(0, 212, 255, 0.15); padding: 8px 20px; border-radius: 12px; margin: 8px; display: inline-block; border: 1px solid var(--s); font-weight: 900; color: var(--a); }
+    .main-btn { background: linear-gradient(45deg, var(--p), var(--s)); color: #fff; padding: 15px 30px; border-radius: 50px; text-decoration: none; font-weight: 900; font-size: 1rem; display: inline-block; box-shadow: 0 0 25px var(--p); margin-top: 15px; border:none; }
 
-    /* المسابقة */
-    .contest-box { background: linear-gradient(135deg, rgba(255,0,127,0.1), rgba(0,212,255,0.1)); padding: 45px; border-radius: 40px; border: 3px solid var(--a); text-align: center; position: relative; overflow: hidden; }
-    .important-note { background: #ff007f; color: #fff; padding: 20px; border-radius: 20px; margin: 25px 0; font-weight: 900; font-size: 1.2rem; box-shadow: 0 0 20px var(--p); animation: pulse 1.5s infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
-    .contest-form input { width: 100%; padding: 18px; margin: 12px 0; border-radius: 15px; border: 2px solid var(--s); background: rgba(0,0,0,0.8); color: #fff; text-align: center; font-size: 1.1rem; }
-
+    /* خريطة القناة - الوصف الأسطوري */
+    .journey-box { background: var(--glass); padding: 25px; border-radius: 30px; border: 2px solid var(--p); line-height: 1.8; backdrop-filter: blur(15px); text-align: right; }
+    .feature-tag { background: rgba(255, 0, 127, 0.2); padding: 4px 10px; border-radius: 8px; margin: 3px; display: inline-block; border: 1px solid var(--p); font-weight: 900; color: var(--a); font-size: 0.8rem; }
+    
     /* الاحتفالات */
-    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
-    .gallery-item { border-radius: 25px; overflow: hidden; border: 2px solid var(--s); transition: 0.4s; position: relative; background: #000; height: 400px; }
-    .gallery-item:hover { transform: scale(1.05); border-color: var(--a); z-index: 5; }
-    .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-    .gallery-label { position: absolute; bottom: 0; width: 100%; background: linear-gradient(transparent, rgba(0,0,0,1)); padding: 20px; text-align: center; color: var(--a); font-weight: 900; font-size: 1.2rem; }
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
+    .gallery-item { border-radius: 15px; overflow: hidden; border: 2px solid var(--s); position: relative; height: 220px; background: #000; }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
+    .gallery-label { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.8); padding: 8px; text-align: center; color: var(--a); font-weight: 900; font-size: 0.8rem; }
 
-    /* المديرين */
-    .leader-card { background: var(--glass); border: 2px solid var(--p); border-radius: 40px; padding: 35px; text-align: center; margin-bottom: 30px; transition: 0.4s; }
-    .leader-card:hover { border-color: var(--a); background: rgba(255,255,255,0.1); }
-    .leader-pic { width: 180px; height: 180px; border-radius: 50%; border: 5px solid var(--s); margin-bottom: 20px; object-fit: cover; box-shadow: 0 0 25px var(--s); }
-    .contact-wa { background: #25d366; color: #fff; padding: 12px 25px; border-radius: 50px; text-decoration: none; font-weight: 900; display: inline-flex; align-items: center; gap: 10px; transition: 0.3s; }
-    .contact-wa:hover { transform: scale(1.1); background: #128c7e; }
+    /* القادة */
+    .leader-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .leader-card { background: var(--glass); border: 2px solid var(--p); border-radius: 30px; padding: 20px; text-align: center; }
+    .leader-pic { width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--s); margin-bottom: 10px; object-fit: cover; }
+    .contact-wa { background: #25d366; color: #fff; padding: 10px 18px; border-radius: 50px; text-decoration: none; font-weight: 900; display: inline-flex; align-items: center; gap: 5px; font-size: 0.85rem; }
 
-    footer { text-align: center; padding: 50px; color: var(--p); font-weight: 900; border-top: 1px solid var(--glass); }
+    footer { text-align: center; padding: 30px 10px; color: var(--p); font-weight: 900; font-size: 0.8rem; border-top: 1px solid var(--glass); margin-top: 20px; }
   </style>
 </head>
 <body>
@@ -73,10 +68,11 @@
 
 <nav class="cosmic-nav">
   <a class="nav-link active" onclick="nav('home', this)">الرئيسية</a>
-  <a class="nav-link" onclick="nav('journey', this)">خريطة القناة</a>
+  <a class="nav-link" onclick="nav('journey', this)">عن كرملات</a>
   <a class="nav-link" onclick="nav('contest', this)">المسابقة</a>
+  <a class="nav-link" onclick="nav('hall-of-fame', this)">لوحة الشرف</a>
   <a class="nav-link" onclick="nav('events', this)">الاحتفالات</a>
-  <a class="nav-link" onclick="nav('team', this)">المديرين</a>
+  <a class="nav-link" onclick="nav('team', this)">القادة</a>
 </nav>
 
 <div class="container">
@@ -85,82 +81,79 @@
     <div class="hero">
       <img src="logo.png" class="main-logo">
       <h1 class="hero-title" id="counter">0</h1>
-      <div style="color:var(--a); font-weight:900; letter-spacing:8px; font-size: 1.5rem;">KRAMLAT</div>
+      <div style="color:var(--a); font-weight:900; letter-spacing:5px; font-size: 1.1rem;">KRAMLAT</div>
+      <div class="ad-banner"><img src="kesa.png"></div>
       <a href="https://whatsapp.com/channel/0029VbAqgz23WHTOe8lXeM1N" class="main-btn">دخول البوابة الرسمية 🚀🍭</a>
     </div>
   </section>
 
   <section id="journey" class="page">
     <div class="journey-box">
-      <h2 style="color:var(--s); text-align:center;">🌌 مرحباً بك في إمبراطورية كرملات</h2>
-      <p>
-        ليست مجرد قناة، بل هي <b>ثورة في عالم المحتوى الرقمي!</b> انطلقت كرملات لتكون الملاذ الآمن لكل من يبحث عن الاختلاف والتميز. نحن هنا لنعيد تعريف الترفيه من خلال دمج الإبداع البصري بالذكاء الفني.<br><br>
-        
-        <b>ماذا ينتظرك داخل الإمبراطورية؟</b><br>
-        في كل ركن من أركان قناتنا، ستجد قصة جديدة وتجربة فريدة. نحن نتخصص في صناعة "الدماغ العالية"، حيث نوفر لك:<br>
-        <span class="feature-tag">🎭 إيديتس احترافية عالمية</span> 
-        <span class="feature-tag">🔮 أسرار وغوامض مرعبة</span> 
-        <span class="feature-tag">🔥 تحديات جنونية مع المتابعين</span><br>
-        <span class="feature-tag">🧠 كبسولات معرفية ذكية</span> 
-        <span class="feature-tag">💻 حأجات حلوة برو ماكس</span> 
-        <span class="feature-tag">🎮 أقوى قيم-بلاي وتكتيكات</span><br><br>
+      <h2 style="color:var(--s); text-align:center; font-size: 1.6rem;">🍭 إمبراطورية كرملات</h2>
+      <p style="text-align: center; font-weight: bold; color: var(--a);">"مرحبًا بك في الجانب الآخر من الإنترنت.. حيث لا مكان للملل!" 😎🔥</p>
+      <p style="font-size: 0.9rem;">كرملات مش مجرد قناة، دي عالم موازي فيه كل حاجة تخطر على بالك! 🌀✨</p>
+      
+      <b>📦 إيه اللي مستنيك؟</b><br>
+      <span class="feature-tag">😹 ركن الضحك الهستيري</span><br>
+      <span class="feature-tag">👻 الغموض والإثارة</span><br>
+      <span class="feature-tag">🎥 إبداع بصري (إيديتس)</span><br>
+      <span class="feature-tag">🧠 كبسولات معرفية</span><br>
+      <span class="feature-tag">🎮 ألعاب وتحديات</span><br><br>
 
-        <b>رؤيتنا المستقبيلة:</b> نحن لا ننظر تحت أقدامنا، بل ننظر إلى النجوم. رحلتنا بدأت بـ 100 حالم، واليوم نحن 500 أسطورة، وغداً سنغزو العالم بمحتوانا. نعدكم دائماً بالتطور المستمر، وبأن تظل "كرملات" هي المكان الذي تجد فيه ما لا يتوقعه عقلك.<br><br>
-        <b>قوانين الإمبراطورية:</b> الاحترام المتبادل، التفاعل المستمر، وعشق الإبداع. أنت الآن لست مجرد متابع، أنت "كرملاتي" أصيل، وجزء من هذه العائلة الكبيرة. استعد.. فالقادم سيبهرك أكثر! ✅💥
-      </p>
+      <b>📌 مميزاتنا:</b> تجدد مستمر، دماغ عالية، وتفاعل حقيقي مع كل الكرملاتية! ✅💥
     </div>
   </section>
 
   <section id="contest" class="page">
-    <div class="contest-box">
-      <h2 style="color:var(--a); font-size:2.5rem;">🥇 السحب للمسابقه الكونية الكبري</h2>
-      <p style="font-size: 1.2rem;">سجل حضورك الآن لتدخل التاريخ وتفوز بالجوائز!</p>
-      
-      <div class="important-note">
-        📸 شرط أساسي للدخول: بعد التسجيل، خذ "سكرين شوت" لبياناتك وأرسلها فوراً لأحد المديرين لتأكيد الحجز!
-      </div>
+    <div style="text-align: center; background: rgba(0,0,0,0.5); padding: 30px; border-radius: 30px; border: 2px solid var(--a);">
+      <h2 style="color:var(--a); font-size: 1.5rem;">🥇 سحب المسابقة الكبرى</h2>
+      <p style="font-size: 0.85rem;">سجل بياناتك وخد سكرين شوت فوراً!</p>
+      <input type="text" placeholder="الاسم الثلاثي" style="width:100%; padding:12px; margin:10px 0; border-radius:10px; border:2px solid var(--s); background:#000; color:#fff; text-align:center;">
+      <input type="tel" placeholder="رقم الواتساب" style="width:100%; padding:12px; margin:10px 0; border-radius:10px; border:2px solid var(--s); background:#000; color:#fff; text-align:center;">
+      <button class="main-btn" onclick="alert('سجلنا يا بطل! ابعت السكرين للمديرين')">دخول السحب 🏁</button>
+    </div>
+  </section>
 
-      <div class="contest-form">
-        <input type="text" id="name" placeholder="اكتب اسمك الثلاثي يا بطل">
-        <input type="text" id="phone" placeholder="رقم واتسابك الخاص">
-        <button class="main-btn" onclick="alert('سجلنا بياناتك! الله عليك يا نجم يالا خد السكرين وكلم المدير فوراً!')">دخول السحب النهائي 🏁</button>
-      </div>
+  <section id="hall-of-fame" class="page">
+    <h2 style="text-align:center; color:#ffd700; font-size:1.5rem;">🏆 لوحة شرف الأساطير</h2>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+      <div style="border:1px solid #ffd700; padding:15px; border-radius:15px; text-align:center;">جودة</div>
+      <div style="border:1px solid #ffd700; padding:15px; border-radius:15px; text-align:center;">سراچ</div>
+      <div style="border:1px solid #ffd700; padding:15px; border-radius:15px; text-align:center;">حمزة</div>
+      <div style="border:1px solid #ffd700; padding:15px; border-radius:15px; text-align:center;">عبدالله</div>
     </div>
   </section>
 
   <section id="events" class="page">
-    <h2 style="text-align:center; color:var(--s); margin-bottom:40px; font-size: 2.5rem;">🗓️ سجل الشرف والإنجازات</h2>
+    <h2 style="text-align:center; color:var(--s); font-size: 1.5rem; margin-bottom:15px;">🗓️ سجل الاحتفالات</h2>
     <div class="gallery-grid">
-      <div class="gallery-item"><img src="100.png"><div class="gallery-label">100: ميلاد الأسطورة</div></div>
-      <div class="gallery-item"><img src="200.png"><div class="gallery-label">200: كسر حاجز الصمت</div></div>
-      <div class="gallery-item"><img src="300.png"><div class="gallery-label">300: غزو الإبداع</div></div>
-      <div class="gallery-item"><img src="400.png"><div class="gallery-label">400: اقتراب القمة</div></div>
-      <div class="gallery-item"><img src="500.png"><div class="gallery-label">جمدان  ال 500 دماغ عالية 🔥</div></div>
-    <div class="gallery-item"><img src="logo.png"><div class="gallery-label">انتظروا قريبا</div></div>
+      <div class="gallery-item"><img src="100.png"><div class="gallery-label">🎉 احتفال الـ 100</div></div>
+      <div class="gallery-item"><img src="200.png"><div class="gallery-label">🔥 احتفال الـ 200</div></div>
+      <div class="gallery-item"><img src="300.png"><div class="gallery-label">🚀 احتفال الـ 300</div></div>
+      <div class="gallery-item"><img src="400.png"><div class="gallery-label">💎 احتفال الـ 400</div></div>
+      <div class="gallery-item"><img src="500.png"><div class="gallery-label">👑 جمدان الـ 500</div></div>
     </div>
   </section>
 
   <section id="team" class="page">
-    <div class="gallery-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+    <div class="leader-grid">
       <div class="leader-card">
-        <img src="Kareem.png" class="leader-pic" alt="Kareem">
-        <div style="font-family:'Orbitron'; font-size:1.8rem; color:var(--a);">KAREEM 👑</div>
-        <p><b>كريم عمر سيد (البلدوزر)</b><br>مؤسس الامبراطوريه، المبرمج، والعقل المدبر ( الكل في الكل )</p>
-        <a href="https://wa.me/201159562785" class="contact-wa">ارسل سكرين المسابقة لكريم 📩</a>
+        <img src="Kareem.png" class="leader-pic">
+        <div style="font-family:'Orbitron'; color:var(--a); font-size:1.2rem;">KAREEM 👑</div>
+        <p style="font-size:0.8rem;">كريم عمر (البلدوزر) - المؤسس والمبرمج</p>
+        <a href="https://wa.me/201159562785" class="contact-wa">ارسل السكرين لكريم 📩</a>
       </div>
-
       <div class="leader-card">
         <img src="shreef.png" class="leader-pic">
-        <div style="font-family:'Orbitron'; font-size:1.8rem; color:var(--s);">SHREEF ⚡</div>
-        <p><b>شريف سيد حسن (العميل)</b><br>قائد العمليات الميدانية وضابط التفاعل</p>
-        <a href="https://wa.me/201060843290" class="contact-wa">ارسل سكرين المسابقة لشريف 📩</a>
+        <div style="font-family:'Orbitron'; color:var(--s); font-size:1.2rem;">SHREEF ⚡</div>
+        <p style="font-size:0.8rem;">شريف سيد (العميل) - قائد العمليات</p>
+        <a href="https://wa.me/201060843290" class="contact-wa">ارسل السكرين لشريف 📩</a>
       </div>
-
       <div class="leader-card">
-        <img src="apqareno.png" class="leader-pic" alt="Abqarieno">
-        <div style="font-family:'Orbitron'; font-size:1.8rem; color:var(--p);">ABQARIENO 🧪</div>
-        <p><b>مصطفى محمد (العبقري)</b><br>الممول الرسمي الابداعي ورئيس مختبر الإبداع الفني</p>
-        <a href="https://wa.me/201158606601" class="contact-wa">ارسل سكرين المسابقة ل عبقرينو📩</a>
+        <img src="apqareno.png" class="leader-pic">
+        <div style="font-family:'Orbitron'; color:var(--p); font-size:1.2rem;">ABQARIENO 🧪</div>
+        <p style="font-size:0.8rem;">مصطفى محمد (العبقري) - الممول الإبداعي</p>
+        <a href="https://wa.me/201158606601" class="contact-wa">ارسل السكرين لعبقرينو 📩</a>
       </div>
     </div>
   </section>
@@ -187,15 +180,15 @@
   class P {
     constructor(x,y) {
       this.x=x; this.y=y; 
-      this.v={x:(Math.random()-0.5)*35, y:(Math.random()-0.5)*35}; 
-      this.a=1; this.s=Math.random()*6+2; 
+      this.v={x:(Math.random()-0.5)*25, y:(Math.random()-0.5)*25}; 
+      this.a=1; this.s=Math.random()*5+1; 
       this.c=`hsl(${Math.random()*360},100%,60%)`;
     }
     draw() { ctx.globalAlpha=this.a; ctx.fillStyle=this.c; ctx.beginPath(); ctx.arc(this.x,this.y,this.s,0,Math.PI*2); ctx.fill(); }
-    update() { this.x+=this.v.x; this.y+=this.v.y; this.a-=0.015; }
+    update() { this.x+=this.v.x; this.y+=this.v.y; this.a-=0.02; }
   }
 
-  function explode(x,y) { for(let i=0; i<250; i++) ps.push(new P(x,y)); }
+  function explode(x,y) { for(let i=0; i<150; i++) ps.push(new P(x,y)); }
   function animate() {
     ctx.clearRect(0,0,canvas.width,canvas.height);
     ps.forEach((p,i) => { p.update(); p.draw(); if(p.a<=0) ps.splice(i,1); });
@@ -209,7 +202,7 @@
       if(c<500){ c+=25; document.getElementById('counter').innerText=c; }
       else { 
         document.getElementById('counter').innerText="500"; 
-        explode(window.innerWidth/2, window.innerHeight/2); 
+        explode(window.innerWidth/2, window.innerHeight/3); 
         clearInterval(timer); 
       }
     }, 40);
