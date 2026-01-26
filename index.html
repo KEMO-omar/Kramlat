@@ -71,6 +71,15 @@
       100% { transform: translateY(-150px) rotate(20deg) scale(1.2); opacity: 0; }
     }
 
+    /* نافذة القصة المنبثقة */
+    #storyModal {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.96); 
+      z-index: 9999; padding: 20px; overflow-y: auto; border: 2px solid var(--p);
+      backdrop-filter: blur(10px);
+    }
+    .story-content { max-width: 600px; margin: 40px auto; text-align: right; line-height: 1.8; }
+    .close-story { background: var(--p); color: #fff; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: 900; position: fixed; top: 20px; left: 20px; z-index: 10001; }
+
     /* الشبكات */
     .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; }
     .gallery-item { border-radius: 15px; overflow: hidden; border: 2px solid var(--s); position: relative; height: 200px; background: #000; }
@@ -92,6 +101,39 @@
 
 <canvas id="cosmos"></canvas>
 
+<div id="storyModal">
+  <button class="close-story" onclick="closeStory()">إغلاق ✖️</button>
+  <div class="story-content">
+    <h2 style="color:var(--a); border-bottom:2px solid var(--s); padding-bottom:10px;">الجزء الأول: المنبه الذي لم يرن 🕒🚫</h2>
+    
+    <p>بدأ الأمر في الساعة 3:14 فجراً. استيقظ "آدم" ليس على صوت منبهه، بل على صوت صمت غريب. الصمت في شقته لم يكن هادئاً، بل كان له "طنين" يضغط على أذنيه. 🤫👂</p>
+    
+    <p>عندما نظر إلى ساعته الرقمية، وجد شيئاً جعل قلبه يقفز من مكانه: الأرقام كانت تتحرك للخلف! 😱⏳ 20... 19... 18...</p>
+    
+    <p>ارتبك آدم، فرك عينيه بشدة، وعندما نظر مرة أخرى، كانت الساعة 7:00 صباحاً والشمس تملأ الغرفة! ☀️ "مجرد كابوس"، تمتم لنفسه وهو يتجه للمطبخ ليهدئ روعه. لكنه وجد على طاولة الطعام فنجان قهوة ساخناً، يتصاعد منه البخار، وبجانبه ورقة مكتوبة بخط يده هو: ☕📝</p>
+    
+    <blockquote style="background:var(--glass); border-right:5px solid var(--p); padding:15px; margin:20px 0; border-radius:0 10px 10px 0;">"لا تفتح الباب إذا طرقوا ثلاث مرات. انتظر الرابعة." 🚫🚪</blockquote>
+
+    <p>آدم يعيش بمفرده تماماً.. وهو متأكد أنه لم يصنع قهوة بعد! 😨</p>
+    
+    <h3 style="color:var(--s);">اللغز يتصاعد 🕵️‍♂️🔥</h3>
+    <p>بينما كان يحاول استيعاب الموقف، سمع صوت خطوات ثقيلة في الممر خارج شقته.. خطوات معدنية ومنتظمة. الخطوات توقفت تماماً أمام بابه. 👣👣</p>
+    
+    <p>طرق.. (سكت آدم وأنفاسه مسموعة) 🔇 طرق.. (قبض يده على سكين المطبخ بشدة) 🔪 طرق.. ساد سكون قاتل. 💀</p>
+    
+    <p>تذكر آدم التحذير في الورقة: "انتظر الرابعة". مرت دقيقة، دقيقتان.. لم تأتِ الطرقة الرابعة. قرر آدم، بدافع الفضول القاتل، أن ينظر من فتحة الباب الصغيرة (العين السحرية). 👀🚪</p>
+    
+    <p>ما رآه لم يكن شخصاً غريباً.. بل كان يرى نفسه! 👤👤 آدم آخر، يقف في الممر، يرتدي ملابس لم يلبسها آدم منذ سنوات، وكان "الآدم الآخر" ينظر مباشرة إلى فتحة الباب ويبتسم ابتسامة عريضة غير طبيعية، ويحمل في يده صندوقاً خشبياً صغيراً. 📦🤡</p>
+    
+    <p>وفجأة، وقبل أن يرمش آدم، اختفى الشخص في الممر تماماً، وسمع صوتاً بارداً يأتي من خلفه، من داخل الشقة الفارغة: "ألم تشرب قهوتك بعد؟" ☕️👤</p>
+    
+    <div style="text-align:center; margin-top:30px; padding:20px; border:1px dashed var(--a);">
+      <p style="color:var(--a); font-weight:bold;">تفتكر إيه اللي هيحصل لما آدم يلف ويبص وراه؟ 😨</p>
+      <a href="https://whatsapp.com/channel/0029VbAqgz23WHTOe8lXeM1N" class="main-btn">تابع الجزء الثاني على القناة 🚀🍭</a>
+    </div>
+  </div>
+</div>
+
 <nav class="cosmic-nav">
   <a class="nav-link active" onclick="nav('home', this)">الرئيسية</a>
   <a class="nav-link" onclick="nav('journey', this)">عن كرملات</a>
@@ -110,6 +152,7 @@
       <div style="color:var(--a); font-weight:900; letter-spacing:5px; font-size: 1.1rem;">KRAMLAT</div>
       <div class="ad-banner"><img src="kesa.png"></div>
       <h3>القصه نزلت دلوقتي يلا خش اقراها</h3>
+      <button class="main-btn" style="background:linear-gradient(45deg, var(--s), var(--p)); margin-bottom:10px;" onclick="showStory()">📖 اقرأ الجزء الأول الآن</button>
       <a href="https://whatsapp.com/channel/0029VbAqgz23WHTOe8lXeM1N" class="main-btn">دخول البوابة الرسمية 🚀🍭</a>
     </div>
   </section>
@@ -195,6 +238,16 @@
 </div>
 
 <script>
+  // وظائف القصة
+  function showStory() {
+    document.getElementById('storyModal').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  }
+  function closeStory() {
+    document.getElementById('storyModal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+  }
+
   function rotateLogo() {
     const logo = document.getElementById('logoImg');
     if(!logo.classList.contains('rotate')) {
@@ -213,7 +266,6 @@
       el.innerText = text;
       el.style.left = x + 'px';
       el.style.top = y + 'px';
-      // تشتيت الألوان والعشوائية
       el.style.color = `hsl(${Math.random()*360}, 100%, 70%)`;
       document.body.appendChild(el);
       setTimeout(() => el.remove(), 800);
@@ -268,4 +320,4 @@
   startCounter();
 </script>
 </body>
-</html>
+  </html>
