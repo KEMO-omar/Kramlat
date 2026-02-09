@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>إمبراطورية كرملات | Kramlat Ultimate 🍭</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Orbitron:wght@900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <style>
     :root {
       --p: #ff007f; --s: #00d4ff; --a: #ccff00; --bg: #010103;
@@ -71,15 +73,6 @@
       100% { transform: translateY(-150px) rotate(20deg) scale(1.2); opacity: 0; }
     }
 
-    /* نافذة القصة المنبثقة */
-    #storyModal {
-      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.96); 
-      z-index: 9999; padding: 20px; overflow-y: auto; border: 2px solid var(--p);
-      backdrop-filter: blur(10px);
-    }
-    .story-content { max-width: 600px; margin: 40px auto; text-align: right; line-height: 1.8; }
-    .close-story { background: var(--p); color: #fff; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: 900; position: fixed; top: 20px; left: 20px; z-index: 10001; }
-
     /* الشبكات */
     .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; }
     .gallery-item { border-radius: 15px; overflow: hidden; border: 2px solid var(--s); position: relative; height: 200px; background: #000; }
@@ -94,56 +87,39 @@
     .winner-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
     @media (min-width: 600px) { .winner-grid { grid-template-columns: repeat(4, 1fr); } }
 
-    footer { text-align: center; padding: 30px 10px; color: var(--p); font-weight: 900; font-size: 0.8rem; border-top: 1px solid var(--glass); margin-top: 20px; }
+    /* فوتر احترافي جديد */
+    .social-footer {
+      text-align: center;
+      padding: 40px 10px;
+      background: rgba(0, 0, 0, 0.6);
+      border-top: 2px solid var(--p);
+      margin-top: 50px;
+      border-radius: 30px 30px 0 0;
+    }
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .social-icons a {
+      color: #fff;
+      font-size: 2.2rem;
+      transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .social-icons a:hover { transform: translateY(-10px) scale(1.2); }
+    .fa-facebook:hover { color: #1877F2; filter: drop-shadow(0 0 10px #1877F2); }
+    .fa-instagram:hover { color: #E4405F; filter: drop-shadow(0 0 10px #E4405F); }
+    .fa-tiktok:hover { color: #fff; filter: drop-shadow(0 0 10px #fff); }
+    .fa-globe:hover { color: var(--a); filter: drop-shadow(0 0 10px var(--a)); }
+    
+    .copy-text { color: var(--p); font-weight: 900; font-size: 0.85rem; margin-top: 10px; }
   </style>
 </head>
 <body>
 
 <canvas id="cosmos"></canvas>
-
-<div id="storyModal">
-  <button class="close-story" onclick="closeStory()">اطلع ✖️</button>
-  <div class="story-content">
-    <h2 style="color:var(--a); border-bottom:2px solid var(--s); padding-bottom:10px;">الجزء الأول: المنبه الذي لم يرن 🕒🚫</h2>
-    
-    <p>بدأ الأمر في الساعة 3:14 فجراً. استيقظ "آدم" ليس على صوت منبهه، بل على صوت صمت غريب. الصمت في شقته لم يكن هادئاً، بل كان له "طنين" يضغط على أذنيه. 🤫👂</p>
-    
-    <p>عندما نظر إلى ساعته الرقمية، وجد شيئاً جعل قلبه يقفز من مكانه: الأرقام كانت تتحرك للخلف! 😱⏳ 20... 19... 18...</p>
-    
-    <p>ارتبك آدم، فرك عينيه بشدة، وعندما نظر مرة أخرى، كانت الساعة 7:00 صباحاً والشمس تملأ الغرفة! ☀️ "مجرد كابوس"، تمتم لنفسه وهو يتجه للمطبخ ليهدئ روعه. لكنه وجد على طاولة الطعام فنجان قهوة ساخناً، يتصاعد منه البخار، وبجانبه ورقة مكتوبة بخط يده هو: ☕📝</p>
-    
-    <blockquote style="background:var(--glass); border-right:5px solid var(--p); padding:15px; margin:20px 0; border-radius:0 10px 10px 0;">"لا تفتح الباب إذا طرقوا ثلاث مرات. انتظر الرابعة." 🚫🚪</blockquote>
-
-    <p>آدم يعيش بمفرده تماماً.. وهو متأكد أنه لم يصنع قهوة بعد! 😨</p>
-    
-    <h3 style="color:var(--s);">اللغز يتصاعد 🕵️‍♂️🔥</h3>
-    <p>بينما كان يحاول استيعاب الموقف، سمع صوت خطوات ثقيلة في الممر خارج شقته.. خطوات معدنية ومنتظمة. الخطوات توقفت تماماً أمام بابه. 👣👣</p>
-    
-    <p>طرق.. (سكت آدم وأنفاسه مسموعة) 🔇 طرق.. (قبض يده على سكين المطبخ بشدة) 🔪 طرق.. ساد سكون قاتل. 💀</p>
-    
-    <p>تذكر آدم التحذير في الورقة: "انتظر الرابعة". مرت دقيقة، دقيقتان.. لم تأتِ الطرقة الرابعة. قرر آدم، بدافع الفضول القاتل، أن ينظر من فتحة الباب الصغيرة (العين السحرية). 👀🚪</p>
-    
-    <p>ما رآه لم يكن شخصاً غريباً.. بل كان يرى نفسه! 👤👤 آدم آخر، يقف في الممر، يرتدي ملابس لم يلبسها آدم منذ سنوات، وكان "الآدم الآخر" ينظر مباشرة إلى فتحة الباب ويبتسم ابتسامة عريضة غير طبيعية، ويحمل في يده صندوقاً خشبياً صغيراً. 📦🤡</p>
-    
-    <p>وفجأة، وقبل أن يرمش آدم، اختفى الشخص في الممر تماماً، وسمع صوتاً بارداً يأتي من خلفه، من داخل الشقة الفارغة: "ألم تشرب قهوتك بعد؟" ☕️👤</p>
-    <h2 style="color:var(--a); border-bottom:2px solid var(--s); padding-bottom:10px;">الجزء الثاني 🔵😲 : صدى الثقوب الزمنيه</h2>
-    
-    <div style="text-align:center; margin-top:30px; padding:20px; border:1px dashed var(--a);">
-      <p style="color:var(--a); font-weight:bold;">
-تصلب آدم في مكانه، والسكين سقطت من يده لترتطم بالأرض بصوت معدني حاد 🔪، تردد صداه في أركان المطبخ كأنه صرخة مكتومة. ببطء شديد، وبأنفاس تلاحق بعضها البعض، التفت آدم خلفه.. لكنه لم يجد أحداً! المطبخ كان فارغاً تماماً، إلا من فنجان القهوة الذي لا يزال يتصاعد منه بخار كثيف، وكأن شخصاً كان يرتشف منه منذ ثانية واحدة. ☕️
-فجأة، انطفأت أنوار الشقة بالكامل، وساد ظلام دامس ثقيل، لدرجة أن آدم لم يعد يرى كف يده أمام وجهه. وسط هذا السكون المرعب، بدأ يسمع صوتاً رخيماً، عميقاً، لا يأتي من مكان محدد، بل يبدو وكأنه ينبعث من داخل جدران الشقة نفسها.
-الصوت الغامض:
--"القهوة تبرد يا آدم.. والوقت أيضاً لا يظل ساخناً للأبد. تلك الورقة التي وجدتها؟ أنت لم تكتبها اليوم.. أنت كتبتها منذ سنوات طويلة، لكي تحذر نفسك من هذه اللحظة، لكنك اخترت أن تنسى." ⌛️
-شعر آدم ببرودة شديدة تكتسح المكان، وفجأة ظهر الصندوق الخشبي (الذي كان يحمله شبيهه في الممر) فوق طاولة المطبخ تحت ضوء باهت مجهول المصدر! الصندوق بدأ يهتز بعنف، ويصدر منه صوت "خربشة" أظافر حادة تحاول اختراق الخشب من الداخل، وصوت أنفاس ثقيلة تخرج من فتحاته الصغيرة. 📦
-آدم تراجع للخلف حتى اصطدم بالثلاجة، صرخ بصوت مخنوق: "من أنت؟ وكيف عرفت بشأن الورقة؟"
-الصوت: "أنا 'المراقب'.. جئت لأغلق الثغرة التي فتحتها الساعة 3:14. أمامك وقت محدد لتعرف ما بداخل الصندوق، وإذا لم تفتحه قبل أن تدق الساعة الثامنة، ستمحو هذه الدقيقة وجودك من العالم تماماً."
-وفجأة، بدأت الأرض تحت قدمي آدم تهتز، وصورة وجهه في مرآة المطبخ بدأت تتغير وتتحول لملامح شخص آخر لا يعرفه، يرتدي بدلة رسمية وينظر إليه ببرود مخيف. 🪞👤
-ما هو السر الذي يخفيه الصندوق؟ ومن هو هذا "المراقب" الذي يتحكم في إضاءة الشقة وزمانها؟
-(انتظروا الجزء الثالث: "انزلاق الذاكرة") ⛓️ الموعد القادم.. هل سيجرؤ آدم على فتح الصندوق؟ 📦🔥</p>
-      <a href="https://whatsapp.com/channel/0029VbAqgz23WHTOe8lXeM1N" class="main-btn">تابع الجزء الثالث على القناة 🚀🍭</a>
-    </div>
-  </div>
-</div>
 
 <nav class="cosmic-nav">
   <a class="nav-link active" onclick="nav('home', this)">الرئيسية</a>
@@ -161,9 +137,7 @@
       <img src="logo.png" class="main-logo" id="logoImg" onclick="rotateLogo()">
       <h1 class="hero-title" id="counter">0</h1>
       <div style="color:var(--a); font-weight:900; letter-spacing:5px; font-size: 1.1rem;">KRAMLAT</div>
-      <div class="ad-banner"><img src="kesa.png"></div>
-      <h3>القصه نزلت دلوقتي يلا خش اقراها</h3>
-      <button class="main-btn" style="background:linear-gradient(45deg, var(--s), var(--p)); margin-bottom:10px;" onclick="showStory()">📖 اقرأ الجزء الأول و الثاني  الآن يا نجم </button>
+      <h3>مرحباً بكم في إمبراطورية كرملات</h3>
       <a href="https://whatsapp.com/channel/0029VbAqgz23WHTOe8lXeM1N" class="main-btn">دخول البوابة الرسمية 🚀🍭</a>
     </div>
   </section>
@@ -173,12 +147,12 @@
       <h2 style="color:var(--s); text-align:center; font-size: 1.5rem;">🍭 إمبراطورية كرملات</h2>
       <p style="text-align: center; font-weight: bold; color: var(--a);">"حيث لا مكان للملل!" 😎🔥</p>
       <p style="font-size: 0.95rem; text-align: right; border-bottom: 1px solid var(--glass); padding-bottom: 10px;">
-         لو بتدور على التقليدي يبقى أنت في المكان الغلط، لأن كرملات مش مجرد قناة، دي عالم موازي فيه كل حاجة وأي حاجة تخطر على بالك!و خلي بالك دي كرملات يعني بوابه الفوضي الابداعيه 🌀✨
+         لو بتدور على التقليدي يبقى أنت في المكان الغلط، لأن كرملات مش مجرد قناة، دي عالم موازي فيه كل حاجة وأي حاجة تخطر على بالك! و خلي بالك دي كرملات يعني بوابه الفوضي الابداعيه 🌀✨
       </p>
       
       <b style="color: var(--p);">📦 إيه اللي مستنيك؟ (دوس على المربع):</b>
       <div class="feature-tag" onclick="spawnEmoji(' ههههه 😂 ضحك', event)"> 😹 ركن الضحك الهستيري: ميمز خرافية هتفصلك ضحك وملصقات عمرك ما تلاقيها في مكان بس عندنا عشان تبهر اصحابك .</div>
-      <div class="feature-tag" onclick="spawnEmoji('👻 رعب', event)">👻 الغموض والإثارة: حاجات هتخلي الأدرينالين يوصل للسما!زي القصص المرعبه والمشوقه اللي تخليك تقراها غصب عنك 🚨</div>
+      <div class="feature-tag" onclick="spawnEmoji('👻 رعب', event)">👻 الغموض والإثارة: حاجات هتخلي الأدرينالين يوصل للسما! زي القصص المرعبه والمشوقه اللي تخليك تقراها غصب عنك 🚨</div>
       <div class="feature-tag" onclick="spawnEmoji('🎥 WoW', event)">🎥 إبداع بصري: إيديتس مجنونة معمول بمزاج عالي ساعات بتضحك و ساعات تطير المخ.</div>
       <div class="feature-tag" onclick="spawnEmoji('😲 OMG!', event)">🧠 كبسولات معرفية: معلومات ممتعة هتصدمك بجد معلومات تخليك تقول ؟.</div>
       <div class="feature-tag" onclick="spawnEmoji('🎮 Weeee', event)">🎮 ألعاب وتحديات: مساحة للتفاعل والمغامرة بنعملها للمتابعين و كمان بين المتابعين وبعض .</div>
@@ -242,25 +216,31 @@
         <div style="font-family:'Orbitron'; color:var(--p); font-size:1.3rem;">ABQARIENO 🧪</div>
         <p style="font-size:0.85rem;">مصطفى محمد (العبقري)<br>الممول الإبداعي</p>
         <a href="https://wa.me/201158606601" class="contact-wa">ارسل السكرين لعبقرينو 📩</a>
-      <a href="https://mostafa7html7-pixel.github.io/Abqarieno-/"class="main-btn">دخول لموقع عبقرينو الجامد 🚀🍭</a>
+        <a href="https://mostafa7html7-pixel.github.io/Abqarieno-/"class="main-btn">دخول لموقع عبقرينو الجامد 🚀🍭</a>
       </div>
     </div>
   </section>
 
-  <footer>تمت البرمجة بواسطة الكينج KAREEM OMAR - مبرمج مصري © 2026</footer>
+  <footer class="social-footer">
+    <div class="social-icons">
+      <a href="https://www.facebook.com/profile.php?id=61585345501431" target="_blank">
+        <i class="fab fa-facebook"></i>
+      </a>
+      <a href="https://www.instagram.com/kareemomar1511?igsh=MWRrc2VmNHI2d3ZicQ==" target="_blank">
+        <i class="fab fa-instagram"></i>
+      </a>
+      <a href="https://www.tiktok.com/@kareem_omar15" target="_blank">
+        <i class="fab fa-tiktok"></i>
+      </a>
+      <a href="https://kemo-omar.github.io/Kareem/" target="_blank">
+        <i class="fas fa-globe"></i>
+      </a>
+    </div>
+    <p class="copy-text">تمت البرمجة بواسطة الكينج KAREEM OMAR - مبرمج مصري © 2026</p>
+  </footer>
 </div>
 
 <script>
-  // وظائف القصة
-  function showStory() {
-    document.getElementById('storyModal').style.display = 'block';
-    document.body.style.overflow = 'hidden';
-  }
-  function closeStory() {
-    document.getElementById('storyModal').style.display = 'none';
-    document.body.style.overflow = 'auto';
-  }
-
   function rotateLogo() {
     const logo = document.getElementById('logoImg');
     if(!logo.classList.contains('rotate')) {
@@ -321,10 +301,12 @@
 
   function startCounter() {
     let c=0; 
+    const counterEl = document.getElementById('counter');
+    if(!counterEl) return;
     const timer = setInterval(() => { 
-      if(c<500){ c+=25; document.getElementById('counter').innerText=c; }
+      if(c<500){ c+=25; counterEl.innerText=c; }
       else { 
-        document.getElementById('counter').innerText="500"; 
+        counterEl.innerText="500"; 
         explode(window.innerWidth/2, window.innerHeight/3); 
         clearInterval(timer); 
       }
@@ -333,4 +315,4 @@
   startCounter();
 </script>
 </body>
-  </html>
+</html>
