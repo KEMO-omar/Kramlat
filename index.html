@@ -7,7 +7,7 @@
   
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#ff007f">
-  <link rel="apple-touch-icon" href="13.png">
+  <link rel="apple-touch-icon" href="logo.png">
 
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Orbitron:wght@900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -107,7 +107,7 @@
   
   <section id="home" class="page active">
     <div class="hero">
-      <img src="logo.png" class="main-logo" id="logoImg" onclick="rotateLogo()">
+      <img src="logo8.png" class="main-logo" id="logoImg" onclick="rotateLogo()">
       <h1 class="hero-title" id="counter">0</h1>
       <div style="color:var(--a); font-weight:900; letter-spacing:8px; font-size: 1.3rem; margin-top: 10px;">KRAMLAT</div>
       <h2 style="font-weight: 400; opacity: 0.9;">أهلاً بك في المقر الرئيسي للكرملاتية</h2>
@@ -124,6 +124,7 @@
       <p style="text-align: center; font-weight: bold; color: var(--a);">"حيث لا مكان للملل!" 😎🔥</p>
       <p>لو بتدور على التقليدي يبقى أنت في المكان الغلط، لأن كرملات مش مجرد قناة، دي عالم موازي فيه كل حاجة وأي حاجة تخطر على بالك! و خلي بالك دي كرملات يعني بوابه الفوضي الابداعيه 🌀✨</p>
       
+      <div class="feature-tag" onclick="spawnEmoji('🌜 رمضان كريم ✨', event)">رمضان: محتوى ديني عن رمضان و افضل ملصقات (تم تعبئة الكرش بنجاح)🌜✨🤣</div>
       <div class="feature-tag" onclick="spawnEmoji('😂', event)">🌟 😹 ركن الضحك الهستيري: ميمز خرافية هتفصلك ضحك وملصقات عمرك ما تلاقيها في مكان بس عندنا عشان تبهر اصحابك .</div>
       <div class="feature-tag" onclick="spawnEmoji('👻', event)">⚡ 👻 الغموض والإثارة: حاجات هتخلي الأدرينالين يوصل للسما! زي القصص المرعبه والمشوقه اللي تخليك تقراها غصب عنك 🚨</div>
       <div class="feature-tag" onclick="spawnEmoji('🎥', event)">🎥 إبداع بصري: إيديتس مجنونة معمول بمزاج عالي ساعات بتضحك و ساعات تطير المخ.</div>
@@ -230,7 +231,7 @@
     let c=0; const el = document.getElementById('counter');
     const timer = setInterval(() => { 
       if(c<500){ c+=25; el.innerText=c; }
-      else { el.innerText="500"; explode(window.innerWidth/2, window.innerHeight/3); clearInterval(timer); }
+      else { el.innerText="رمضان كريم 🌜"; explode(window.innerWidth/2, window.innerHeight/3); clearInterval(timer); }
     }, 40);
   }
   startCounter();
