@@ -9,7 +9,7 @@
   <meta name="theme-color" content="#ff007f">
   <link rel="apple-touch-icon" href="logo.png">
 
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Orbitron:wght@900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Orbitron:wght@900&family=Amiri:wght@700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
@@ -17,6 +17,9 @@
       --p: #ff007f; --s: #00d4ff; --a: #ccff00; --bg: #010103;
       --glass: rgba(255, 255, 255, 0.08);
       --gold: #ffd700;
+      /* ألوان إضافية لرمضان */
+      --ramadan-gold: #f39c12;
+      --ramadan-glow: rgba(243, 156, 18, 0.5);
     }
     * { box-sizing: border-box; cursor: crosshair; scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
     body { 
@@ -29,12 +32,12 @@
     nav.cosmic-nav {
       position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
       background: rgba(0,0,0,0.92); backdrop-filter: blur(20px);
-      padding: 8px 12px; border-radius: 20px; border: 1px solid var(--p);
-      display: flex; gap: 6px; z-index: 1000; box-shadow: 0 0 25px rgba(255, 0, 127, 0.4);
+      padding: 8px 12px; border-radius: 20px; border: 1px solid var(--ramadan-gold); /* تغيير لون الحدود */
+      display: flex; gap: 6px; z-index: 1000; box-shadow: 0 0 25px var(--ramadan-glow); /* تغيير لون التوهج */
       width: 95%; max-width: 750px; justify-content: center; flex-wrap: wrap;
     }
     .nav-link { color: #fff; text-decoration: none; font-weight: 900; font-size: clamp(0.7rem, 2.2vw, 0.85rem); cursor: pointer; white-space: nowrap; transition: 0.3s; padding: 8px 12px; border-radius: 12px; }
-    .nav-link.active { color: var(--a); text-shadow: 0 0 10px var(--a); background: rgba(255,255,255,0.1); }
+    .nav-link.active { color: var(--ramadan-gold); text-shadow: 0 0 10px var(--ramadan-gold); background: rgba(243, 156, 18, 0.1); }
     
     .install-nav-btn { background: var(--a); color: #000 !important; border: 1px solid #fff; display: none; animation: pulse 2s infinite; }
     @keyframes pulse { 0% {transform: scale(1);} 50% {transform: scale(1.05);} 100% {transform: scale(1);} }
@@ -46,47 +49,61 @@
 
     /* الهيرو */
     .hero { text-align: center; min-height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-    .main-logo { width: 130px; height: 130px; border-radius: 50%; border: 4px solid var(--p); box-shadow: 0 0 40px var(--p); margin-bottom: 25px; transition: 0.5s; cursor: pointer; }
+    .main-logo { width: 130px; height: 130px; border-radius: 50%; border: 4px solid var(--ramadan-gold); box-shadow: 0 0 40px var(--ramadan-glow); margin-bottom: 25px; transition: 0.5s; cursor: pointer; }
     .main-logo.rotate { transform: rotate(360deg); }
-    .hero-title { font-family: 'Orbitron'; font-size: clamp(80px, 28vw, 150px); margin: 0; background: linear-gradient(to bottom, #fff, var(--s), var(--p)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 20px var(--s)); line-height: 0.8; }
     
-    .stats-card { background: linear-gradient(135deg, rgba(255,0,127,0.2), rgba(0,212,255,0.2)); border: 2px solid var(--s); padding: 15px 30px; border-radius: 20px; margin: 25px 0; font-weight: 900; color: #fff; backdrop-filter: blur(10px); }
-    .stats-card span { color: var(--a); font-size: 1.5rem; text-shadow: 0 0 10px var(--a); }
+    /* تنسيق خاص لعنوان الهيرو ليناسب رمضان */
+    .hero-title { font-family: 'Orbitron'; font-size: clamp(80px, 28vw, 150px); margin: 0; background: linear-gradient(to bottom, #fff, var(--ramadan-gold), #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 20px var(--ramadan-glow)); line-height: 0.8; }
+    
+    /* تنسيق خاص لـ "رمضان كريم" داخل العداد */
+    .hero-title.ramadan-text {
+      font-family: 'Amiri', serif;
+      font-size: clamp(40px, 15vw, 80px);
+      background: linear-gradient(to bottom, var(--gold), #fff, var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 15px var(--ramadan-glow));
+    }
 
-    .main-btn { background: linear-gradient(45deg, var(--p), var(--s)); color: #fff; padding: 18px 40px; border-radius: 50px; text-decoration: none; font-weight: 900; font-size: 1.1rem; display: inline-block; box-shadow: 0 0 30px var(--p); border:none; cursor: pointer; transition: 0.3s; text-align: center; }
+    .stats-card { background: linear-gradient(135deg, rgba(243, 156, 18, 0.2), rgba(255, 255, 255, 0.1)); border: 2px solid var(--ramadan-gold); padding: 15px 30px; border-radius: 20px; margin: 25px 0; font-weight: 900; color: #fff; backdrop-filter: blur(10px); }
+    .stats-card span { color: var(--ramadan-gold); font-size: 1.5rem; text-shadow: 0 0 10px var(--ramadan-glow); }
+
+    .main-btn { background: linear-gradient(45deg, var(--ramadan-gold), var(--gold)); color: #000; padding: 18px 40px; border-radius: 50px; text-decoration: none; font-weight: 900; font-size: 1.1rem; display: inline-block; box-shadow: 0 0 30px var(--ramadan-glow); border:none; cursor: pointer; transition: 0.3s; text-align: center; }
+    .main-btn:hover { transform: scale(1.05); box-shadow: 0 0 40px var(--ramadan-glow); }
 
     /* الأقسام */
-    .content-box { background: var(--glass); padding: 35px; border-radius: 40px; border: 2px solid var(--p); line-height: 1.8; backdrop-filter: blur(15px); text-align: right; }
-    .section-title { color: var(--a); font-size: 2rem; text-align: center; margin-bottom: 25px; text-shadow: 0 0 15px var(--a); }
+    .content-box { background: var(--glass); padding: 35px; border-radius: 40px; border: 2px solid var(--ramadan-gold); line-height: 1.8; backdrop-filter: blur(15px); text-align: right; }
+    .section-title { color: var(--ramadan-gold); font-size: 2rem; text-align: center; margin-bottom: 25px; text-shadow: 0 0 15px var(--ramadan-glow); }
     
-    .feature-tag { background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 15px; margin: 12px 0; display: block; border-right: 5px solid var(--s); font-weight: 700; color: #eee; transition: 0.3s; cursor: pointer; position: relative; overflow: hidden; }
-    .feature-tag:hover { background: rgba(255,255,255,0.1); transform: translateX(-10px); border-right-color: var(--a); }
+    .feature-tag { background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 15px; margin: 12px 0; display: block; border-right: 5px solid var(--ramadan-gold); font-weight: 700; color: #eee; transition: 0.3s; cursor: pointer; position: relative; overflow: hidden; }
+    .feature-tag:hover { background: rgba(243, 156, 18, 0.1); transform: translateX(-10px); border-right-color: var(--gold); }
 
     .floating-emoji { position: fixed; pointer-events: none; z-index: 9999; animation: flyUp 0.8s ease-out forwards; font-size: 1.5rem; text-shadow: 0 0 10px #fff; }
     @keyframes flyUp { 0% { transform: translateY(0) scale(0.5); opacity: 1; } 100% { transform: translateY(-150px) rotate(20deg) scale(1.2); opacity: 0; } }
 
     /* لوحة الشرف */
     .winner-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; }
-    .winner-item { background: linear-gradient(145deg, #1a1a1a, #000); border: 2px solid var(--gold); padding: 20px; border-radius: 20px; text-align: center; font-weight: 900; color: var(--gold); box-shadow: 0 0 15px rgba(255, 215, 0, 0.2); }
+    .winner-item { background: linear-gradient(145deg, #2c3e50, #000); border: 2px solid var(--gold); padding: 20px; border-radius: 20px; text-align: center; font-weight: 900; color: var(--gold); box-shadow: 0 0 15px rgba(255, 215, 0, 0.2); }
 
     /* الشبكات والجاليري */
     .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
-    .gallery-item { border-radius: 15px; overflow: hidden; border: 2px solid var(--s); position: relative; height: 200px; background: #000; }
+    .gallery-item { border-radius: 15px; overflow: hidden; border: 2px solid var(--ramadan-gold); position: relative; height: 200px; background: #000; }
     .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
-    .gallery-label { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.8); padding: 8px; text-align: center; color: var(--a); font-weight: 900; font-size: 0.75rem; }
+    .gallery-label { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.8); padding: 8px; text-align: center; color: var(--gold); font-weight: 900; font-size: 0.75rem; }
 
     /* القادة */
     .leader-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-    .leader-card { background: rgba(255,255,255,0.03); border: 2px solid var(--s); border-radius: 35px; padding: 30px; text-align: center; transition: 0.4s; }
-    .leader-pic { width: 140px; height: 140px; border-radius: 50%; border: 4px solid var(--a); margin-bottom: 15px; object-fit: cover; box-shadow: 0 0 20px var(--a); }
+    .leader-card { background: rgba(255,255,255,0.03); border: 2px solid var(--ramadan-gold); border-radius: 35px; padding: 30px; text-align: center; transition: 0.4s; }
+    .leader-pic { width: 140px; height: 140px; border-radius: 50%; border: 4px solid var(--gold); margin-bottom: 15px; object-fit: cover; box-shadow: 0 0 20px var(--ramadan-glow); }
     .contact-wa { background: #25d366; color: #fff; padding: 12px 20px; border-radius: 50px; text-decoration: none; font-weight: 900; display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem; margin-top: 10px; }
 
-    input { width:100%; padding:16px; margin:10px 0; border-radius:15px; border:2px solid var(--s); background:rgba(0,0,0,0.5); color:#fff; text-align:center; font-family: 'Cairo'; font-size: 1rem; }
+    input { width:100%; padding:16px; margin:10px 0; border-radius:15px; border:2px solid var(--ramadan-gold); background:rgba(0,0,0,0.5); color:#fff; text-align:center; font-family: 'Cairo'; font-size: 1rem; }
 
-    .social-footer { text-align: center; padding: 40px 10px; background: rgba(0, 0, 0, 0.6); border-top: 2px solid var(--p); margin-top: 50px; border-radius: 30px 30px 0 0; }
+    .social-footer { text-align: center; padding: 40px 10px; background: rgba(0, 0, 0, 0.6); border-top: 2px solid var(--ramadan-gold); margin-top: 50px; border-radius: 30px 30px 0 0; }
     .social-icons { display: flex; justify-content: center; gap: 25px; margin-bottom: 20px; }
     .social-icons a { color: #fff; font-size: 2.2rem; transition: 0.4s; }
-    .copy-text { color: var(--p); font-weight: 900; font-size: 0.85rem; }
+    .social-icons a:hover { color: var(--ramadan-gold); transform: scale(1.1); }
+    .copy-text { color: var(--ramadan-gold); font-weight: 900; font-size: 0.85rem; }
   </style>
 </head>
 <body>
@@ -109,10 +126,10 @@
     <div class="hero">
       <img src="logo8.png" class="main-logo" id="logoImg" onclick="rotateLogo()">
       <h1 class="hero-title" id="counter">0</h1>
-      <div style="color:var(--a); font-weight:900; letter-spacing:8px; font-size: 1.3rem; margin-top: 10px;">KRAMLAT</div>
+      <div style="color:var(--ramadan-gold); font-weight:900; letter-spacing:8px; font-size: 1.3rem; margin-top: 10px;">KRAMLAT</div>
       <h2 style="font-weight: 400; opacity: 0.9;">أهلاً بك في المقر الرئيسي للكرملاتية</h2>
       <div class="stats-card">
-        <i class="fa-solid fa-bolt-lightning"></i> نحن نكبر الآن! إجمالي الزيارات: <span id="visitCount">0</span>
+        <i class="fa-solid fa-moon"></i> رمضان كريم! إجمالي الزيارات: <span id="visitCount">0</span>
       </div>
       <a href="https://whatsapp.com/channel/0029VbAqgz23WHTOe8lXeM1N" class="main-btn">انضم للمجرة الرسمية 🚀🍭</a>
     </div>
@@ -121,7 +138,7 @@
   <section id="journey" class="page">
     <div class="content-box">
       <h2 class="section-title">🔮 قصة إمبراطورية كرملات</h2>
-      <p style="text-align: center; font-weight: bold; color: var(--a);">"حيث لا مكان للملل!" 😎🔥</p>
+      <p style="text-align: center; font-weight: bold; color: var(--ramadan-gold);">"حيث لا مكان للملل!" 😎🔥</p>
       <p>لو بتدور على التقليدي يبقى أنت في المكان الغلط، لأن كرملات مش مجرد قناة، دي عالم موازي فيه كل حاجة وأي حاجة تخطر على بالك! و خلي بالك دي كرملات يعني بوابه الفوضي الابداعيه 🌀✨</p>
       
       <div class="feature-tag" onclick="spawnEmoji('🌜 رمضان كريم ✨', event)">رمضان: محتوى ديني عن رمضان و افضل ملصقات (تم تعبئة الكرش بنجاح)🌜✨🤣</div>
@@ -134,7 +151,7 @@
   </section>
 
   <section id="contest" class="page">
-    <div class="content-box" style="border-color: var(--a); text-align: center;">
+    <div class="content-box" style="border-color: var(--ramadan-gold); text-align: center;">
       <h2 class="section-title">🏆 المسابقة الكونية الكبرى</h2>
       <p>هل تمتلك الشجاعة لتكون الفائز القادم؟ سجل بياناتك الآن لتدخل في السحب التلقائي.</p>
       <div style="max-width: 500px; margin: 0 auto;">
@@ -149,10 +166,10 @@
     <div class="content-box" style="border-color: var(--gold);">
       <h2 class="section-title" style="color: var(--gold);">🏆 لوحة شرف الأساطير</h2>
       <div class="winner-grid">
-        <div class="winner-item"><i class="fas fa-crown"></i><br>جودة</div>
+        <div class="winner-item"><i class="fas fa-moon"></i><br>جودة</div>
         <div class="winner-item"><i class="fas fa-star"></i><br>سراچ</div>
-        <div class="winner-item"><i class="fas fa-bolt"></i><br>حمزة</div>
-        <div class="winner-item"><i class="fas fa-fire"></i><br>عبدالله</div>
+        <div class="winner-item"><i class="fas fa-mosque"></i><br>حمزة</div>
+        <div class="winner-item"><i class="fas fa-kaaba"></i><br>عبدالله</div>
       </div>
     </div>
   </section>
@@ -173,20 +190,20 @@
     <div class="leader-grid">
       <div class="leader-card">
         <img src="Kareem.png" class="leader-pic">
-        <div style="font-family:'Orbitron'; color:var(--a); font-size:1.5rem;">KAREEM 👑</div>
+        <div style="font-family:'Orbitron'; color:var(--ramadan-gold); font-size:1.5rem;">KAREEM 👑</div>
         <p><b>كريم عمر (البلدوزر)</b><br>المؤسس والمبرمج الأول.<br>صاحب الرؤية التي بدأت كل شيء.</p>
         <a href="https://wa.me/201159562785" class="contact-wa">تواصل مع الكينج 📩</a>
         <br><br><a href="https://kemo-omar.github.io/Kareem/" class="main-btn" style="padding:10px 20px; font-size:0.8rem;">موقع كيمو الرسمي 🚀</a>
       </div>
       <div class="leader-card">
         <img src="shreef.png" class="leader-pic">
-        <div style="font-family:'Orbitron'; color:var(--s); font-size:1.5rem;">SHREEF ⚡</div>
+        <div style="font-family:'Orbitron'; color:var(--ramadan-gold); font-size:1.5rem;">SHREEF ⚡</div>
         <p><b>شريف سيد (العميل)</b><br>قائد العمليات الميدانية.<br>المسؤول عن النظام والتوسع.</p>
         <a href="https://wa.me/201060843290" class="contact-wa">تواصل مع العميل 📩</a>
       </div>
       <div class="leader-card">
         <img src="apqareno.png" class="leader-pic">
-        <div style="font-family:'Orbitron'; color:var(--p); font-size:1.5rem;">ABQARIENO 🧪</div>
+        <div style="font-family:'Orbitron'; color:var(--ramadan-gold); font-size:1.5rem;">ABQARIENO 🧪</div>
         <p><b>مصطفى محمد (العبقري)</b><br>الممول الإبداعي ومهندس الأفكار.<br>من يحول الأحلام إلى حقيقة بصرية.</p>
         <a href="https://wa.me/201158606601" class="contact-wa">تواصل مع العبقري 📩</a>
         <br><br><a href="https://mostafa7html7-pixel.github.io/Abqarieno-/" class="main-btn" style="padding:10px 20px; font-size:0.8rem;">موقع عبقرينو الجامد 🚀</a>
@@ -227,11 +244,23 @@
   visitRef.transaction(current => (current || 0) + 1);
   visitRef.on('value', snap => { document.getElementById('visitCount').innerText = snap.val() || 0; });
 
+  // دالة العداد مع التعديل لرمضان
   function startCounter() {
     let c=0; const el = document.getElementById('counter');
+    // التأكد من إزالة التنسيق الخاص لرمضان في البداية إذا كان موجوداً
+    el.classList.remove('ramadan-text');
+    
     const timer = setInterval(() => { 
-      if(c<500){ c+=25; el.innerText=c; }
-      else { el.innerText="رمضان كريم 🌜"; explode(window.innerWidth/2, window.innerHeight/3); clearInterval(timer); }
+      if(c<500){ 
+        c+=25; el.innerText=c; 
+      }
+      else { 
+        clearInterval(timer); 
+        // تطبيق التنسيق الجميل والخط الخاص لرمضان كريم
+        el.innerText="رمضان كريم 🌜"; 
+        el.classList.add('ramadan-text');
+        explode(window.innerWidth/2, window.innerHeight/3); 
+      }
     }, 40);
   }
   startCounter();
@@ -281,6 +310,7 @@
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
     document.getElementById(id).classList.add('active'); el.classList.add('active');
+    // إعادة تشغيل العداد عند العودة للرئيسية
     if(id==='home') startCounter();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -297,7 +327,7 @@
     }
   }
 
-  // Canvas
+  // Canvas - تم تعديل الألوان لتناسب رمضان (ذهبي وفضي)
   const canvas = document.getElementById('cosmos');
   const ctx = canvas.getContext('2d');
   let ps = [];
@@ -306,7 +336,10 @@
   class P {
     constructor(x,y) {
       this.x=x; this.y=y; this.v={x:(Math.random()-0.5)*15, y:(Math.random()-0.5)*15}; 
-      this.a=1; this.s=Math.random()*4+1; this.c=`hsl(${Math.random()*360},100%,60%)`;
+      this.a=1; this.s=Math.random()*4+1; 
+      // ألوان رمضانية: درجات الذهبي والفضي
+      const hue = Math.random() > 0.5 ? 45 : 200; // 45 للذهبي، 200 للفضي/الأزرق السماوي
+      this.c=`hsl(${hue},100%,${70 + Math.random()*30}%)`;
     }
     draw() { ctx.globalAlpha=this.a; ctx.fillStyle=this.c; ctx.beginPath(); ctx.arc(this.x,this.y,this.s,0,Math.PI*2); ctx.fill(); }
     update() { this.x+=this.v.x; this.y+=this.v.y; this.a-=0.02; }
