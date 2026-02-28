@@ -4,6 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>إمبراطورية كرملات | Kramlat Ultimate 🍭</title>
+  
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ff007f">
+  <link rel="apple-touch-icon" href="13.png">
+
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Orbitron:wght@900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
@@ -48,9 +53,6 @@
 
     .hero-title { font-family: 'Orbitron'; font-size: clamp(70px, 25vw, 130px); margin: 0; background: linear-gradient(to bottom, #fff, var(--s), var(--p)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 15px var(--s)); line-height: 1; }
     
-    .ad-banner { margin-top: 20px; border: 2px solid var(--a); border-radius: 20px; padding: 8px; background: rgba(0,0,0,0.5); width: 100%; max-width: 350px; box-shadow: 0 0 20px var(--a); }
-    .ad-banner img { width: 100%; border-radius: 10px; display: block; }
-
     .main-btn { background: linear-gradient(45deg, var(--p), var(--s)); color: #fff; padding: 15px 30px; border-radius: 50px; text-decoration: none; font-weight: 900; font-size: 1rem; display: inline-block; box-shadow: 0 0 25px var(--p); margin-top: 15px; border:none; text-align: center; cursor: pointer; }
 
     /* المربعات التفاعلية */
@@ -87,39 +89,33 @@
     .winner-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
     @media (min-width: 600px) { .winner-grid { grid-template-columns: repeat(4, 1fr); } }
 
-    /* فوتر احترافي جديد */
+    /* فوتر */
     .social-footer {
-      text-align: center;
-      padding: 40px 10px;
-      background: rgba(0, 0, 0, 0.6);
-      border-top: 2px solid var(--p);
-      margin-top: 50px;
-      border-radius: 30px 30px 0 0;
+      text-align: center; padding: 40px 10px; background: rgba(0, 0, 0, 0.6);
+      border-top: 2px solid var(--p); margin-top: 50px; border-radius: 30px 30px 0 0;
     }
-    .social-icons {
-      display: flex;
-      justify-content: center;
-      gap: 25px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-    .social-icons a {
-      color: #fff;
-      font-size: 2.2rem;
-      transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
+    .social-icons { display: flex; justify-content: center; gap: 25px; margin-bottom: 20px; flex-wrap: wrap; }
+    .social-icons a { color: #fff; font-size: 2.2rem; transition: 0.4s; }
     .social-icons a:hover { transform: translateY(-10px) scale(1.2); }
-    .fa-facebook:hover { color: #1877F2; filter: drop-shadow(0 0 10px #1877F2); }
-    .fa-instagram:hover { color: #E4405F; filter: drop-shadow(0 0 10px #E4405F); }
-    .fa-tiktok:hover { color: #fff; filter: drop-shadow(0 0 10px #fff); }
-    .fa-globe:hover { color: var(--a); filter: drop-shadow(0 0 10px var(--a)); }
+    .fa-facebook:hover { color: #1877F2; }
+    .fa-instagram:hover { color: #E4405F; }
+    .fa-globe:hover { color: var(--a); }
     
     .copy-text { color: var(--p); font-weight: 900; font-size: 0.85rem; margin-top: 10px; }
+
+    /* زر التثبيت العائم */
+    #installBtn {
+        position: fixed; bottom: 100px; left: 20px; z-index: 2000;
+        background: var(--a); color: #000; border: none; padding: 10px 20px;
+        border-radius: 50px; font-weight: 900; display: none; 
+        box-shadow: 0 0 20px var(--a); cursor: pointer;
+    }
   </style>
 </head>
 <body>
 
 <canvas id="cosmos"></canvas>
+<button id="installBtn"><i class="fa-solid fa-download"></i> تثبيت التطبيق 🍭</button>
 
 <nav class="cosmic-nav">
   <a class="nav-link active" onclick="nav('home', this)">الرئيسية</a>
@@ -138,6 +134,7 @@
       <h1 class="hero-title" id="counter">0</h1>
       <div style="color:var(--a); font-weight:900; letter-spacing:5px; font-size: 1.1rem;">KRAMLAT</div>
       <h3>مرحباً بكم في إمبراطورية كرملات</h3>
+      <p id="visit-count-text" style="color:var(--s); font-weight:bold;">جاري حساب الزيارات...</p>
       <a href="https://whatsapp.com/channel/0029VbAqgz23WHTOe8lXeM1N" class="main-btn">دخول البوابة الرسمية 🚀🍭</a>
     </div>
   </section>
@@ -168,10 +165,10 @@
   <section id="contest" class="page">
     <div style="text-align: center; background: rgba(0,0,0,0.6); padding: 25px; border-radius: 30px; border: 2px solid var(--a); backdrop-filter: blur(10px);">
       <h2 style="color:var(--a); font-size: 1.5rem;">🥇 سحب المسابقة الكونيه الكبرى</h2>
-      <p style="font-size: 0.85rem; margin-bottom: 15px;">لما تسجل بياناتك خد سكرين شوت فوراً! وابعتها لحد من المديرين عشان اسمك يدخل السحب يلا مستني ايه مش عايز اسمك يكون في لوحة الشرف زي اخواتك</p>
-      <input type="text" placeholder="الاسم الثلاثي" style="width:100%; padding:14px; margin:8px 0; border-radius:12px; border:2px solid var(--s); background:#000; color:#fff; text-align:center;">
-      <input type="tel" placeholder="رقم الواتساب" style="width:100%; padding:14px; margin:8px 0; border-radius:12px; border:2px solid var(--s); background:#000; color:#fff; text-align:center;">
-      <button class="main-btn" style="width: 100%;" onclick="alert('سجلنا يا بطل! ابعت السكرين للمديرين')">دخول السحب 🏁</button>
+      <p style="font-size: 0.85rem; margin-bottom: 15px;">لما تسجل بياناتك خد سكرين شوت فوراً! وابعتها لحد من المديرين عشان اسمك يدخل السحب</p>
+      <input type="text" id="userName" placeholder="الاسم الثلاثي" style="width:100%; padding:14px; margin:8px 0; border-radius:12px; border:2px solid var(--s); background:#000; color:#fff; text-align:center;">
+      <input type="tel" id="userPhone" placeholder="رقم الواتساب" style="width:100%; padding:14px; margin:8px 0; border-radius:12px; border:2px solid var(--s); background:#000; color:#fff; text-align:center;">
+      <button class="main-btn" id="submitBtn" style="width: 100%;" onclick="submitToContest()">دخول السحب 🏁</button>
     </div>
   </section>
 
@@ -223,24 +220,85 @@
 
   <footer class="social-footer">
     <div class="social-icons">
-      <a href="https://www.facebook.com/profile.php?id=61585345501431" target="_blank">
-        <i class="fab fa-facebook"></i>
-      </a>
-      <a href="https://www.instagram.com/kareemomar1511?igsh=MWRrc2VmNHI2d3ZicQ==" target="_blank">
-        <i class="fab fa-instagram"></i>
-      </a>
-      <a href="https://www.tiktok.com/@kareem_omar15" target="_blank">
-        <i class="fab fa-tiktok"></i>
-      </a>
-      <a href="https://kemo-omar.github.io/Kareem/" target="_blank">
-        <i class="fas fa-globe"></i>
-      </a>
+      <a href="https://www.facebook.com/profile.php?id=61585345501431" target="_blank"><i class="fab fa-facebook"></i></a>
+      <a href="https://www.instagram.com/kareemomar1511?igsh=MWRrc2VmNHI2d3ZicQ==" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.tiktok.com/@kareem_omar15" target="_blank"><i class="fab fa-tiktok"></i></a>
+      <a href="https://kemo-omar.github.io/Kareem/" target="_blank"><i class="fas fa-globe"></i></a>
     </div>
     <p class="copy-text">تمت البرمجة بواسطة الكينج KAREEM OMAR - مبرمج مصري © 2026</p>
   </footer>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
 <script>
+  // تهيئة Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyCZr_OpkCfEFxeTrOc5fp7F_uvyVGlT5Yc",
+    authDomain: "karamlat-99e6e.firebaseapp.com",
+    databaseURL: "https://karamlat-99e6e-default-rtdb.firebaseio.com",
+    projectId: "karamlat-99e6e",
+    storageBucket: "karamlat-99e6e.firebasestorage.app",
+    messagingSenderId: "817474436731",
+    appId: "1:817474436731:web:6b4c38fd98048f1a3b6cde"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  const rtdb = firebase.database();
+
+  // حساب عدد الزيارات
+  const visitRef = rtdb.ref('stats/visits');
+  visitRef.transaction(current => (current || 0) + 1);
+  visitRef.on('value', snap => {
+    document.getElementById('visit-count-text').innerText = "إجمالي زيارات الإمبراطورية: " + snap.val();
+  });
+
+  // تسجيل في المسابقة
+  async function submitToContest() {
+    const name = document.getElementById('userName').value;
+    const phone = document.getElementById('userPhone').value;
+    const btn = document.getElementById('submitBtn');
+
+    if(!name || !phone) return alert('يا كرملاتي سجل بياناتك كاملة! 🍭');
+
+    btn.innerText = "جاري التسجيل...";
+    try {
+      await db.collection("contest_entries").add({
+        name: name,
+        phone: phone,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      alert('تم تسجيلك يا بطل! خد سكرين شوت وابعتها للمديرين فوراً 🚀');
+      btn.innerText = "تم التسجيل بنجاح ✅";
+    } catch (e) {
+      alert('حصل مشكلة.. جرب تاني');
+      btn.innerText = "دخول السحب 🏁";
+    }
+  }
+
+  // --- كود التثبيت PWA ---
+  let deferredPrompt;
+  const installBtn = document.getElementById('installBtn');
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.style.display = 'block';
+  });
+
+  installBtn.addEventListener('click', async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') installBtn.style.display = 'none';
+      deferredPrompt = null;
+    }
+  });
+
+  // --- باقي أكواد التصميم الأصلية (بالميلي) ---
   function rotateLogo() {
     const logo = document.getElementById('logoImg');
     if(!logo.classList.contains('rotate')) {
@@ -252,13 +310,11 @@
   function spawnEmoji(text, event) {
     const x = event.clientX || (event.touches ? event.touches[0].clientX : 0);
     const y = event.clientY || (event.touches ? event.touches[0].clientY : 0);
-    
     for(let i=0; i<5; i++) {
       const el = document.createElement('div');
       el.className = 'floating-emoji';
       el.innerText = text;
-      el.style.left = x + 'px';
-      el.style.top = y + 'px';
+      el.style.left = x + 'px'; el.style.top = y + 'px';
       el.style.color = `hsl(${Math.random()*360}, 100%, 70%)`;
       document.body.appendChild(el);
       setTimeout(() => el.remove(), 800);
@@ -305,11 +361,7 @@
     if(!counterEl) return;
     const timer = setInterval(() => { 
       if(c<500){ c+=25; counterEl.innerText=c; }
-      else { 
-        counterEl.innerText="500"; 
-        explode(window.innerWidth/2, window.innerHeight/3); 
-        clearInterval(timer); 
-      }
+      else { counterEl.innerText="500"; explode(window.innerWidth/2, window.innerHeight/3); clearInterval(timer); }
     }, 40);
   }
   startCounter();
