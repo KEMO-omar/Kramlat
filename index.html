@@ -16,6 +16,7 @@
     :root {
       --p: #ff007f; --s: #00d4ff; --a: #ccff00; --bg: #010103;
       --glass: rgba(255, 255, 255, 0.08);
+      --gold: #ffd700;
     }
     * { box-sizing: border-box; cursor: crosshair; scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
     body { 
@@ -24,84 +25,68 @@
     }
     canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 
-    /* نافبار مطور */
+    /* نافبار */
     nav.cosmic-nav {
       position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
       background: rgba(0,0,0,0.92); backdrop-filter: blur(20px);
-      padding: 8px 10px; border-radius: 20px; border: 1px solid var(--p);
-      display: flex; gap: 4px; z-index: 1000; box-shadow: 0 0 20px var(--p);
-      width: 95%; max-width: 650px; justify-content: center; flex-wrap: wrap;
+      padding: 8px 12px; border-radius: 20px; border: 1px solid var(--p);
+      display: flex; gap: 6px; z-index: 1000; box-shadow: 0 0 25px rgba(255, 0, 127, 0.4);
+      width: 95%; max-width: 750px; justify-content: center; flex-wrap: wrap;
     }
-    .nav-link { color: #fff; text-decoration: none; font-weight: 900; font-size: clamp(0.6rem, 2vw, 0.75rem); cursor: pointer; white-space: nowrap; transition: 0.3s; padding: 6px 8px; border-radius: 10px; }
-    .nav-link.active { color: var(--a); text-shadow: 0 0 10px var(--a); background: rgba(255,255,255,0.05); }
+    .nav-link { color: #fff; text-decoration: none; font-weight: 900; font-size: clamp(0.7rem, 2.2vw, 0.85rem); cursor: pointer; white-space: nowrap; transition: 0.3s; padding: 8px 12px; border-radius: 12px; }
+    .nav-link.active { color: var(--a); text-shadow: 0 0 10px var(--a); background: rgba(255,255,255,0.1); }
     
-    /* زر التثبيت في النافبار */
-    .install-nav-btn {
-        background: var(--a); color: #000 !important; border: 1px solid #fff;
-        box-shadow: 0 0 10px var(--a); display: none; /* هيظهر بالجافاسكريبت */
-    }
+    .install-nav-btn { background: var(--a); color: #000 !important; border: 1px solid #fff; display: none; animation: pulse 2s infinite; }
+    @keyframes pulse { 0% {transform: scale(1);} 50% {transform: scale(1.05);} 100% {transform: scale(1);} }
 
-    .container { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 110px 15px 40px 15px; }
-    .page { display: none; animation: zoomIn 0.5s ease forwards; width: 100%; }
+    .container { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 120px 15px 40px 15px; }
+    .page { display: none; animation: zoomIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; width: 100%; }
     .page.active { display: block; }
-    @keyframes zoomIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    @keyframes zoomIn { from { opacity: 0; transform: scale(0.9) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
-    .hero { text-align: center; min-height: 50vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-    .main-logo { 
-      width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--p); 
-      box-shadow: 0 0 30px var(--p); margin-bottom: 20px;
-      transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer;
-    }
+    /* الهيرو */
+    .hero { text-align: center; min-height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+    .main-logo { width: 130px; height: 130px; border-radius: 50%; border: 4px solid var(--p); box-shadow: 0 0 40px var(--p); margin-bottom: 25px; transition: 0.5s; cursor: pointer; }
     .main-logo.rotate { transform: rotate(360deg); }
-    .hero-title { font-family: 'Orbitron'; font-size: clamp(70px, 25vw, 130px); margin: 0; background: linear-gradient(to bottom, #fff, var(--s), var(--p)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 15px var(--s)); line-height: 1; }
+    .hero-title { font-family: 'Orbitron'; font-size: clamp(80px, 28vw, 150px); margin: 0; background: linear-gradient(to bottom, #fff, var(--s), var(--p)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 20px var(--s)); line-height: 0.8; }
     
-    .stats-badge {
-        background: rgba(212, 0, 255, 0.1); border: 1px solid var(--s);
-        padding: 10px 20px; border-radius: 50px; margin: 15px 0;
-        font-weight: 900; color: var(--s); text-shadow: 0 0 10px var(--s);
-    }
+    .stats-card { background: linear-gradient(135deg, rgba(255,0,127,0.2), rgba(0,212,255,0.2)); border: 2px solid var(--s); padding: 15px 30px; border-radius: 20px; margin: 25px 0; font-weight: 900; color: #fff; backdrop-filter: blur(10px); }
+    .stats-card span { color: var(--a); font-size: 1.5rem; text-shadow: 0 0 10px var(--a); }
 
-    .main-btn { background: linear-gradient(45deg, var(--p), var(--s)); color: #fff; padding: 15px 30px; border-radius: 50px; text-decoration: none; font-weight: 900; font-size: 1rem; display: inline-block; box-shadow: 0 0 25px var(--p); margin-top: 15px; border:none; text-align: center; cursor: pointer; }
+    .main-btn { background: linear-gradient(45deg, var(--p), var(--s)); color: #fff; padding: 18px 40px; border-radius: 50px; text-decoration: none; font-weight: 900; font-size: 1.1rem; display: inline-block; box-shadow: 0 0 30px var(--p); border:none; cursor: pointer; transition: 0.3s; text-align: center; }
 
-    .journey-box { background: var(--glass); padding: 25px; border-radius: 30px; border: 2px solid var(--p); line-height: 1.8; backdrop-filter: blur(15px); text-align: right; }
-    .feature-tag { 
-      background: rgba(255, 0, 127, 0.2); padding: 10px 15px; border-radius: 12px; 
-      margin: 8px 0; display: block; border: 1px solid var(--p); 
-      font-weight: 900; color: #fff; font-size: 0.9rem; transition: 0.3s;
-      cursor: pointer; position: relative; overflow: hidden;
-    }
-    .feature-tag:active { transform: scale(0.98); background: var(--p); }
+    /* الأقسام */
+    .content-box { background: var(--glass); padding: 35px; border-radius: 40px; border: 2px solid var(--p); line-height: 1.8; backdrop-filter: blur(15px); text-align: right; }
+    .section-title { color: var(--a); font-size: 2rem; text-align: center; margin-bottom: 25px; text-shadow: 0 0 15px var(--a); }
+    
+    .feature-tag { background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 15px; margin: 12px 0; display: block; border-right: 5px solid var(--s); font-weight: 700; color: #eee; transition: 0.3s; cursor: pointer; position: relative; overflow: hidden; }
+    .feature-tag:hover { background: rgba(255,255,255,0.1); transform: translateX(-10px); border-right-color: var(--a); }
 
-    .floating-emoji {
-      position: fixed; pointer-events: none; z-index: 9999;
-      animation: flyUp 0.8s ease-out forwards; font-size: 1.5rem;
-      white-space: nowrap; font-weight: 900; text-shadow: 0 0 10px #fff;
-    }
+    .floating-emoji { position: fixed; pointer-events: none; z-index: 9999; animation: flyUp 0.8s ease-out forwards; font-size: 1.5rem; text-shadow: 0 0 10px #fff; }
     @keyframes flyUp { 0% { transform: translateY(0) scale(0.5); opacity: 1; } 100% { transform: translateY(-150px) rotate(20deg) scale(1.2); opacity: 0; } }
 
-    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; }
+    /* لوحة الشرف */
+    .winner-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; }
+    .winner-item { background: linear-gradient(145deg, #1a1a1a, #000); border: 2px solid var(--gold); padding: 20px; border-radius: 20px; text-align: center; font-weight: 900; color: var(--gold); box-shadow: 0 0 15px rgba(255, 215, 0, 0.2); }
+
+    /* الشبكات والجاليري */
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
     .gallery-item { border-radius: 15px; overflow: hidden; border: 2px solid var(--s); position: relative; height: 200px; background: #000; }
     .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
     .gallery-label { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.8); padding: 8px; text-align: center; color: var(--a); font-weight: 900; font-size: 0.75rem; }
 
+    /* القادة */
     .leader-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-    .leader-card { background: var(--glass); border: 2px solid var(--p); border-radius: 30px; padding: 25px; text-align: center; }
-    .leader-pic { width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--s); margin-bottom: 10px; object-fit: cover; }
+    .leader-card { background: rgba(255,255,255,0.03); border: 2px solid var(--s); border-radius: 35px; padding: 30px; text-align: center; transition: 0.4s; }
+    .leader-pic { width: 140px; height: 140px; border-radius: 50%; border: 4px solid var(--a); margin-bottom: 15px; object-fit: cover; box-shadow: 0 0 20px var(--a); }
     .contact-wa { background: #25d366; color: #fff; padding: 12px 20px; border-radius: 50px; text-decoration: none; font-weight: 900; display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem; margin-top: 10px; }
 
-    .winner-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    @media (min-width: 600px) { .winner-grid { grid-template-columns: repeat(4, 1fr); } }
+    input { width:100%; padding:16px; margin:10px 0; border-radius:15px; border:2px solid var(--s); background:rgba(0,0,0,0.5); color:#fff; text-align:center; font-family: 'Cairo'; font-size: 1rem; }
 
     .social-footer { text-align: center; padding: 40px 10px; background: rgba(0, 0, 0, 0.6); border-top: 2px solid var(--p); margin-top: 50px; border-radius: 30px 30px 0 0; }
-    .social-icons { display: flex; justify-content: center; gap: 25px; margin-bottom: 20px; flex-wrap: wrap; }
+    .social-icons { display: flex; justify-content: center; gap: 25px; margin-bottom: 20px; }
     .social-icons a { color: #fff; font-size: 2.2rem; transition: 0.4s; }
-    .social-icons a:hover { transform: translateY(-10px) scale(1.2); }
-    .fa-facebook:hover { color: #1877F2; } .fa-instagram:hover { color: #E4405F; } .fa-tiktok:hover { color: #fff; } .fa-globe:hover { color: var(--a); }
-    .copy-text { color: var(--p); font-weight: 900; font-size: 0.85rem; margin-top: 10px; }
-
-    /* تنسيق الحقول لتصبح فخمة */
-    input { width:100%; padding:14px; margin:8px 0; border-radius:12px; border:2px solid var(--s); background:#000; color:#fff; text-align:center; font-family: 'Cairo'; font-weight: bold; }
-    input:focus { border-color: var(--a); outline: none; box-shadow: 0 0 10px var(--a); }
+    .copy-text { color: var(--p); font-weight: 900; font-size: 0.85rem; }
   </style>
 </head>
 <body>
@@ -109,7 +94,7 @@
 <canvas id="cosmos"></canvas>
 
 <nav class="cosmic-nav">
-  <a class="nav-link install-nav-btn" id="installBtn" onclick="installApp()">تثبيت كرملات 🍭</a>
+  <a class="nav-link install-nav-btn" id="installBtn" onclick="installApp()"><i class="fa-solid fa-download"></i> تثبيت 🍭</a>
   <a class="nav-link active" onclick="nav('home', this)">الرئيسية</a>
   <a class="nav-link" onclick="nav('journey', this)">عن كرملات</a>
   <a class="nav-link" onclick="nav('contest', this)">المسابقة</a>
@@ -124,51 +109,55 @@
     <div class="hero">
       <img src="logo.png" class="main-logo" id="logoImg" onclick="rotateLogo()">
       <h1 class="hero-title" id="counter">0</h1>
-      <div style="color:var(--a); font-weight:900; letter-spacing:5px; font-size: 1.1rem;">KRAMLAT</div>
-      <h3>مرحباً بكم في إمبراطورية كرملات</h3>
-      <div class="stats-badge"><i class="fa-solid fa-eye"></i> إجمالي الزيارات: <span id="visitCount">0</span></div>
-      <a href="https://whatsapp.com/channel/0029VbAqgz23WHTOe8lXeM1N" class="main-btn">دخول البوابة الرسمية 🚀🍭</a>
+      <div style="color:var(--a); font-weight:900; letter-spacing:8px; font-size: 1.3rem; margin-top: 10px;">KRAMLAT</div>
+      <h2 style="font-weight: 400; opacity: 0.9;">أهلاً بك في المقر الرئيسي للكرملاتية</h2>
+      <div class="stats-card">
+        <i class="fa-solid fa-bolt-lightning"></i> نحن نكبر الآن! إجمالي الزيارات: <span id="visitCount">0</span>
+      </div>
+      <a href="https://whatsapp.com/channel/0029VbAqgz23WHTOe8lXeM1N" class="main-btn">انضم للمجرة الرسمية 🚀🍭</a>
     </div>
   </section>
 
   <section id="journey" class="page">
-    <div class="journey-box">
-      <h2 style="color:var(--s); text-align:center; font-size: 1.5rem;">🍭 إمبراطورية كرملات</h2>
+    <div class="content-box">
+      <h2 class="section-title">🔮 قصة إمبراطورية كرملات</h2>
       <p style="text-align: center; font-weight: bold; color: var(--a);">"حيث لا مكان للملل!" 😎🔥</p>
-      <p style="font-size: 0.95rem; text-align: right; border-bottom: 1px solid var(--glass); padding-bottom: 10px;">
-         لو بتدور على التقليدي يبقى أنت في المكان الغلط، لأن كرملات مش مجرد قناة، دي عالم موازي فيه كل حاجة وأي حاجة تخطر على بالك! و خلي بالك دي كرملات يعني بوابه الفوضي الابداعيه 🌀✨
-      </p>
-      <b style="color: var(--p);">📦 إيه اللي مستنيك؟ (دوس على المربع):</b>
-      <div class="feature-tag" onclick="spawnEmoji(' 😂', event)"> 😹 ركن الضحك الهستيري: ميمز خرافية هتفصلك ضحك وملصقات عمرك ما تلاقيها في مكان بس عندنا عشان تبهر اصحابك .</div>
-      <div class="feature-tag" onclick="spawnEmoji(' 👻', event)"> 👻 الغموض والإثارة: حاجات هتخلي الأدرينالين يوصل للسما! زي القصص المرعبه والمشوقه اللي تخليك تقراها غصب عنك 🚨</div>
-      <div class="feature-tag" onclick="spawnEmoji(' 🎥', event)"> 🎥 إبداع بصري: إيديتس مجنونة معمول بمزاج عالي ساعات بتضحك و ساعات تطير المخ.</div>
-      <div class="feature-tag" onclick="spawnEmoji(' 🧠', event)"> 🧠 كبسولات معرفية: معلومات ممتعة هتصدمك بجد معلومات تخليك تقول ؟.</div>
-      <div class="feature-tag" onclick="spawnEmoji(' 🎮', event)"> 🎮 ألعاب وتحديات: مساحة للتفاعل والمغامرة بنعملها للمتابعين و كمان بين المتابعين وبعض .</div>
+      <p>لو بتدور على التقليدي يبقى أنت في المكان الغلط، لأن كرملات مش مجرد قناة، دي عالم موازي فيه كل حاجة وأي حاجة تخطر على بالك! و خلي بالك دي كرملات يعني بوابه الفوضي الابداعيه 🌀✨</p>
+      
+      <div class="feature-tag" onclick="spawnEmoji('😂', event)">🌟 😹 ركن الضحك الهستيري: ميمز خرافية هتفصلك ضحك وملصقات عمرك ما تلاقيها في مكان بس عندنا عشان تبهر اصحابك .</div>
+      <div class="feature-tag" onclick="spawnEmoji('👻', event)">⚡ 👻 الغموض والإثارة: حاجات هتخلي الأدرينالين يوصل للسما! زي القصص المرعبه والمشوقه اللي تخليك تقراها غصب عنك 🚨</div>
+      <div class="feature-tag" onclick="spawnEmoji('🎥', event)">🎥 إبداع بصري: إيديتس مجنونة معمول بمزاج عالي ساعات بتضحك و ساعات تطير المخ.</div>
+      <div class="feature-tag" onclick="spawnEmoji('🧠', event)">🧠 كبسولات معرفية: معلومات ممتعة هتصدمك بجد معلومات تخليك تقول إيه ده؟.</div>
+      <div class="feature-tag" onclick="spawnEmoji('🎮', event)">🎮 ألعاب وتحديات: مساحة للتفاعل والمغامرة بنعملها للمتابعين و كمان بين المتابعين وبعض.</div>
     </div>
   </section>
 
   <section id="contest" class="page">
-    <div style="text-align: center; background: rgba(0,0,0,0.6); padding: 25px; border-radius: 30px; border: 2px solid var(--a); backdrop-filter: blur(10px);">
-      <h2 style="color:var(--a); font-size: 1.5rem;">🥇 سحب المسابقة الكونيه الكبرى</h2>
-      <p style="font-size: 0.85rem; margin-bottom: 15px;">سجل بياناتك وخد سكرين شوت وابعتها للمديرين</p>
-      <input type="text" id="joinName" placeholder="الاسم الثلاثي">
-      <input type="tel" id="joinPhone" placeholder="رقم الواتساب">
-      <button class="main-btn" id="contestBtn" style="width: 100%;" onclick="sendToFirebase()">دخول السحب 🏁</button>
+    <div class="content-box" style="border-color: var(--a); text-align: center;">
+      <h2 class="section-title">🏆 المسابقة الكونية الكبرى</h2>
+      <p>هل تمتلك الشجاعة لتكون الفائز القادم؟ سجل بياناتك الآن لتدخل في السحب التلقائي.</p>
+      <div style="max-width: 500px; margin: 0 auto;">
+        <input type="text" id="joinName" placeholder="اكتب اسمك الثلاثي هنا...">
+        <input type="tel" id="joinPhone" placeholder="رقم الواتساب الخاص بك">
+        <button class="main-btn" id="contestBtn" style="width: 100%; margin-top: 20px;" onclick="sendToFirebase()">تأكيد دخول السحب 🏁</button>
+      </div>
     </div>
   </section>
 
   <section id="hall-of-fame" class="page">
-    <h2 style="text-align:center; color:#ffd700; font-size:1.5rem; margin-bottom: 20px;">🏆 لوحة شرف الأساطير</h2>
-    <div class="winner-grid">
-      <div style="border:2px solid #ffd700; padding:15px; border-radius:15px; text-align:center;">جودة</div>
-      <div style="border:2px solid #ffd700; padding:15px; border-radius:15px; text-align:center;">سراچ</div>
-      <div style="border:2px solid #ffd700; padding:15px; border-radius:15px; text-align:center;">حمزة</div>
-      <div style="border:2px solid #ffd700; padding:15px; border-radius:15px; text-align:center;">عبدالله</div>
+    <div class="content-box" style="border-color: var(--gold);">
+      <h2 class="section-title" style="color: var(--gold);">🏆 لوحة شرف الأساطير</h2>
+      <div class="winner-grid">
+        <div class="winner-item"><i class="fas fa-crown"></i><br>جودة</div>
+        <div class="winner-item"><i class="fas fa-star"></i><br>سراچ</div>
+        <div class="winner-item"><i class="fas fa-bolt"></i><br>حمزة</div>
+        <div class="winner-item"><i class="fas fa-fire"></i><br>عبدالله</div>
+      </div>
     </div>
   </section>
 
   <section id="events" class="page">
-    <h2 style="text-align:center; color:var(--s); font-size: 1.5rem; margin-bottom:20px;">🗓️ سجل الاحتفالات</h2>
+    <h2 class="section-title">🗓️ سجل الاحتفالات التاريخية</h2>
     <div class="gallery-grid">
       <div class="gallery-item"><img src="100.png"><div class="gallery-label">🎉 احتفال الـ 100</div></div>
       <div class="gallery-item"><img src="200.png"><div class="gallery-label">🔥 احتفال الـ 200</div></div>
@@ -179,26 +168,27 @@
   </section>
 
   <section id="team" class="page">
+    <h2 class="section-title">🎖️ مجلس إدارة الإمبراطورية</h2>
     <div class="leader-grid">
       <div class="leader-card">
         <img src="Kareem.png" class="leader-pic">
-        <div style="font-family:'Orbitron'; color:var(--a); font-size:1.3rem;">KAREEM 👑</div>
-        <p>كريم عمر👑 (البلدوزر)<br>المؤسس والمبرمج</p>
-        <a href="https://wa.me/201159562785" class="contact-wa">ارسل السكرين لكريم 📩</a>
-        <a href="https://kemo-omar.github.io/Kareem/" class="main-btn">موقع كيمو الرسمي 🚀</a>
+        <div style="font-family:'Orbitron'; color:var(--a); font-size:1.5rem;">KAREEM 👑</div>
+        <p><b>كريم عمر (البلدوزر)</b><br>المؤسس والمبرمج الأول.<br>صاحب الرؤية التي بدأت كل شيء.</p>
+        <a href="https://wa.me/201159562785" class="contact-wa">تواصل مع الكينج 📩</a>
+        <br><br><a href="https://kemo-omar.github.io/Kareem/" class="main-btn" style="padding:10px 20px; font-size:0.8rem;">موقع كيمو الرسمي 🚀</a>
       </div>
       <div class="leader-card">
         <img src="shreef.png" class="leader-pic">
-        <div style="font-family:'Orbitron'; color:var(--s); font-size:1.3rem;">SHREEF ⚡</div>
-        <p>شريف سيد (العميل)<br>قائد العمليات</p>
-        <a href="https://wa.me/201060843290" class="contact-wa">ارسل السكرين لشريف 📩</a>
+        <div style="font-family:'Orbitron'; color:var(--s); font-size:1.5rem;">SHREEF ⚡</div>
+        <p><b>شريف سيد (العميل)</b><br>قائد العمليات الميدانية.<br>المسؤول عن النظام والتوسع.</p>
+        <a href="https://wa.me/201060843290" class="contact-wa">تواصل مع العميل 📩</a>
       </div>
       <div class="leader-card">
         <img src="apqareno.png" class="leader-pic">
-        <div style="font-family:'Orbitron'; color:var(--p); font-size:1.3rem;">ABQARIENO 🧪</div>
-        <p>مصطفى محمد (العبقري)<br>الممول الإبداعي</p>
-        <a href="https://wa.me/201158606601" class="contact-wa">ارسل السكرين لعبقرينو 📩</a>
-        <a href="https://mostafa7html7-pixel.github.io/Abqarieno-/" class="main-btn">موقع عبقرينو الجامد 🚀</a>
+        <div style="font-family:'Orbitron'; color:var(--p); font-size:1.5rem;">ABQARIENO 🧪</div>
+        <p><b>مصطفى محمد (العبقري)</b><br>الممول الإبداعي ومهندس الأفكار.<br>من يحول الأحلام إلى حقيقة بصرية.</p>
+        <a href="https://wa.me/201158606601" class="contact-wa">تواصل مع العبقري 📩</a>
+        <br><br><a href="https://mostafa7html7-pixel.github.io/Abqarieno-/" class="main-btn" style="padding:10px 20px; font-size:0.8rem;">موقع عبقرينو الجامد 🚀</a>
       </div>
     </div>
   </section>
@@ -210,7 +200,7 @@
       <a href="https://www.tiktok.com/@kareem_omar15" target="_blank"><i class="fab fa-tiktok"></i></a>
       <a href="https://kemo-omar.github.io/Kareem/" target="_blank"><i class="fas fa-globe"></i></a>
     </div>
-    <p class="copy-text">تمت البرمجة بواسطة الكينج KAREEM OMAR - مبرمج مصري © 2026</p>
+    <p class="copy-text">Developed by KAREEM OMAR © 2026</p>
   </footer>
 </div>
 
@@ -218,7 +208,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
 <script>
-  // بيانات Firebase الخاصة بك
+  // Firebase
   const firebaseConfig = {
     apiKey: "AIzaSyCZr_OpkCfEFxeTrOc5fp7F_uvyVGlT5Yc",
     authDomain: "karamlat-99e6e.firebaseapp.com",
@@ -228,97 +218,85 @@
     messagingSenderId: "817474436731",
     appId: "1:817474436731:web:6b4c38fd98048f1a3b6cde"
   };
-
-  // تهيئة Firebase
   firebase.initializeApp(firebaseConfig);
   const rtdb = firebase.database();
 
-  // 1. حساب عدد الزيارات وحفظها (Realtime Database)
+  // العداد والزيارات
   const visitRef = rtdb.ref('site_stats/total_visits');
   visitRef.transaction(current => (current || 0) + 1);
-  visitRef.on('value', snap => {
-    document.getElementById('visitCount').innerText = snap.val() || 0;
-  });
+  visitRef.on('value', snap => { document.getElementById('visitCount').innerText = snap.val() || 0; });
 
-  // 2. إرسال بيانات المسابقة (Realtime Database)
-  function sendToFirebase() {
-    const name = document.getElementById('joinName').value;
-    const phone = document.getElementById('joinPhone').value;
-    const btn = document.getElementById('contestBtn');
-
-    if(!name || !phone) {
-        alert('سجل بياناتك يا كرملاتي يا عسل! 🍭');
-        return;
-    }
-
-    btn.innerText = "جاري الحفظ...";
-    const entryRef = rtdb.ref('contest_entries').push();
-    entryRef.set({
-      name: name,
-      phone: phone,
-      time: new Date().toLocaleString()
-    }).then(() => {
-      alert('تم التسجيل بنجاح! خد سكرين شوت وابعتها للمديرين 🚀');
-      btn.innerText = "تم التسجيل ✅";
-      document.getElementById('joinName').value = "";
-      document.getElementById('joinPhone').value = "";
-    }).catch(err => {
-      console.error(err);
-      alert('حدث خطأ! تأكد من اتصال الإنترنت.');
-      btn.innerText = "دخول السحب 🏁";
-    });
+  function startCounter() {
+    let c=0; const el = document.getElementById('counter');
+    const timer = setInterval(() => { 
+      if(c<500){ c+=25; el.innerText=c; }
+      else { el.innerText="500"; explode(window.innerWidth/2, window.innerHeight/3); clearInterval(timer); }
+    }, 40);
   }
+  startCounter();
 
-  // --- كود التثبيت PWA ---
+  // PWA & Install
   let deferredPrompt;
-  const installBtn = document.getElementById('installBtn');
-
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    installBtn.style.display = 'inline-block';
+    document.getElementById('installBtn').style.display = 'inline-block';
   });
 
   function installApp() {
     if (deferredPrompt) {
       deferredPrompt.prompt();
-      deferredPrompt.userChoice.then(res => {
-        if (res.outcome === 'accepted') installBtn.style.display = 'none';
+      deferredPrompt.userChoice.then((choice) => {
+        if (choice.outcome === 'accepted') document.getElementById('installBtn').style.display = 'none';
         deferredPrompt = null;
       });
     }
   }
 
-  // --- الوظائف الأصلية للموقع ---
-  function rotateLogo() {
-    const logo = document.getElementById('logoImg');
-    logo.classList.add('rotate');
-    setTimeout(() => logo.classList.remove('rotate'), 700);
+  // تسجل الـ Service Worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(err => console.log(err));
+    });
   }
 
-  function spawnEmoji(text, event) {
-    const x = event.clientX || (event.touches ? event.touches[0].clientX : 0);
-    const y = event.clientY || (event.touches ? event.touches[0].clientY : 0);
-    for(let i=0; i<5; i++) {
-      const el = document.createElement('div');
-      el.className = 'floating-emoji';
-      el.innerText = text;
-      el.style.left = x + 'px'; el.style.top = y + 'px';
-      document.body.appendChild(el);
-      setTimeout(() => el.remove(), 800);
-    }
+  // وظائف المسابقة
+  function sendToFirebase() {
+    const name = document.getElementById('joinName').value;
+    const phone = document.getElementById('joinPhone').value;
+    const btn = document.getElementById('contestBtn');
+    if(!name || !phone) { alert('سجل بياناتك يا عسل!'); return; }
+    btn.innerText = "جاري الحفظ...";
+    rtdb.ref('contest_entries').push({ name, phone, time: new Date().toLocaleString() })
+    .then(() => { 
+      alert('تم التسجيل بنجاح! 🚀'); 
+      btn.innerText = "تم التسجيل ✅";
+      btn.disabled = true;
+    });
   }
 
+  // التنقل
   function nav(id, el) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    el.classList.add('active');
+    document.getElementById(id).classList.add('active'); el.classList.add('active');
     if(id==='home') startCounter();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // انيميشن الخلفية والعداد
+  function rotateLogo() { const logo = document.getElementById('logoImg'); logo.classList.add('rotate'); setTimeout(()=>logo.classList.remove('rotate'),700); }
+
+  function spawnEmoji(text, event) {
+    const x = event.clientX || (event.touches ? event.touches[0].clientX : 0);
+    const y = event.clientY || (event.touches ? event.touches[0].clientY : 0);
+    for(let i=0; i<5; i++){
+      const el = document.createElement('div'); el.className = 'floating-emoji'; el.innerText = text;
+      el.style.left = x + 'px'; el.style.top = y + 'px'; document.body.appendChild(el);
+      setTimeout(() => el.remove(), 800);
+    }
+  }
+
+  // Canvas
   const canvas = document.getElementById('cosmos');
   const ctx = canvas.getContext('2d');
   let ps = [];
@@ -326,10 +304,8 @@
   window.onresize = resize; resize();
   class P {
     constructor(x,y) {
-      this.x=x; this.y=y; 
-      this.v={x:(Math.random()-0.5)*15, y:(Math.random()-0.5)*15}; 
-      this.a=1; this.s=Math.random()*4+1; 
-      this.c=`hsl(${Math.random()*360},100%,60%)`;
+      this.x=x; this.y=y; this.v={x:(Math.random()-0.5)*15, y:(Math.random()-0.5)*15}; 
+      this.a=1; this.s=Math.random()*4+1; this.c=`hsl(${Math.random()*360},100%,60%)`;
     }
     draw() { ctx.globalAlpha=this.a; ctx.fillStyle=this.c; ctx.beginPath(); ctx.arc(this.x,this.y,this.s,0,Math.PI*2); ctx.fill(); }
     update() { this.x+=this.v.x; this.y+=this.v.y; this.a-=0.02; }
@@ -341,41 +317,6 @@
     requestAnimationFrame(animate);
   }
   animate();
-  function startCounter() {
-    let c=0; const el = document.getElementById('counter');
-    const timer = setInterval(() => { 
-      if(c<500){ c+=25; el.innerText=c; }
-      else { el.innerText="500"; explode(window.innerWidth/2, window.innerHeight/3); clearInterval(timer); }
-    }, 40);
-  }
-  startCounter();
 </script>
-  // --- كود التثبيت المطور ---
-  let deferredPrompt;
-  const installBtn = document.getElementById('installBtn');
-
-  // إظهار الزرار عافية أول ما الموقع يفتح عشان تتأكد إنه موجود
-  window.addEventListener('load', () => {
-      installBtn.style.display = 'inline-block'; 
-  });
-
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    console.log('المتصفح جاهز للتثبيت! ✅');
-  });
-
-  function installApp() {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then(res => {
-        if (res.outcome === 'accepted') installBtn.style.display = 'none';
-        deferredPrompt = null;
-      });
-    } else {
-      // رسالة ذكية لو المتصفح لسه مش مستجيب
-      alert('يا إمبراطور 🍭:\n1. لو أنت أندرويد: استنى 5 ثواني وجرب تاني أو دوس على الـ 3 نقط في المتصفح واختار Install App.\n2. لو أنت آيفون: دوس على زرار "Share" وبعدين "Add to Home Screen".');
-    }
-  }
 </body>
 </html>
