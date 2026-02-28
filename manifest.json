@@ -1,0 +1,20 @@
+{
+  "name": "إمبراطورية كرملات",
+  "short_name": "كرملات",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#010103",
+  "theme_color": "#ff007f",
+  "icons": [
+    {
+      "src": "13.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "13.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
