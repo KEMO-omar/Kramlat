@@ -350,5 +350,32 @@
   }
   startCounter();
 </script>
+  // --- كود التثبيت المطور ---
+  let deferredPrompt;
+  const installBtn = document.getElementById('installBtn');
+
+  // إظهار الزرار عافية أول ما الموقع يفتح عشان تتأكد إنه موجود
+  window.addEventListener('load', () => {
+      installBtn.style.display = 'inline-block'; 
+  });
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    console.log('المتصفح جاهز للتثبيت! ✅');
+  });
+
+  function installApp() {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(res => {
+        if (res.outcome === 'accepted') installBtn.style.display = 'none';
+        deferredPrompt = null;
+      });
+    } else {
+      // رسالة ذكية لو المتصفح لسه مش مستجيب
+      alert('يا إمبراطور 🍭:\n1. لو أنت أندرويد: استنى 5 ثواني وجرب تاني أو دوس على الـ 3 نقط في المتصفح واختار Install App.\n2. لو أنت آيفون: دوس على زرار "Share" وبعدين "Add to Home Screen".');
+    }
+  }
 </body>
 </html>
