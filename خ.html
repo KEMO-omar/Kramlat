@@ -143,6 +143,45 @@
             font-size: 0.8rem;
             color: rgba(255,255,255,0.5);
         }
+        .back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 25px;
+    margin: 20px 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(248, 6, 204, 0.5);
+    border-radius: 50px;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    animation: fadeInDown 1.2s ease-out;
+}
+
+.back-btn:hover {
+    background: linear-gradient(45deg, #f806cc, #3f5efb);
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(248, 6, 204, 0.6);
+    border-color: transparent;
+}
+
+.back-btn::before {
+    content: '→'; /* سهم العودة */
+    margin-left: 10px;
+    font-size: 1.2rem;
+}
+
+/* إضافة أنيميشن الظهور إذا لم يكن موجوداً */
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
     </style>
 </head>
 <body>
@@ -150,6 +189,10 @@
     <header>
         <h1>✨ مسابقة كرملات الجامدة ✨</h1>
         <div class="subtitle">لوحة شرف الأساطير المشاركين</div>
+        <a href="index.html" class="back-btn">
+    <span>العودة للرئيسية</span>
+</a>
+
     </header>
 
     <div class="container" id="namesContainer">
@@ -220,7 +263,7 @@
     </div>
 
     <div class="footer">
-        جميع الحقوق محفوظة لمسابقة كرملات © 2024
+        جميع الحقوق محفوظة لمسابقة كرملات © 2026
     </div>
 
 </body>
