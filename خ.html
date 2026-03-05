@@ -3,266 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مسابقة كرملات الجامدة - النسخة الاحترافية</title>
+    <title>لوحة شرف كرملات 2026 🍭🏆</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-color: #f806cc;
             --secondary-color: #3f5efb;
+            --winner-gold: #ffcc00;
             --bg-dark: #0f0c29;
             --card-bg: rgba(255, 255, 255, 0.05);
             --accent-glow: rgba(248, 6, 204, 0.4);
         }
 
         body {
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
             font-family: 'Cairo', sans-serif;
             background: radial-gradient(circle at center, #240b36 0%, #000000 100%);
-            color: white;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow-x: hidden;
+            color: white; min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center;
         }
 
-        /* خلفية متحركة خفيفة */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
-            opacity: 0.1;
-            z-index: -1;
-        }
-
-        header {
-            text-align: center;
-            padding: 40px 20px;
-            animation: fadeInDown 1s ease-out;
-        }
-
+        header { text-align: center; padding: 40px 20px; }
         h1 {
-            margin: 0;
-            font-size: 3rem;
-            font-weight: 900;
-            text-transform: uppercase;
+            margin: 0; font-size: 2.8rem; font-weight: 900;
             background: linear-gradient(to right, #f806cc, #3f5efb);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 15px var(--accent-glow));
-            letter-spacing: 2px;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px var(--accent-glow));
         }
 
-        .subtitle {
-            color: #ccc;
-            font-size: 1.1rem;
-            margin-top: 10px;
-            letter-spacing: 1px;
+        /* تنسيق الأقسام */
+        .section-title {
+            width: 100%; text-align: center; margin: 40px 0 20px;
+            font-size: 1.5rem; font-weight: 700; color: var(--winner-gold);
+            text-transform: uppercase; letter-spacing: 2px;
+            display: flex; align-items: center; justify-content: center; gap: 15px;
+        }
+        .section-title::before, .section-title::after {
+            content: ""; height: 1px; width: 100px; background: var(--winner-gold); opacity: 0.5;
         }
 
         .container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 20px;
-            padding: 20px;
-            width: 90%;
-            max-width: 1200px;
-            perspective: 1000px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px; padding: 20px; width: 90%; max-width: 1200px;
         }
 
+        /* الكروت الأساسية */
         .name-card {
-            position: relative;
-            height: 80px;
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 10px 15px;
-            font-weight: 700;
-            font-size: 1rem;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            overflow: hidden;
+            background: var(--card-bg); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px;
+            display: flex; justify-content: center; align-items: center;
+            text-align: center; padding: 15px; font-weight: 600; font-size: 0.9rem;
+            transition: 0.3s; animation: fadeInUp 0.5s ease backwards;
         }
 
-        /* تأثير التوهج عند التمرير */
-        .name-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: 0.5s;
+        /* كروت المتأهلين (توهج ذهبي) */
+        .winner-card {
+            border: 1px solid var(--winner-gold);
+            background: rgba(255, 204, 0, 0.1);
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.2);
+            font-weight: 900; color: #fff;
+        }
+        .winner-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(255, 204, 0, 0.5);
         }
 
-        .name-card:hover::before {
-            left: 100%;
-        }
+        /* كروت الـ 64 (هادئة) */
+        .regular-card { opacity: 0.7; font-size: 0.85rem; }
+        .regular-card:hover { opacity: 1; transform: translateY(-5px); border-color: var(--primary-color); }
 
-        .name-card:hover {
-            transform: translateY(-10px) rotateX(10deg);
-            background: rgba(248, 6, 204, 0.2);
-            border-color: var(--primary-color);
-            box-shadow: 0 15px 30px rgba(248, 6, 204, 0.3);
-            color: #fff;
+        .back-btn {
+            display: inline-flex; align-items: center; padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1); border: 1px solid var(--primary-color);
+            border-radius: 50px; color: white; text-decoration: none; font-weight: bold;
+            transition: 0.3s; margin-top: 10px;
         }
+        .back-btn:hover { background: var(--primary-color); box-shadow: 0 0 15px var(--primary-color); }
 
-        /* الأنميشن الخاص بظهور الكروت */
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .name-card {
-            animation: fadeInUp 0.5s ease backwards;
-        }
-
-        /* تأخير ظهور كل كرت ليعطي شكل تتابعي */
-        .name-card:nth-child(n) { animation-delay: calc(0.05s * var(--i)); }
-
         @media (max-width: 600px) {
-            h1 { font-size: 2rem; }
-            .container {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 12px;
-            }
-            .name-card { height: 65px; font-size: 0.9rem; }
+            .container { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            h1 { font-size: 1.8rem; }
         }
-
-        .footer {
-            margin-top: 50px;
-            padding: 20px;
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.5);
-        }
-        .back-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px 25px;
-    margin: 20px 0;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(248, 6, 204, 0.5);
-    border-radius: 50px;
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    animation: fadeInDown 1.2s ease-out;
-}
-
-.back-btn:hover {
-    background: linear-gradient(45deg, #f806cc, #3f5efb);
-    transform: scale(1.05);
-    box-shadow: 0 0 20px rgba(248, 6, 204, 0.6);
-    border-color: transparent;
-}
-
-.back-btn::before {
-    content: '→'; /* سهم العودة */
-    margin-left: 10px;
-    font-size: 1.2rem;
-}
-
-/* إضافة أنيميشن الظهور إذا لم يكن موجوداً */
-@keyframes fadeInDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
     </style>
 </head>
 <body>
 
     <header>
-        <h1>✨ مسابقة كرملات الجامدة ✨</h1>
-        <div class="subtitle">لوحة شرف الأساطير المشاركين</div>
-        <a href="index.html" class="back-btn">
-    <span>العودة للرئيسية</span>
-</a>
-
+        <h1>✨ لوحة شرف كرملات ✨</h1>
+        <a href="index.html" class="back-btn">العودة للرئيسية</a>
     </header>
 
-    <div class="container" id="namesContainer">
-        <div class="name-card" style="--i:1">سراج</div>
-        <div class="name-card" style="--i:2">عمر محمد</div>
-        <div class="name-card" style="--i:3">Mohamed Barakat</div>
-        <div class="name-card" style="--i:4">سيف عبدالعليم قرني</div>
-        <div class="name-card" style="--i:5">أحمد محمد محمود</div>
-        <div class="name-card" style="--i:6">محمد أحمد سيد</div>
-        <div class="name-card" style="--i:7">SHREEF</div>
-        <div class="name-card" style="--i:8">محمود سامح فراج</div>
-        <div class="name-card" style="--i:9">جودة عبد العظيم</div>
-        <div class="name-card" style="--i:10">يوسف نور الدين</div>
-        <div class="name-card" style="--i:11">Ayman Mohamed</div>
-        <div class="name-card" style="--i:12">Motaz Mohamed</div>
-        <div class="name-card" style="--i:13">Adparieno</div>
-        <div class="name-card" style="--i:14">TAHA</div>
-        <div class="name-card" style="--i:15">Mohamed Alzanate</div>
-        <div class="name-card" style="--i:16">Eslam Ali</div>
-        <div class="name-card" style="--i:17">حمزة</div>
-        <div class="name-card" style="--i:18">يوسف عويس</div>
-        <div class="name-card" style="--i:19">Ahmed Sayed</div>
-        <div class="name-card" style="--i:20">عمك إياد</div>
-        <div class="name-card" style="--i:21">سامح العو</div>
-        <div class="name-card" style="--i:22">عبد الغفور البرعي</div>
-        <div class="name-card" style="--i:23">الكوماندا</div>
-        <div class="name-card" style="--i:24">عمر أحمد إبراهيم</div>
-        <div class="name-card" style="--i:25">عبدالله محمد رجب</div>
-        <div class="name-card" style="--i:26">عبدالله رفعت</div>
-        <div class="name-card" style="--i:27">ريان</div>
-        <div class="name-card" style="--i:28">يوسف محمد مختار</div>
-        <div class="name-card" style="--i:29">Anas</div>
-        <div class="name-card" style="--i:30">عمر</div>
-        <div class="name-card" style="--i:31">KEMO OMAR</div>
-        <div class="name-card" style="--i:32">محمد سالم سليمان</div>
-        <div class="name-card" style="--i:33">ياسين المحارب</div>
-        <div class="name-card" style="--i:34">زياد السفاح</div>
-        <div class="name-card" style="--i:35">كريم البرنس</div>
-        <div class="name-card" style="--i:36">مصطفى القناص</div>
-        <div class="name-card" style="--i:37">بودي الأسطورة</div>
-        <div class="name-card" style="--i:38">مروان العملاق</div>
-        <div class="name-card" style="--i:39">هاني الصقر</div>
-        <div class="name-card" style="--i:40">علاء الكينج</div>
-        <div class="name-card" style="--i:41">إبراهيم ميسي</div>
-        <div class="name-card" style="--i:42">خالد المرعب</div>
-        <div class="name-card" style="--i:43">طارق الجن</div>
-        <div class="name-card" style="--i:44">باسم الساحر</div>
-        <div class="name-card" style="--i:45">وائل القائد</div>
-        <div class="name-card" style="--i:46">مازن النجم</div>
-        <div class="name-card" style="--i:47">كابتن ماجد</div>
-        <div class="name-card" style="--i:48">علي الشبح</div>
-        <div class="name-card" style="--i:49">رامي المقاتل</div>
-        <div class="name-card" style="--i:50">تامر الحريف</div>
-        <div class="name-card" style="--i:51">أشرف المشاكس</div>
-        <div class="name-card" style="--i:52">شريف الصخرة</div>
-        <div class="name-card" style="--i:53">بلال المايسترو</div>
-        <div class="name-card" style="--i:54">حسام الفهد</div>
-        <div class="name-card" style="--i:55">شادي الزعيم</div>
-        <div class="name-card" style="--i:56">نادر القوة</div>
-        <div class="name-card" style="--i:57">مجد البركان</div>
-        <div class="name-card" style="--i:58">عصام الحديدي</div>
-        <div class="name-card" style="--i:59">عادل القبطان</div>
-        <div class="name-card" style="--i:60">أمير الظلام</div>
-        <div class="name-card" style="--i:61">يحيى البطل</div>
-        <div class="name-card" style="--i:62">منصور الرعد</div>
-        <div class="name-card" style="--i:63">جابر النمر</div>
-        <div class="name-card" style="--i:64">سعيد الحوت</div>
+    <div class="section-title">🏆 أبطال دور الـ 16 المتأهلين 🏆</div>
+    <div class="container" id="winnersContainer">
+        <div class="name-card winner-card">سراج حماده</div>
+        <div class="name-card winner-card">عمر محمد</div>
+        <div class="name-card winner-card">محمد بركات</div>
+        <div class="name-card winner-card">سيف عبدالعليم</div>
+        <div class="name-card winner-card">احمد محمد</div>
+        <div class="name-card winner-card">محمد احمد</div>
+        <div class="name-card winner-card">جودة عبدالعظيم</div>
+        <div class="name-card winner-card">ايمن محمد</div>
+        <div class="name-card winner-card">حمزة مصطفى</div>
+        <div class="name-card winner-card">محمد زناتي</div>
+        <div class="name-card winner-card">عبدالغفور الربعي</div>
+        <div class="name-card winner-card">الكوماندا</div>
+        <div class="name-card winner-card">عبدالله محمد رجب</div>
+        <div class="name-card winner-card">عمر احمد</div>
+        <div class="name-card winner-card">محمد سالم سليمان</div>
+        <div class="name-card winner-card">انس سمير</div>
+        <div class="name-card winner-card">عمك اياد</div>
+        <div class="name-card winner-card">كريم عمر</div>
+        <div class="name-card winner-card">عبقرينو</div>
+        <div class="name-card winner-card">شريف سيد</div>
+        <div class="name-card winner-card">يوسف محمد</div>
+        <div class="name-card winner-card">يوسف عويس</div>
+        <div class="name-card winner-card">محمود سامح</div>
+        <div class="name-card winner-card">يوسف نورالدين</div>
+        <div class="name-card winner-card">معتز محمد</div>
+        <div class="name-card winner-card">طه</div>
+        <div class="name-card winner-card">اسلام على</div>
+        <div class="name-card winner-card">احمد سيد</div>
+        <div class="name-card winner-card">مصطفى محمد</div>
+        <div class="name-card winner-card">عبدالله رفعت</div>
+        <div class="name-card winner-card">ريان عمر</div>
+        <div class="name-card winner-card">عمر سمير</div>
     </div>
 
-    <div class="footer">
+    <div class="section-title">👥 قائمة جميع المشاركين الـ 64 👥</div>
+    <div class="container" id="allPlayersContainer">
+        <div class="name-card regular-card">سعيد الحوت</div>
+        <div class="name-card regular-card">جابر النمر</div>
+        <div class="name-card regular-card">منصور الرعد</div>
+        <div class="name-card regular-card">يحيى البطل</div>
+        <div class="name-card regular-card">أمير الظلام</div>
+        <div class="name-card regular-card">عادل القبطان</div>
+        <div class="name-card regular-card">عصام الحديدي</div>
+        <div class="name-card regular-card">مجد البركان</div>
+        <div class="name-card regular-card">نادر القوة</div>
+        <div class="name-card regular-card">شادي الزعيم</div>
+        <div class="name-card regular-card">حسام الفهد</div>
+        <div class="name-card regular-card">بلال المايسترو</div>
+        <div class="name-card regular-card">شريف الصخرة</div>
+        <div class="name-card regular-card">أشرف المشاكس</div>
+        <div class="name-card regular-card">تامر الحريف</div>
+        <div class="name-card regular-card">رامي المقاتل</div>
+        <div class="name-card regular-card">علي الشبح</div>
+        <div class="name-card regular-card">كابتن ماجد</div>
+        <div class="name-card regular-card">مازن النجم</div>
+        <div class="name-card regular-card">وائل القائد</div>
+        <div class="name-card regular-card">باسم الساحر</div>
+        <div class="name-card regular-card">طارق الجن</div>
+        <div class="name-card regular-card">خالد المرعب</div>
+        <div class="name-card regular-card">إبراهيم ميسي</div>
+        <div class="name-card regular-card">علاء الكينج</div>
+        <div class="name-card regular-card">هاني الصقر</div>
+        <div class="name-card regular-card">مروان العملاق</div>
+        <div class="name-card regular-card">بودي الأسطورة</div>
+        <div class="name-card regular-card">مصطفى القناص</div>
+        <div class="name-card regular-card">كريم البرنس</div>
+        <div class="name-card regular-card">زياد السفاح</div>
+        <div class="name-card regular-card">ياسين المحارب</div>
+        </div>
+
+    <div class="footer" style="padding: 40px; color: rgba(255,255,255,0.3);">
         جميع الحقوق محفوظة لمسابقة كرملات © 2026
     </div>
 
