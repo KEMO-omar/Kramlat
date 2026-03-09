@@ -10,7 +10,6 @@
             --primary-color: #f806cc;
             --secondary-color: #3f5efb;
             --winner-gold: #ffcc00;
-            --silver-rank: #e0e0e0;
             --bg-dark: #0f0c29;
             --card-bg: rgba(255, 255, 255, 0.05);
             --accent-glow: rgba(248, 6, 204, 0.4);
@@ -39,11 +38,11 @@
             display: flex; align-items: center; justify-content: center; gap: 15px;
         }
         .section-title::before, .section-title::after {
-            content: ""; height: 1px; width: 100px; background: var(--winner-gold); opacity: 0.5;
+            content: ""; height: 1px; width: 80px; background: var(--winner-gold); opacity: 0.5;
         }
 
         .container {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 15px; padding: 20px; width: 90%; max-width: 1200px;
         }
 
@@ -51,30 +50,29 @@
             background: var(--card-bg); backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px;
             display: flex; justify-content: center; align-items: center;
-            text-align: center; padding: 15px; font-weight: 600; font-size: 0.9rem;
+            text-align: center; padding: 12px; font-weight: 600; font-size: 0.85rem;
             transition: 0.3s; animation: fadeInUp 0.5s ease backwards;
         }
 
-        /* كروت دور الـ 8 (توهج ذهبي قوي) */
+        /* دور الـ 8 (ذهبي لامع) */
         .rank-8 {
             border: 2px solid var(--winner-gold);
             background: rgba(255, 204, 0, 0.15);
             box-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
-            font-weight: 900; color: #fff;
+            font-weight: 900;
         }
 
-        /* كروت دور الـ 16 (توهج فضي/أزرق) */
-        .rank-16 {
-            border: 1px solid var(--secondary-color);
-            background: rgba(63, 94, 251, 0.1);
-            color: #e0e0e0;
-        }
+        /* دور الـ 16 (أزرق) */
+        .rank-16 { border: 1px solid var(--secondary-color); background: rgba(63, 94, 251, 0.15); }
 
-        .regular-card { opacity: 0.6; font-size: 0.85rem; }
-        .regular-card:hover { opacity: 1; transform: translateY(-5px); border-color: var(--primary-color); }
+        /* دور الـ 32 (بنفسجي) */
+        .rank-32 { border: 1px solid var(--primary-color); background: rgba(248, 6, 204, 0.1); }
+
+        /* قائمة الـ 64 (بسيط) */
+        .regular-card { opacity: 0.5; font-size: 0.8rem; }
 
         .back-btn {
-            display: inline-flex; align-items: center; padding: 10px 20px;
+            display: inline-flex; align-items: center; padding: 10px 25px;
             background: rgba(255, 255, 255, 0.1); border: 1px solid var(--primary-color);
             border-radius: 50px; color: white; text-decoration: none; font-weight: bold;
             transition: 0.3s; margin-top: 10px;
@@ -99,44 +97,48 @@
         <a href="index.html" class="back-btn">العودة للرئيسية</a>
     </header>
 
-    <div class="section-title">🏆 أبطال دور الـ 8 (المتأهلين) 🏆</div>
+    <div class="section-title">🏆 أبطال دور الـ 8 (المربع الذهبي) 🏆</div>
     <div class="container">
-        <div class="name-card rank-8">سراج حماده</div>
-        <div class="name-card rank-8">كريم عمر</div>
         <div class="name-card rank-8">محمد بركات</div>
         <div class="name-card rank-8">سيف عبدالعليم</div>
-        <div class="name-card rank-8">احمد محمد</div>
         <div class="name-card rank-8">محمد احمد</div>
-        <div class="name-card rank-8">محمد زناتي</div>
-        <div class="name-card rank-8">جودة عبدالعظيم</div>
         <div class="name-card rank-8">ايمن محمد</div>
-        <div class="name-card rank-8">حمزة مصطفى</div>
-        <div class="name-card rank-8">اسلام على</div>
-        <div class="name-card rank-8">احمد سيد</div>
         <div class="name-card rank-8">مصطفى محمد</div>
-        <div class="name-card rank-8">عبدالله رفعت</div>
-        <div class="name-card rank-8">عمر سمير</div>
+        <div class="name-card rank-8">كريم عمر</div>
         <div class="name-card rank-8">ريان عمر</div>
+        <div class="name-card rank-8">عبدالله رفعت</div>
     </div>
 
     <div class="section-title">🥈 أبطال دور الـ 16 🥈</div>
     <div class="container">
-        <div class="name-card rank-16">عمك اياد</div>
-        <div class="name-card rank-16">عبدالغفور البرعي</div>
-        <div class="name-card rank-16">عبقرينو</div>
-        <div class="name-card rank-16">شريف سيد</div>
-        <div class="name-card rank-16">يوسف محمد</div>
-        <div class="name-card rank-16">يوسف عويس</div>
-        <div class="name-card rank-16">محمود سامح</div>
-        <div class="name-card rank-16">يوسف نورالدين</div>
-        <div class="name-card rank-16">معتز محمد</div>
-        <div class="name-card rank-16">طه</div>
-        <div class="name-card rank-16">عمر محمد</div>
-        <div class="name-card rank-16">الكوماندا</div>
-        <div class="name-card rank-16">عبدالله محمد رجب</div>
-        <div class="name-card rank-16">عمر احمد</div>
-        <div class="name-card rank-16">محمد سالم سليمان</div>
-        <div class="name-card rank-16">انس سمير</div>
+        <div class="name-card rank-16">سراج حماده</div>
+        <div class="name-card rank-16">احمد محمد</div>
+        <div class="name-card rank-16">محمد زناتي</div>
+        <div class="name-card rank-16">جودة عبدالعظيم</div>
+        <div class="name-card rank-16">حمزة مصطفى</div>
+        <div class="name-card rank-16">اسلام على</div>
+        <div class="name-card rank-16">أحمد سيد</div>
+        <div class="name-card rank-16">عمر سمير</div>
+    </div>
+
+    <div class="section-title">🥉 أبطال دور الـ 32 🥉</div>
+    <div class="container">
+        <div class="name-card rank-32">عمك اياد</div>
+        <div class="name-card rank-32">عبقرينو</div>
+        <div class="name-card rank-32">شريف سيد</div>
+        <div class="name-card rank-32">يوسف محمد</div>
+        <div class="name-card rank-32">يوسف عويس</div>
+        <div class="name-card rank-32">محمود سامح</div>
+        <div class="name-card rank-32">طه</div>
+        <div class="name-card rank-32">الكوماندا</div>
+        <div class="name-card rank-32">عبدالله محمد رجب</div>
+        <div class="name-card rank-32">عمر احمد</div>
+        <div class="name-card rank-32">انس سمير</div>
+        <div class="name-card rank-32">يوسف نورالدين</div>
+        <div class="name-card rank-32">معتز محمد</div>
+        <div class="name-card rank-32">عمر محمد</div>
+        <div class="name-card rank-32">عبدالغفور البرعي</div>
+        <div class="name-card rank-32">محمد سالم سليمان</div>
     </div>
 
     <div class="section-title">👥 قائمة جميع المشاركين الـ 64 👥</div>
@@ -175,7 +177,7 @@
         <div class="name-card regular-card">ياسين المحارب</div>
     </div>
 
-    <div class="footer" style="padding: 40px; text-align: center; color: rgba(255,255,255,0.2);">
+    <div class="footer" style="padding: 40px; text-align: center; color: rgba(255,255,255,0.1);">
         جميع الحقوق محفوظة لمسابقة كرملات © 2026
     </div>
 
