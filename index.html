@@ -62,11 +62,10 @@
 
     /* الهيرو والعداد */
     .hero { text-align: center; min-height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-    .main-logo { width: 130px; height: 130px; border-radius: 50%; border: 4px solid var(--p); box-shadow: 0 0 40px var(--p); margin-bottom: 25px; transition: 0.5s; cursor: pointer; }
+    .main-logo { width: 130px; height: 130px; border-radius: 50%; border: 4px solid var(--p); box-shadow: 0 0 40px var(--p); margin-bottom: 25px; transition: 0.5s; cursor: pointer; object-fit: cover; }
     .main-logo.rotate { transform: rotate(360deg); }
     .hero-title { font-family: 'Orbitron'; font-size: clamp(80px, 28vw, 150px); margin: 0; background: linear-gradient(to bottom, #fff, var(--s), var(--p)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 20px var(--s)); line-height: 0.8; }
     
-    /* ستايل كلمة رمضان كريم في العداد */
     .ramadan-finish {
       color: var(--a) !important;
       font-weight: 900 !important;
@@ -75,6 +74,15 @@
       text-shadow: 0 0 20px var(--a), 0 0 40px var(--p);
       -webkit-text-fill-color: var(--a) !important;
     }
+
+    /* ستايل قسم الإعلان الجديد */
+    .announcement-box {
+      width: 100%; max-width: 500px; background: var(--glass);
+      border: 2px dashed var(--a); border-radius: 20px; padding: 15px;
+      margin: 20px 0; display: none; animation: pulse 2s infinite;
+    }
+    .announcement-box img { width: 100%; border-radius: 10px; margin-bottom: 10px; }
+    .announcement-box p { margin: 0; font-weight: bold; color: #fff; }
 
     .stats-card { background: linear-gradient(135deg, rgba(255,0,127,0.2), rgba(0,212,255,0.2)); border: 2px solid var(--s); padding: 15px 30px; border-radius: 20px; margin: 25px 0; font-weight: 900; color: #fff; backdrop-filter: blur(10px); }
     .stats-card span { color: var(--a); font-size: 1.5rem; text-shadow: 0 0 10px var(--a); }
@@ -105,7 +113,7 @@
     .leader-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
     .leader-card { background: rgba(255,255,255,0.03); border: 2px solid var(--s); border-radius: 35px; padding: 30px; text-align: center; transition: 0.4s; }
     .leader-pic { width: 140px; height: 140px; border-radius: 50%; border: 4px solid var(--a); margin-bottom: 15px; object-fit: cover; box-shadow: 0 0 20px var(--a); }
-    .contact-wa { background: #25d366; color: #fff; padding: 12px 20px; border-radius: 50px; text-decoration: none; font-weight: 900; display: inline-flex; align-ms: center; gap: 8px; font-size: 0.9rem; margin-top: 10px; }
+    .contact-wa { background: #25d366; color: #fff; padding: 12px 20px; border-radius: 50px; text-decoration: none; font-weight: 900; display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem; margin-top: 10px; }
 
     input { width:100%; padding:16px; margin:10px 0; border-radius:15px; border:2px solid var(--s); background:rgba(0,0,0,0.5); color:#fff; text-align:center; font-family: 'Cairo'; font-size: 1rem; }
 
@@ -138,6 +146,12 @@
     <div class="hero">
       <img src="logo8.png" class="main-logo" id="logoImg" onclick="rotateLogo()">
       <h1 class="hero-title" id="counter">0</h1>
+
+      <div id="adBox" class="announcement-box">
+        <img id="adImage" src="" alt="اعلان">
+        <p id="adText">تحميل الإعلان...</p>
+      </div>
+
       <div style="color:var(--a); font-weight:900; letter-spacing:8px; font-size: 1.3rem; margin-top: 10px;">KRAMLAT</div>
       <h2 style="font-weight: 400; opacity: 0.9;">أهلاً بك في مقر كرملات</h2>
       <div class="stats-card">
@@ -159,6 +173,7 @@
       <div class="feature-tag" onclick="spawnEmoji('👻', event)">⚡ 👻 الغموض والإثارة: حاجات هتخلي الأدرينالين يوصل للسما! زي القصص المرعبه والمشوقه اللي تخليك تقراها غصب عنك 🚨</div>
       <div class="feature-tag" onclick="spawnEmoji('🎥', event)">🎥 إبداع بصري: إيديتس مجنونة معمول بمزاج عالي ساعات بتضحك و ساعات تطير المخ.</div>
       <div class="feature-tag" onclick="spawnEmoji('🧠', event)">🧠 كبسولات معرفية: معلومات ممتعة هتصدمك بجد معلومات تخليك تقول إيه ده؟.</div>
+      <div class="feature-tag" onclick="spawnEmoji('🎥', event)">🎥 إبداع بصري: إيديتس مجنونة معمول بمزاج عالي ساعات بتضحك و ساعات تطير المخ.</div>
       <div class="feature-tag" onclick="spawnEmoji('🎮', event)">🎮 ألعاب وتحديات: مساحة للتفاعل والمغامرة بنعملها للمتابعين و كمان بين المتابعين وبعض.</div>
     </div>
   </section>
@@ -178,24 +193,24 @@
   <section id="hall-of-fame" class="page">
     <div class="content-box" style="border-color: var(--gold);">
       <h2 class="section-title" style="color: var(--gold);">🏆 لوحة شرف الأساطير</h2>
-      <div class="winner-grid">
+      <div class="winner-grid" id="hallOfFameGrid">
         <div class="winner-item"><i class="fas fa-crown"></i><br>جودة</div>
         <div class="winner-item"><i class="fas fa-star"></i><br>سراچ</div>
         <div class="winner-item"><i class="fas fa-bolt"></i><br>حمزة</div>
         <div class="winner-item"><i class="fas fa-fire"></i><br>عبدالله</div>
-      </div>
+        </div>
     </div>
   </section>
 
   <section id="events" class="page">
     <h2 class="section-title">🗓️ سجل الاحتفالات التاريخية</h2>
-    <div class="gallery-grid">
+    <div class="gallery-grid" id="eventsGrid">
       <div class="gallery-item"><img src="100.png"><div class="gallery-label">🎉 احتفال الـ 100</div></div>
       <div class="gallery-item"><img src="200.png"><div class="gallery-label">🔥 احتفال الـ 200</div></div>
       <div class="gallery-item"><img src="300.png"><div class="gallery-label">🚀 احتفال الـ 300</div></div>
       <div class="gallery-item"><img src="400.png"><div class="gallery-label">💎 احتفال الـ 400</div></div>
       <div class="gallery-item"><img src="500.png"><div class="gallery-label">👑 جمدان الـ 500</div></div>
-    </div>
+      </div>
   </section>
 
   <section id="team" class="page">
@@ -252,6 +267,54 @@
   firebase.initializeApp(firebaseConfig);
   const rtdb = firebase.database();
 
+  // جلب إعدادات الإدارة (اللوجو والنص)
+  let adminCounterText = "رمضان كريم";
+  rtdb.ref('admin_control').on('value', (snapshot) => {
+    const data = snapshot.val();
+    if (data) {
+      if (data.logo) document.getElementById('logoImg').src = data.logo; // Base64 أو URL
+      if (data.counterText) adminCounterText = data.counterText;
+      
+      // الإعلانات
+      if (data.ad && data.ad.visible) {
+        document.getElementById('adBox').style.display = 'block';
+        document.getElementById('adImage').src = data.ad.image;
+        document.getElementById('adText').innerText = data.ad.text;
+      } else {
+        document.getElementById('adBox').style.display = 'none';
+      }
+
+      // لوحة الشرف الديناميكية
+      if (data.hall_of_fame) {
+        const grid = document.getElementById('hallOfFameGrid');
+        grid.innerHTML = `
+          <div class="winner-item"><i class="fas fa-crown"></i><br>جودة</div>
+          <div class="winner-item"><i class="fas fa-star"></i><br>سراچ</div>
+          <div class="winner-item"><i class="fas fa-bolt"></i><br>حمزة</div>
+          <div class="winner-item"><i class="fas fa-fire"></i><br>عبدالله</div>
+        `;
+        Object.values(data.hall_of_fame).forEach(hero => {
+          grid.innerHTML += `<div class="winner-item"><i class="fas fa-medal"></i><br>${hero.name}</div>`;
+        });
+      }
+
+      // الاحتفالات الجديدة
+      if (data.extra_events) {
+        const evGrid = document.getElementById('eventsGrid');
+        evGrid.innerHTML = `
+          <div class="gallery-item"><img src="100.png"><div class="gallery-label">🎉 احتفال الـ 100</div></div>
+          <div class="gallery-item"><img src="200.png"><div class="gallery-label">🔥 احتفال الـ 200</div></div>
+          <div class="gallery-item"><img src="300.png"><div class="gallery-label">🚀 احتفال الـ 300</div></div>
+          <div class="gallery-item"><img src="400.png"><div class="gallery-label">💎 احتفال الـ 400</div></div>
+          <div class="gallery-item"><img src="500.png"><div class="gallery-label">👑 جمدان الـ 500</div></div>
+        `;
+        Object.values(data.extra_events).forEach(ev => {
+          evGrid.innerHTML += `<div class="gallery-item"><img src="${ev.image}"><div class="gallery-label">${ev.title}</div></div>`;
+        });
+      }
+    }
+  });
+
   const visitRef = rtdb.ref('site_stats/total_visits');
   visitRef.transaction(current => (current || 0) + 1);
   visitRef.on('value', snap => { document.getElementById('visitCount').innerText = snap.val() || 0; });
@@ -262,7 +325,7 @@
     const timer = setInterval(() => { 
       if(c<500){ c+=25; el.innerText=c; }
       else { 
-        el.innerText="رمضان كريم"; 
+        el.innerText = adminCounterText; 
         el.classList.add('ramadan-finish');
         explode(window.innerWidth/2, window.innerHeight/3); 
         clearInterval(timer); 
