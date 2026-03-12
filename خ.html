@@ -5,108 +5,127 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة شرف كرملات 2026 🍭🏆</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
+            --semi-final-color: #00d4ff; /* لون نصف النهائي المتوهج */
+            --winner-gold: #ffcc00;
             --primary-color: #f806cc;
             --secondary-color: #3f5efb;
-            --winner-gold: #ffcc00;
-            --bg-dark: #0f0c29;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --accent-glow: rgba(248, 6, 204, 0.4);
+            --bg-dark: #050508;
+            --card-bg: rgba(255, 255, 255, 0.03);
         }
 
         body {
             margin: 0; padding: 0;
             font-family: 'Cairo', sans-serif;
-            background: radial-gradient(circle at center, #240b36 0%, #000000 100%);
+            background: radial-gradient(circle at top, #1a0a2e 0%, #000000 100%);
             color: white; min-height: 100vh;
             display: flex; flex-direction: column; align-items: center;
+            background-attachment: fixed;
         }
 
-        header { text-align: center; padding: 40px 20px; }
+        header { text-align: center; padding: 50px 20px; }
         h1 {
-            margin: 0; font-size: 2.8rem; font-weight: 900;
-            background: linear-gradient(to right, #f806cc, #3f5efb);
+            margin: 0; font-size: 3rem; font-weight: 900;
+            background: linear-gradient(to right, var(--winner-gold), #fff, var(--winner-gold));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 10px var(--accent-glow));
+            filter: drop-shadow(0 0 15px rgba(255, 204, 0, 0.5));
+            letter-spacing: 2px;
         }
 
         .section-title {
-            width: 100%; text-align: center; margin: 40px 0 20px;
-            font-size: 1.5rem; font-weight: 700; color: var(--winner-gold);
-            text-transform: uppercase; letter-spacing: 2px;
-            display: flex; align-items: center; justify-content: center; gap: 15px;
+            width: 100%; text-align: center; margin: 50px 0 25px;
+            font-size: 1.6rem; font-weight: 900; color: #fff;
+            display: flex; align-items: center; justify-content: center; gap: 20px;
         }
+        .section-title i { color: var(--semi-final-color); }
         .section-title::before, .section-title::after {
-            content: ""; height: 1px; width: 80px; background: var(--winner-gold); opacity: 0.5;
+            content: ""; height: 2px; width: 100px; 
+            background: linear-gradient(to right, transparent, var(--semi-final-color), transparent);
         }
 
         .container {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px; padding: 20px; width: 90%; max-width: 1200px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px; padding: 20px; width: 90%; max-width: 1200px;
         }
 
         .name-card {
-            background: var(--card-bg); backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px;
-            display: flex; justify-content: center; align-items: center;
-            text-align: center; padding: 12px; font-weight: 600; font-size: 0.85rem;
-            transition: 0.3s; animation: fadeInUp 0.5s ease backwards;
+            background: var(--card-bg); backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 15px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 20px; font-weight: 700;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: fadeInUp 0.6s ease backwards;
+            position: relative; overflow: hidden;
         }
+        .name-card:hover { transform: scale(1.1) translateY(-10px); z-index: 10; }
 
-        /* دور الـ 8 (ذهبي لامع) */
-        .rank-8 {
-            border: 2px solid var(--winner-gold);
-            background: rgba(255, 204, 0, 0.15);
-            box-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
+        /* 🔥 تصنيف نصف النهائي (المربع الذهبي الجديد) */
+        .rank-semi {
+            border: 2px solid var(--semi-final-color);
+            background: rgba(0, 212, 255, 0.1);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+            font-size: 1.2rem;
+        }
+        .rank-semi::before {
+            content: "نصف النهائي"; position: absolute; top: 0; left: 50%;
+            transform: translateX(-50%); background: var(--semi-final-color);
+            color: #000; font-size: 0.6rem; padding: 2px 10px; border-radius: 0 0 10px 10px;
             font-weight: 900;
         }
 
-        /* دور الـ 16 (أزرق) */
-        .rank-16 { border: 1px solid var(--secondary-color); background: rgba(63, 94, 251, 0.15); }
+        /* دور الـ 8 (المرحلة السابقة) */
+        .rank-8 { border: 1px solid var(--winner-gold); background: rgba(255, 204, 0, 0.05); color: #ccc; font-size: 0.9rem; }
 
-        /* دور الـ 32 (بنفسجي) */
-        .rank-32 { border: 1px solid var(--primary-color); background: rgba(248, 6, 204, 0.1); }
-
-        /* قائمة الـ 64 (بسيط) */
-        .regular-card { opacity: 0.5; font-size: 0.8rem; }
+        /* الرتب التانية */
+        .rank-16 { border: 1px solid var(--secondary-color); opacity: 0.7; font-size: 0.85rem; }
+        .rank-32 { border: 1px solid var(--primary-color); opacity: 0.5; font-size: 0.8rem; }
 
         .back-btn {
-            display: inline-flex; align-items: center; padding: 10px 25px;
-            background: rgba(255, 255, 255, 0.1); border: 1px solid var(--primary-color);
-            border-radius: 50px; color: white; text-decoration: none; font-weight: bold;
-            transition: 0.3s; margin-top: 10px;
+            display: inline-flex; align-items: center; padding: 12px 30px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50px; color: white; text-decoration: none; font-weight: 900;
+            transition: 0.3s; margin-top: 20px; box-shadow: 0 5px 20px rgba(248, 6, 204, 0.4);
         }
-        .back-btn:hover { background: var(--primary-color); box-shadow: 0 0 15px var(--primary-color); }
+        .back-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px var(--primary-color); }
 
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         @media (max-width: 600px) {
-            .container { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-            h1 { font-size: 1.8rem; }
+            .container { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            h1 { font-size: 2rem; }
+            .section-title { font-size: 1.2rem; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>✨ لوحة شرف كرملات ✨</h1>
-        <a href="index.html" class="back-btn">العودة للرئيسية</a>
+        <h1>🏆 لوحة شرف كرملات 🏆</h1>
+        <p style="color: #aaa; margin-top: 10px;">الإصدار المحدث - المربع الذهبي</p>
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-right"></i> العودة للرئيسية</a>
     </header>
 
-    <div class="section-title">🏆 أبطال دور الـ 8 (المربع الذهبي) 🏆</div>
+    <div class="section-title"><i class="fas fa-fire"></i> أبطال المربع الذهبي (نصف النهائي) <i class="fas fa-fire"></i></div>
     <div class="container">
-        <div class="name-card rank-8">محمد بركات</div>
-        <div class="name-card rank-8">سيف عبدالعليم</div>
+        <div class="name-card rank-semi">سيف عبدالعليم</div>
+        <div class="name-card rank-semi">مصطفى محمد</div>
+        <div class="name-card rank-semi">معتز محمد</div>
+        <div class="name-card rank-semi">محمد بركات</div>
+    </div>
+
+    <div class="section-title">🎖️ الواصلون لدور الـ 8 🎖️</div>
+    <div class="container">
         <div class="name-card rank-8">محمد احمد</div>
         <div class="name-card rank-8">ايمن محمد</div>
-        <div class="name-card rank-8">مصطفى محمد</div>
         <div class="name-card rank-8">كريم عمر</div>
         <div class="name-card rank-8">ريان عمر</div>
         <div class="name-card rank-8">عبدالله رفعت</div>
+        <div class="name-card rank-8">محمد شعبان</div>
     </div>
 
     <div class="section-title">🥈 أبطال دور الـ 16 🥈</div>
@@ -131,54 +150,11 @@
         <div class="name-card rank-32">محمود سامح</div>
         <div class="name-card rank-32">طه</div>
         <div class="name-card rank-32">الكوماندا</div>
-        <div class="name-card rank-32">عبدالله محمد رجب</div>
-        <div class="name-card rank-32">عمر احمد</div>
-        <div class="name-card rank-32">انس سمير</div>
-        <div class="name-card rank-32">يوسف نورالدين</div>
-        <div class="name-card rank-32">معتز محمد</div>
-        <div class="name-card rank-32">عمر محمد</div>
-        <div class="name-card rank-32">عبدالغفور البرعي</div>
-        <div class="name-card rank-32">محمد سالم سليمان</div>
     </div>
 
-    <div class="section-title">👥 قائمة جميع المشاركين الـ 64 👥</div>
-    <div class="container">
-        <div class="name-card regular-card">سعيد الحوت</div>
-        <div class="name-card regular-card">جابر النمر</div>
-        <div class="name-card regular-card">منصور الرعد</div>
-        <div class="name-card regular-card">يحيى البطل</div>
-        <div class="name-card regular-card">أمير الظلام</div>
-        <div class="name-card regular-card">عادل القبطان</div>
-        <div class="name-card regular-card">عصام الحديدي</div>
-        <div class="name-card regular-card">مجد البركان</div>
-        <div class="name-card regular-card">نادر القوة</div>
-        <div class="name-card regular-card">شادي الزعيم</div>
-        <div class="name-card regular-card">حسام الفهد</div>
-        <div class="name-card regular-card">بلال المايسترو</div>
-        <div class="name-card regular-card">شريف الصخرة</div>
-        <div class="name-card regular-card">أشرف المشاكس</div>
-        <div class="name-card regular-card">تامر الحريف</div>
-        <div class="name-card regular-card">رامي المقاتل</div>
-        <div class="name-card regular-card">علي الشبح</div>
-        <div class="name-card regular-card">كابتن ماجد</div>
-        <div class="name-card regular-card">مازن النجم</div>
-        <div class="name-card regular-card">وائل القائد</div>
-        <div class="name-card regular-card">باسم الساحر</div>
-        <div class="name-card regular-card">طارق الجن</div>
-        <div class="name-card regular-card">خالد المرعب</div>
-        <div class="name-card regular-card">إبراهيم ميسي</div>
-        <div class="name-card regular-card">علاء الكينج</div>
-        <div class="name-card regular-card">هاني الصقر</div>
-        <div class="name-card regular-card">مروان العملاق</div>
-        <div class="name-card regular-card">بودي الأسطورة</div>
-        <div class="name-card regular-card">مصطفى القناص</div>
-        <div class="name-card regular-card">كريم البرنس</div>
-        <div class="name-card regular-card">زياد السفاح</div>
-        <div class="name-card regular-card">ياسين المحارب</div>
-    </div>
-
-    <div class="footer" style="padding: 40px; text-align: center; color: rgba(255,255,255,0.1);">
-        جميع الحقوق محفوظة لمسابقة كرملات © 2026
+    <div class="footer" style="padding: 60px; text-align: center; color: rgba(255,255,255,0.2); font-size: 0.9rem;">
+        جميع الحقوق محفوظة لمسابقة كرملات © 2026 <br>
+        تم التحديث بواسطة الإمبراطور كيمو 👑
     </div>
 
 </body>
