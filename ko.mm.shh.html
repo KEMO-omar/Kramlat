@@ -3,114 +3,220 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم إمبراطورية كرملات 🛠️</title>
+    <title>لوحة تحكم كرملات 👑</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: 'Cairo', sans-serif;
-            background: #0a0a0c; color: #fff; margin: 0; padding: 20px;
+        :root {
+            --p: #ff007f; --s: #00d4ff; --a: #ccff00; --bg: #050508;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
         }
-        .admin-container { max-width: 1000px; margin: 0 auto; }
-        h1 { text-align: center; color: #ff007f; text-shadow: 0 0 10px #ff007f; }
         
-        .card {
-            background: rgba(255, 255, 255, 0.05); border: 1px solid #ff007f;
-            border-radius: 20px; padding: 20px; margin-bottom: 25px;
+        * { box-sizing: border-box; font-family: 'Cairo', sans-serif; outline: none; }
+        
+        body {
+            background: var(--bg) url('https://www.transparenttextures.com/patterns/stardust.png');
+            color: #fff; margin: 0; padding: 20px;
+            background-attachment: fixed;
         }
-        .card-title { font-size: 1.2rem; font-weight: 900; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; color: #ccff00; }
+
+        /* حاوية الأدمن */
+        .admin-container { 
+            max-width: 1100px; margin: 0 auto; 
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        h1 { 
+            text-align: center; color: var(--p); 
+            text-shadow: 0 0 15px rgba(255, 0, 127, 0.5); 
+            margin-bottom: 40px; font-weight: 900;
+        }
+        
+        /* الكروت الزجاجية */
+        .card {
+            background: var(--glass); backdrop-filter: blur(15px);
+            border: 1px solid var(--border); border-top: 2px solid var(--s);
+            border-radius: 25px; padding: 30px; margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: 0.3s;
+        }
+        .card:hover { border-color: var(--p); transform: translateY(-5px); }
+
+        .card-title { 
+            font-size: 1.4rem; font-weight: 900; margin-bottom: 20px; 
+            border-bottom: 1px solid var(--border); padding-bottom: 15px; 
+            color: var(--a); display: flex; align-items: center; gap: 10px;
+        }
+        
+        /* الإدخالات والأزرار */
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 700; color: #ccc; }
         
         input, textarea, select {
-            width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px;
-            border: 1px solid #00d4ff; background: #000; color: #fff;
+            width: 100%; padding: 15px; border-radius: 12px;
+            border: 1px solid var(--border); background: rgba(0, 0, 0, 0.6); 
+            color: #fff; font-size: 1rem; transition: 0.3s;
         }
+        input:focus, select:focus { border-color: var(--s); box-shadow: 0 0 15px rgba(0, 212, 255, 0.3); }
+        
+        input[type="file"] { padding: 12px; background: rgba(255, 255, 255, 0.02); cursor: pointer; }
         
         .btn {
-            background: linear-gradient(45deg, #ff007f, #00d4ff);
-            color: #fff; border: none; padding: 12px 25px; border-radius: 10px;
-            font-weight: 900; cursor: pointer; transition: 0.3s;
+            background: linear-gradient(45deg, var(--p), var(--s));
+            color: #fff; border: none; padding: 15px 30px; border-radius: 12px;
+            font-weight: 900; font-size: 1.1rem; cursor: pointer; 
+            transition: 0.4s; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; box-shadow: 0 5px 15px rgba(255, 0, 127, 0.3);
         }
-        .btn:hover { transform: scale(1.05); filter: brightness(1.2); }
-        .btn-danger { background: #ff4444; }
+        .btn:hover { transform: scale(1.02); box-shadow: 0 8px 25px rgba(0, 212, 255, 0.5); }
+        .btn-danger { background: linear-gradient(45deg, #ff4b2b, #ff416c); box-shadow: 0 5px 15px rgba(255, 65, 108, 0.3); }
+        .btn-sm { padding: 8px 15px; font-size: 0.9rem; width: auto; border-radius: 8px; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #111; border-radius: 10px; overflow: hidden; }
-        th, td { padding: 12px; text-align: right; border-bottom: 1px solid #333; }
-        th { background: #ff007f; color: #fff; }
+        /* الجداول */
+        .table-responsive { overflow-x: auto; border-radius: 15px; border: 1px solid var(--border); }
+        table { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.4); }
+        th, td { padding: 15px; text-align: right; border-bottom: 1px solid var(--border); }
+        th { background: rgba(255, 0, 127, 0.2); color: #fff; white-space: nowrap; }
+        tr:hover { background: rgba(255, 255, 255, 0.03); }
 
-        .preview-img { width: 100px; height: 100px; object-fit: cover; border-radius: 10px; margin-top: 10px; border: 1px solid #fff; display: none; }
+        /* معاينة الصور */
+        .preview-img { 
+            width: 120px; height: 120px; object-fit: cover; border-radius: 15px; 
+            margin-top: 15px; border: 2px dashed var(--s); display: none;
+        }
+
+        /* شبكات العرض للحذف */
+        .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin-top: 20px; }
+        .item-card { 
+            background: rgba(0,0,0,0.5); border: 1px solid var(--border); border-radius: 15px; 
+            padding: 15px; text-align: center; position: relative;
+        }
+        .item-card img { width: 100%; height: 100px; object-fit: cover; border-radius: 10px; margin-bottom: 10px; }
+        .item-card h4 { margin: 0 0 10px 0; font-size: 1rem; color: var(--a); }
+        .delete-badge {
+            position: absolute; top: -10px; left: -10px; background: #ff4444; color: white;
+            width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 0 10px #ff4444; transition: 0.3s;
+        }
+        .delete-badge:hover { transform: scale(1.2); }
+
+        /* نظام الإشعارات (Toast) */
+        #toast-container { position: fixed; bottom: 20px; left: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .toast {
+            background: rgba(0, 0, 0, 0.9); border-right: 5px solid var(--a); color: #fff;
+            padding: 15px 25px; border-radius: 10px; font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5); backdrop-filter: blur(10px);
+            animation: slideIn 0.5s ease-out forwards;
+        }
+        .toast.error { border-color: #ff4444; }
+        @keyframes slideIn { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { to { opacity: 0; transform: translateY(10px); } }
     </style>
 </head>
 <body>
 
 <div class="admin-container">
-    <h1><i class="fas fa-user-shield"></i> لوحة تحكم الأدمن (كريم)</h1>
+    <h1><i class="fas fa-user-astronaut"></i> مركز القيادة | KAREEM 👑</h1>
 
     <div class="card">
-        <div class="card-title"><i class="fas fa-users"></i> المسجلون في المسابقة</div>
-        <div style="overflow-x: auto;">
+        <div class="card-title"><i class="fas fa-users"></i> المسجلون في المسابقة الكبرى</div>
+        <div class="table-responsive">
             <table id="contestTable">
                 <thead>
                     <tr>
                         <th>الأسم الثلاثي</th>
                         <th>رقم الواتساب</th>
-                        <th>التوقيت</th>
+                        <th>وقت التسجيل</th>
                         <th>إجراء</th>
                     </tr>
                 </thead>
                 <tbody id="contestBody">
-                    </tbody>
+                    <tr><td colspan="4" style="text-align:center;">جاري تحميل الأبطال...</td></tr>
+                </tbody>
             </table>
         </div>
     </div>
 
     <div class="card">
-        <div class="card-title"><i class="fas fa-magic"></i> إعدادات الهيرو (الرئيسية)</div>
-        <label>تغيير اللوجو:</label>
-        <input type="file" id="logoInput" accept="image/*" onchange="previewImage(this, 'logoPreview')">
-        <img id="logoPreview" class="preview-img">
-        <button class="btn" onclick="uploadData('logo', 'logoInput')">حفظ اللوجو الجديد</button>
+        <div class="card-title"><i class="fas fa-paint-brush"></i> هوية الموقع (الرئيسية)</div>
+        <div class="form-group">
+            <label>تغيير اللوجو الرئيسي:</label>
+            <input type="file" id="logoInput" accept="image/*" onchange="previewImage(this, 'logoPreview')">
+            <img id="logoPreview" class="preview-img">
+            <button class="btn" style="margin-top: 15px;" id="btnLogo" onclick="uploadData('logo', 'logoInput', 'btnLogo')"><i class="fas fa-upload"></i> حفظ اللوجو الجديد</button>
+        </div>
 
-        <hr style="margin:20px 0; border-color:#333;">
+        <hr style="margin:30px 0; border-color:rgba(255,255,255,0.1);">
         
-        <label>نص نهاية العداد (بدل رمضان كريم):</label>
-        <input type="text" id="counterText" placeholder="مثلاً: كراميلات للأبد 🍭">
-        <button class="btn" onclick="updateText('counterText')">تحديث النص</button>
+        <div class="form-group">
+            <label>النص الختامي للعداد (بدل رمضان كريم):</label>
+            <input type="text" id="counterText" placeholder="اكتب النص هنا...">
+            <button class="btn" style="margin-top: 15px;" onclick="updateText('counterText')"><i class="fas fa-save"></i> تحديث النص الختامي</button>
+        </div>
     </div>
 
     <div class="card">
-        <div class="card-title"><i class="fas fa-ad"></i> التحكم في الإعلان العائم</div>
-        <label>نص الإعلان:</label>
-        <input type="text" id="adText" placeholder="اكتب نص الإعلان هنا...">
-        <label>صورة الإعلان:</label>
-        <input type="file" id="adImage" accept="image/*" onchange="previewImage(this, 'adPreview')">
-        <img id="adPreview" class="preview-img">
-        <label>حالة الإعلان:</label>
-        <select id="adVisible">
-            <option value="true">ظاهر ✅</option>
-            <option value="false">مخفي ❌</option>
-        </select>
-        <button class="btn" onclick="saveAd()">نشر الإعلان</button>
+        <div class="card-title"><i class="fas fa-bullhorn"></i> نظام الإعلانات المباشر</div>
+        <div class="form-group">
+            <label>نص الإعلان:</label>
+            <input type="text" id="adText" placeholder="اكتب عرضك أو إعلانك هنا...">
+        </div>
+        <div class="form-group">
+            <label>صورة الإعلان:</label>
+            <input type="file" id="adImage" accept="image/*" onchange="previewImage(this, 'adPreview')">
+            <img id="adPreview" class="preview-img">
+        </div>
+        <div class="form-group">
+            <label>حالة الإعلان:</label>
+            <select id="adVisible">
+                <option value="true">🟢 مرئي للجميع</option>
+                <option value="false">🔴 مخفي</option>
+            </select>
+        </div>
+        <button class="btn" id="btnAd" onclick="saveAd()"><i class="fas fa-broadcast-tower"></i> نشر الإعلان</button>
     </div>
 
     <div class="card">
-        <div class="card-title"><i class="fas fa-crown"></i> إضافة أسطورة للوحة الشرف</div>
-        <input type="text" id="legendName" placeholder="اسم الأسطورة الجديد">
-        <button class="btn" onclick="addLegend()">إضافة للوحة الشرف</button>
+        <div class="card-title"><i class="fas fa-crown"></i> إدارة أساطير لوحة الشرف</div>
+        <div style="display: flex; gap: 10px;">
+            <input type="text" id="legendName" placeholder="اكتب اسم الأسطورة الجديد...">
+            <button class="btn" style="width: auto;" onclick="addLegend()"><i class="fas fa-plus"></i></button>
+        </div>
+        <h4 style="margin-top: 20px; color: var(--gold);">الأساطير الحاليين (المضافين حديثاً):</h4>
+        <div class="items-grid" id="legendsGrid">
+            </div>
     </div>
 
     <div class="card">
-        <div class="card-title"><i class="fas fa-birthday-cake"></i> إضافة احتفال جديد</div>
-        <input type="text" id="eventTitle" placeholder="عنوان الاحتفال (مثلاً: احتفال الـ 600)">
-        <input type="file" id="eventImage" accept="image/*" onchange="previewImage(this, 'eventPreview')">
-        <img id="eventPreview" class="preview-img">
-        <button class="btn" onclick="addEvent()">إضافة الاحتفال</button>
+        <div class="card-title"><i class="fas fa-birthday-cake"></i> إدارة سجل الاحتفالات</div>
+        <div class="form-group">
+            <label>عنوان الاحتفال:</label>
+            <input type="text" id="eventTitle" placeholder="مثلاً: جمدان الـ 600">
+        </div>
+        <div class="form-group">
+            <label>صورة الاحتفال:</label>
+            <input type="file" id="eventImage" accept="image/*" onchange="previewImage(this, 'eventPreview')">
+            <img id="eventPreview" class="preview-img">
+        </div>
+        <button class="btn" id="btnEvent" onclick="addEvent()"><i class="fas fa-fire"></i> توثيق الاحتفال</button>
+        
+        <h4 style="margin-top: 20px; color: var(--gold);">الاحتفالات المضافة حديثاً:</h4>
+        <div class="items-grid" id="eventsGrid">
+            </div>
     </div>
+
 </div>
+
+<div id="toast-container"></div>
 
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
 <script>
+    // إعدادات Firebase
     const firebaseConfig = {
         apiKey: "AIzaSyCZr_OpkCfEFxeTrOc5fp7F_uvyVGlT5Yc",
         authDomain: "karamlat-99e6e.firebaseapp.com",
@@ -123,40 +229,37 @@
     firebase.initializeApp(firebaseConfig);
     const rtdb = firebase.database();
 
-    // 1. جلب المسجلين
-    rtdb.ref('contest_entries').on('value', (snapshot) => {
-        const body = document.getElementById('contestBody');
-        body.innerHTML = "";
-        snapshot.forEach((child) => {
-            const data = child.val();
-            body.innerHTML += `
-                <tr>
-                    <td>${data.name}</td>
-                    <td>${data.phone}</td>
-                    <td>${data.time}</td>
-                    <td><button class="btn btn-danger" onclick="deleteEntry('${child.key}')">حذف</button></td>
-                </tr>
-            `;
-        });
-    });
-
-    function deleteEntry(key) {
-        if(confirm('متأكد انك عايز تمسح المتسابق ده؟')) rtdb.ref('contest_entries').child(key).remove();
+    // ==========================================
+    // 🔔 نظام الإشعارات (Toast)
+    // ==========================================
+    function showToast(msg, type = "success") {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerHTML = type === 'success' ? `<i class="fas fa-check-circle"></i> ${msg}` : `<i class="fas fa-exclamation-circle"></i> ${msg}`;
+        container.appendChild(toast);
+        setTimeout(() => {
+            toast.style.animation = 'fadeOut 0.5s forwards';
+            setTimeout(() => toast.remove(), 500);
+        }, 3000);
     }
 
-    // 2. معاينة الصور
+    // ==========================================
+    // 📷 معاينة وتحويل الصور
+    // ==========================================
     function previewImage(input, previewId) {
         const preview = document.getElementById(previewId);
         const file = input.files[0];
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            preview.src = reader.result;
-            preview.style.display = 'block';
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                preview.src = reader.result;
+                preview.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
         }
-        if (file) reader.readAsDataURL(file);
     }
 
-    // 3. تحويل الصور لـ Base64 ورفعها
     async function toBase64(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -166,18 +269,87 @@
         });
     }
 
-    async function uploadData(path, inputId) {
-        const file = document.getElementById(inputId).files[0];
-        if(!file) return alert('اختار صورة الأول!');
-        const base64 = await toBase64(file);
-        rtdb.ref('admin_control').child(path).set(base64)
-        .then(() => alert('تم التحديث بنجاح!'));
+    // ==========================================
+    // 👥 جلب وإدارة المسجلين
+    // ==========================================
+    rtdb.ref('contest_entries').on('value', (snapshot) => {
+        const body = document.getElementById('contestBody');
+        body.innerHTML = "";
+        if (!snapshot.exists()) {
+            body.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#888;">لا يوجد مسجلين حتى الآن.</td></tr>`;
+            return;
+        }
+        snapshot.forEach((child) => {
+            const data = child.val();
+            body.innerHTML += `
+                <tr>
+                    <td><strong>${data.name}</strong></td>
+                    <td style="color:var(--s);">${data.phone}</td>
+                    <td style="font-size:0.8rem; color:#aaa;">${data.time}</td>
+                    <td><button class="btn btn-danger btn-sm" onclick="deleteEntry('${child.key}')"><i class="fas fa-trash"></i></button></td>
+                </tr>
+            `;
+        });
+    });
+
+    function deleteEntry(key) {
+        if(confirm('متأكد إنك عايز تحذف المتسابق ده؟')) {
+            rtdb.ref('contest_entries').child(key).remove()
+            .then(() => showToast("تم الحذف بنجاح!"))
+            .catch(() => showToast("حدث خطأ أثناء الحذف", "error"));
+        }
     }
 
-    function updateText(node) {
-        const val = document.getElementById(node).value;
-        rtdb.ref('admin_control').child(node).set(val)
-        .then(() => alert('تم تحديث النص!'));
+    // ==========================================
+    // 🎨 إدارة الهوية والإعلانات
+    // ==========================================
+    // جلب الإعدادات الحالية لعرضها في الأدمن
+    rtdb.ref('admin_control').on('value', (snapshot) => {
+        const data = snapshot.val();
+        if(data) {
+            if(data.counterText) document.getElementById('counterText').value = data.counterText;
+            if(data.ad) {
+                document.getElementById('adText').value = data.ad.text || '';
+                document.getElementById('adVisible').value = data.ad.visible ? "true" : "false";
+                if(data.ad.image) {
+                    const adPrev = document.getElementById('adPreview');
+                    adPrev.src = data.ad.image;
+                    adPrev.style.display = 'block';
+                }
+            }
+            if(data.logo) {
+                const logoPrev = document.getElementById('logoPreview');
+                logoPrev.src = data.logo;
+                logoPrev.style.display = 'block';
+            }
+        }
+    });
+
+    async function uploadData(path, inputId, btnId) {
+        const file = document.getElementById(inputId).files[0];
+        const btn = document.getElementById(btnId);
+        if(!file) return showToast('اختار صورة الأول يا هندسة!', 'error');
+        
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الرفع...';
+        btn.disabled = true;
+        
+        try {
+            const base64 = await toBase64(file);
+            await rtdb.ref('admin_control').child(path).set(base64);
+            showToast('تم تحديث اللوجو بنجاح! 🚀');
+        } catch(e) {
+            showToast('حصل خطأ في الرفع', 'error');
+        } finally {
+            btn.innerHTML = '<i class="fas fa-upload"></i> حفظ اللوجو الجديد';
+            btn.disabled = false;
+        }
+    }
+
+    function updateText(nodeId) {
+        const val = document.getElementById(nodeId).value;
+        if(!val) return showToast('اكتب النص الأول!', 'error');
+        rtdb.ref('admin_control').child(nodeId).set(val)
+        .then(() => showToast('تم تحديث النص الختامي! ✨'));
     }
 
     async function saveAd() {
@@ -185,33 +357,110 @@
         const visible = document.getElementById('adVisible').value === "true";
         const file = document.getElementById('adImage').files[0];
         let imageData = document.getElementById('adPreview').src;
+        const btn = document.getElementById('btnAd');
+
+        if(!text && !imageData && visible) return showToast('حط صورة أو نص للإعلان!', 'error');
+
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري النشر...';
+        btn.disabled = true;
 
         if(file) imageData = await toBase64(file);
         
-        rtdb.ref('admin_control/ad').set({
-            text: text,
-            image: imageData,
-            visible: visible
-        }).then(() => alert('تم نشر الإعلان!'));
+        rtdb.ref('admin_control/ad').set({ text: text, image: imageData, visible: visible })
+        .then(() => showToast('تم تحديث الإعلان بنجاح! 📢'))
+        .finally(() => {
+            btn.innerHTML = '<i class="fas fa-broadcast-tower"></i> نشر الإعلان';
+            btn.disabled = false;
+        });
     }
+
+    // ==========================================
+    // 👑 إدارة الأساطير والاحتفالات (إضافة وحذف)
+    // ==========================================
+    
+    // جلب وعرض الأساطير
+    rtdb.ref('admin_control/hall_of_fame').on('value', (snapshot) => {
+        const grid = document.getElementById('legendsGrid');
+        grid.innerHTML = "";
+        if(!snapshot.exists()) {
+            grid.innerHTML = "<p style='color:#888;'>مفيش أساطير انضافت من هنا لسه.</p>";
+            return;
+        }
+        snapshot.forEach(child => {
+            const key = child.key;
+            const data = child.val();
+            grid.innerHTML += `
+                <div class="item-card">
+                    <div class="delete-badge" onclick="deleteItem('hall_of_fame', '${key}')"><i class="fas fa-times"></i></div>
+                    <h4><i class="fas fa-user-astronaut"></i> ${data.name}</h4>
+                </div>
+            `;
+        });
+    });
 
     function addLegend() {
-        const name = document.getElementById('legendName').value;
-        if(!name) return;
-        rtdb.ref('admin_control/hall_of_fame').push({ name: name })
-        .then(() => alert('تم إضافة الأسطورة!'));
+        const nameInput = document.getElementById('legendName');
+        if(!nameInput.value) return showToast('اكتب الاسم يا غالي', 'error');
+        rtdb.ref('admin_control/hall_of_fame').push({ name: nameInput.value })
+        .then(() => {
+            showToast('تم إضافة الأسطورة! 🏆');
+            nameInput.value = '';
+        });
     }
 
+    // جلب وعرض الاحتفالات
+    rtdb.ref('admin_control/extra_events').on('value', (snapshot) => {
+        const grid = document.getElementById('eventsGrid');
+        grid.innerHTML = "";
+        if(!snapshot.exists()) {
+            grid.innerHTML = "<p style='color:#888;'>مفيش احتفالات انضافت من هنا لسه.</p>";
+            return;
+        }
+        snapshot.forEach(child => {
+            const key = child.key;
+            const data = child.val();
+            grid.innerHTML += `
+                <div class="item-card">
+                    <div class="delete-badge" onclick="deleteItem('extra_events', '${key}')"><i class="fas fa-times"></i></div>
+                    <img src="${data.image}" alt="Event">
+                    <h4>${data.title}</h4>
+                </div>
+            `;
+        });
+    });
+
     async function addEvent() {
-        const title = document.getElementById('eventTitle').value;
+        const titleInput = document.getElementById('eventTitle');
         const file = document.getElementById('eventImage').files[0];
-        if(!title || !file) return alert('كمل البيانات!');
+        const btn = document.getElementById('btnEvent');
+
+        if(!titleInput.value || !file) return showToast('كمل بيانات الاحتفال (عنوان وصورة)!', 'error');
         
-        const imageData = await toBase64(file);
-        rtdb.ref('admin_control/extra_events').push({
-            title: title,
-            image: imageData
-        }).then(() => alert('تم إضافة الاحتفال!'));
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الرفع...';
+        btn.disabled = true;
+
+        try {
+            const imageData = await toBase64(file);
+            await rtdb.ref('admin_control/extra_events').push({ title: titleInput.value, image: imageData });
+            showToast('تم توثيق الاحتفال! 🎉');
+            titleInput.value = '';
+            document.getElementById('eventImage').value = '';
+            document.getElementById('eventPreview').style.display = 'none';
+        } catch(e) {
+            showToast('خطأ في رفع الاحتفال', 'error');
+        } finally {
+            btn.innerHTML = '<i class="fas fa-fire"></i> توثيق الاحتفال';
+            btn.disabled = false;
+        }
+    }
+
+    // دالة عامة للحذف (للأساطير والاحتفالات)
+    function deleteItem(path, key) {
+        if(confirm('متأكد إنك عايز تمسح العنصر ده نهائياً؟')) {
+            rtdb.ref(`admin_control/${path}`).child(key).remove()
+            .then(() => showToast("تم الحذف من الواجهة بنجاح! 🗑️"))
+            .catch(() => showToast("حدث خطأ", "error"));
+        }
     }
 </script>
 
