@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الانضمام لجيش كرملات 👑</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #f806cc;
+            --secondary: #3f5efb;
+            --glass: rgba(255, 255, 255, 0.05);
+            --neon-shadow: 0 0 20px rgba(248, 6, 204, 0.5);
+        }
+
+        body {
+            margin: 0; padding: 0;
+            font-family: 'Cairo', sans-serif;
+            background: #050508;
+            height: 100vh;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            overflow: hidden; color: white;
+        }
+
+        .bg-animate {
+            position: absolute; width: 100%; height: 100%;
+            background: radial-gradient(circle at 20% 30%, #1a0a2e 0%, #000 100%);
+            z-index: -1;
+        }
+
+        .reg-card {
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 30px; border-radius: 30px;
+            width: 90%; max-width: 400px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        h2 { font-size: 1.8rem; font-weight: 900; margin: 10px 0; background: linear-gradient(to left, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .input-group { position: relative; margin-bottom: 15px; }
+        .input-group i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--primary); }
+
+        input {
+            width: 100%; padding: 12px 45px 12px 15px;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px; color: white; font-family: 'Cairo'; outline: none; transition: 0.3s; box-sizing: border-box;
+        }
+
+        input:focus { border-color: var(--primary); box-shadow: var(--neon-shadow); }
+
+        .submit-btn {
+            width: 100%; padding: 15px; background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none; border-radius: 12px; color: white; font-weight: 900; cursor: pointer; transition: 0.3s;
+        }
+
+        .submit-btn:disabled { background: #444; cursor: not-allowed; }
+
+        .back-home {
+            margin-top: 20px; text-decoration: none; color: #aaa; font-size: 0.85rem; transition: 0.3s;
+            display: inline-flex; align-items: center; gap: 8px;
+        }
+        .back-home:hover { color: white; }
+
+        /* Custom Alert */
+        #customAlert {
+            display: none; position: fixed; top: 20px; padding: 15px 30px;
+            border-radius: 10px; z-index: 100; font-weight: bold; animation: slideIn 0.5s ease;
+        }
+        @keyframes slideIn { from { transform: translateY(-100px); } to { transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div id="customAlert"></div>
+    <div class="bg-animate"></div>
+
+    <div class="reg-card">
+        <div style="font-size: 2.5rem;">🍭</div>
+        <h2>سجل في مفاجأة الـ 500</h2>
+        <p style="color: #888; font-size: 0.8rem; margin-bottom: 20px;">ادخل السحب العشوائي لجيش الإمبراطورية</p>
+
+        <form id="registrationForm">
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="userName" placeholder="اسمك بالكامل" required>
+            </div>
+
+            <div class="input-group">
+                <i class="fab fa-telegram-plane"></i>
+                <input type="text" id="userHandle" placeholder="يوزر التليجرام أو رقمك" required>
+            </div>
+
+            <button type="submit" id="submitBtn" class="submit-btn">تأكيد الانضمام 🔥</button>
+        </form>
+
+        <a href="index.html" class="back-home">
+            <i class="fas fa-house"></i> العودة للرئيسية
+        </a>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+        import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCZr_OpkCfEFxeTrOc5fp7F_uvyVGlT5Yc",
+            authDomain: "karamlat-99e6e.firebaseapp.com",
+            databaseURL: "https://karamlat-99e6e-default-rtdb.firebaseio.com",
+            projectId: "karamlat-99e6e",
+            storageBucket: "karamlat-99e6e.firebasestorage.app",
+            messagingSenderId: "817474436731",
+            appId: "1:817474436731:web:6b4c38fd98048f1a3b6cde"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const form = document.getElementById('registrationForm');
+        const alertBox = document.getElementById('customAlert');
+
+        function showAlert(msg, type) {
+            alertBox.innerText = msg;
+            alertBox.style.display = 'block';
+            alertBox.style.backgroundColor = type === 'success' ? '#2ecc71' : '#e74c3c';
+            setTimeout(() => { alertBox.style.display = 'none'; }, 3000);
+        }
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const submitBtn = document.getElementById('submitBtn');
+            const name = document.getElementById('userName').value;
+            const handle = document.getElementById('userHandle').value.replace(/[^a-zA-Z0-9]/g, ""); // تنظيف اليوزر
+
+            submitBtn.disabled = true;
+            submitBtn.innerText = "جاري التحقق...";
+
+            try {
+                // التأكد من عدم تكرار التسجيل (باستخدام اليوزر كـ Key)
+                const dbRef = ref(db);
+                const snapshot = await get(child(dbRef, `registrations/${handle}`));
+
+                if (snapshot.exists()) {
+                    showAlert("يا بطل، أنت مسجل عندنا بالفعل! 🍭", "error");
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "تأكيد الانضمام 🔥";
+                } else {
+                    // تسجيل جديد
+                    await set(ref(db, 'registrations/' + handle), {
+                        fullName: name,
+                        userHandle: handle,
+                        timestamp: new Date().toISOString()
+                    });
+                    
+                    showAlert("تم تسجيلك بنجاح! انتظر السحب 🚀", "success");
+                    form.reset();
+                    submitBtn.innerText = "تم التسجيل ✅";
+                }
+            } catch (error) {
+                showAlert("حصل مشكلة، حاول تاني يا كيمو", "error");
+                submitBtn.disabled = false;
+            }
+        };
+    </script>
+</body>
+</html>
