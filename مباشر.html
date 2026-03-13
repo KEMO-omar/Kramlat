@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بث مباشر | ماراثون سحب كرملات 🔴</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root { --primary: #f806cc; --secondary: #3f5efb; --bg: #050508; --gold: #ffcc00; }
+        body { margin: 0; font-family: 'Cairo', sans-serif; background: var(--bg); color: white; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        
+        .live-indicator { position: absolute; top: 20px; right: 20px; background: #ff4757; padding: 5px 15px; border-radius: 8px; font-weight: 900; animation: blink 1.2s infinite; display: flex; align-items: center; gap: 8px; z-index: 100; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        .stream-card { text-align: center; width: 90%; max-width: 600px; position: relative; }
+        
+        .waiting-msg { font-size: 1.5rem; color: #666; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+        .main-display { display: none; }
+        
+        .picker-box {
+            height: 180px; background: rgba(255,255,255,0.02); border: 2px solid var(--primary); 
+            border-radius: 25px; display: flex; align-items: center; justify-content: center;
+            font-size: 2.5rem; font-weight: 900; margin: 25px 0; position: relative; overflow: hidden;
+            box-shadow: 0 0 40px rgba(248, 6, 204, 0.2);
+        }
+
+        .progress-bar { position: absolute; bottom: 0; left: 0; height: 6px; background: var(--primary); width: 0%; transition: 0.2s linear; }
+        
+        #timerDisplay { font-size: 1.2rem; color: var(--primary); font-weight: bold; margin-bottom: 10px; }
+
+        .winner-ui { display: none; animation: winnerPop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes winnerPop { 0% { transform: scale(0.3); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div class="live-indicator"><i class="fas fa-circle"></i> مباشر</div>
+
+    <div class="stream-card">
+        <div id="waitingState" class="waiting-msg">
+            <div style="font-size: 4rem;">📡</div>
+            بانتظار إشارة البدء من الإمبراطور...
+        </div>
+
+        <div id="drawingState" class="main-display">
+            <div id="timerDisplay">الماراثون شغال...</div>
+            <div class="picker-box">
+                <div id="nameDisplay">جاري السحب...</div>
+                <div id="winnerUI" class="winner-ui">
+                    <div style="color: var(--gold); font-size: 1.2rem;">🏆 مبروك للفائز 🏆</div>
+                    <div id="winnerName" style="font-size: 3.5rem; text-shadow: 0 0 20px var(--primary);"></div>
+                </div>
+                <div class="progress-bar" id="pBar"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+        import { getDatabase, ref, onValue, get, child } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCZr_OpkCfEFxeTrOc5fp7F_uvyVGlT5Yc",
+            authDomain: "karamlat-99e6e.firebaseapp.com",
+            databaseURL: "https://karamlat-99e6e-default-rtdb.firebaseio.com",
+            projectId: "karamlat-99e6e",
+            storageBucket: "karamlat-99e6e.firebasestorage.app",
+            messagingSenderId: "817474436731",
+            appId: "1:817474436731:web:6b4c38fd98048f1a3b6cde"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const streamRef = ref(db, 'liveStream');
+
+        let participants = [];
+        let nameInterval;
+
+        // تحميل الأسماء للـ Animation
+        async function loadNames() {
+            const snap = await get(child(ref(db), 'registrations'));
+            if(snap.exists()) participants = Object.values(snap.val()).map(u => u.fullName);
+        }
+        loadNames();
+
+        // الاستماع للتغييرات في البث
+        onValue(streamRef, (snapshot) => {
+            const data = snapshot.val();
+            if (!data) return;
+
+            if (data.status === "drawing") {
+                showDrawing(data.progress, data.timer);
+            } else if (data.status === "finished") {
+                showWinner(data.winner);
+            } else {
+                resetToWaiting();
+            }
+        });
+
+        function showDrawing(progress, timerText) {
+            document.getElementById('waitingState').style.display = 'none';
+            document.getElementById('drawingState').style.display = 'block';
+            document.getElementById('winnerUI').style.display = 'none';
+            document.getElementById('nameDisplay').style.display = 'block';
+            
+            document.getElementById('pBar').style.width = progress + "%";
+            document.getElementById('timerDisplay').innerText = "الوقت المتبقي: " + timerText;
+
+            if (!nameInterval) {
+                nameInterval = setInterval(() => {
+                    if(participants.length > 0) {
+                        document.getElementById('nameDisplay').innerText = participants[Math.floor(Math.random() * participants.length)];
+                    }
+                }, 80);
+            }
+        }
+
+        function showWinner(name) {
+            clearInterval(nameInterval);
+            nameInterval = null;
+            document.getElementById('nameDisplay').style.display = 'none';
+            document.getElementById('winnerUI').style.display = 'block';
+            document.getElementById('winnerName').innerText = name;
+            document.getElementById('pBar').style.width = "0%";
+            document.getElementById('timerDisplay').innerText = "انتهى الماراثون! 🎉";
+            
+            confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
+        }
+
+        function resetToWaiting() {
+            document.getElementById('waitingState').style.display = 'block';
+            document.getElementById('drawingState').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
