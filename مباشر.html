@@ -9,12 +9,12 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root { --primary: #f806cc; --secondary: #3f5efb; --bg: #050508; --gold: #ffcc00; }
-        body { margin: 0; font-family: 'Cairo', sans-serif; background: var(--bg); color: white; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        body { margin: 0; font-family: 'Cairo', sans-serif; background: var(--bg); color: white; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
         
         .live-indicator { position: absolute; top: 20px; right: 20px; background: #ff4757; padding: 5px 15px; border-radius: 8px; font-weight: 900; animation: blink 1.2s infinite; display: flex; align-items: center; gap: 8px; z-index: 100; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-        .stream-card { text-align: center; width: 90%; max-width: 600px; position: relative; }
+        .stream-card { text-align: center; width: 90%; max-width: 600px; position: relative; z-index: 10; }
         
         .waiting-msg { font-size: 1.5rem; color: #666; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
@@ -34,6 +34,21 @@
 
         .winner-ui { display: none; animation: winnerPop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
         @keyframes winnerPop { 0% { transform: scale(0.3); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+        /* ستايل الأذكار الطائرة */
+        .dhikr-msg {
+            position: absolute; background: rgba(255, 255, 255, 0.05); padding: 10px 20px;
+            border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 1rem; color: var(--gold); white-space: nowrap;
+            animation: dhikrFade 3s ease-in-out forwards; z-index: 5;
+            backdrop-filter: blur(5px);
+        }
+        @keyframes dhikrFade {
+            0% { opacity: 0; transform: translateY(20px); }
+            20% { opacity: 1; transform: translateY(0); }
+            80% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-20px); }
+        }
     </style>
 </head>
 <body>
@@ -79,15 +94,15 @@
 
         let participants = [];
         let nameInterval;
+        let dhikrInterval;
+        const azkar = ["صلي على النبي ﷺ", "استغفر الله", "وحد الله", "سبحان الله وبحمده", "لا حول ولا قوة إلا بالله", "الله أكبر", "الحمد لله"];
 
-        // تحميل الأسماء للـ Animation
         async function loadNames() {
             const snap = await get(child(ref(db), 'registrations'));
             if(snap.exists()) participants = Object.values(snap.val()).map(u => u.fullName);
         }
         loadNames();
 
-        // الاستماع للتغييرات في البث
         onValue(streamRef, (snapshot) => {
             const data = snapshot.val();
             if (!data) return;
@@ -116,12 +131,36 @@
                         document.getElementById('nameDisplay').innerText = participants[Math.floor(Math.random() * participants.length)];
                     }
                 }, 80);
+                
+                // بدء ظهور الأذكار
+                startDhikr();
             }
+        }
+
+        function startDhikr() {
+            if (dhikrInterval) return;
+            dhikrInterval = setInterval(() => {
+                const text = azkar[Math.floor(Math.random() * azkar.length)];
+                const div = document.createElement('div');
+                div.className = 'dhikr-msg';
+                div.innerText = text;
+                
+                // توزيع عشوائي في الشاشة بعيداً عن المركز
+                const x = Math.random() * 80 + 10; // من 10% لـ 90%
+                const y = Math.random() * 80 + 10; 
+                div.style.left = x + '%';
+                div.style.top = y + '%';
+                
+                document.body.appendChild(div);
+                setTimeout(() => div.remove(), 3000);
+            }, 1500); // تظهر رسالة كل ثانية ونصف
         }
 
         function showWinner(name) {
             clearInterval(nameInterval);
+            clearInterval(dhikrInterval);
             nameInterval = null;
+            dhikrInterval = null;
             document.getElementById('nameDisplay').style.display = 'none';
             document.getElementById('winnerUI').style.display = 'block';
             document.getElementById('winnerName').innerText = name;
@@ -132,6 +171,8 @@
         }
 
         function resetToWaiting() {
+            clearInterval(dhikrInterval);
+            dhikrInterval = null;
             document.getElementById('waitingState').style.display = 'block';
             document.getElementById('drawingState').style.display = 'none';
         }
