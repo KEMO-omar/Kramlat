@@ -274,7 +274,7 @@
     // ==========================================
     // 👥 جلب وإدارة المسجلين
     // ==========================================
-    rtdb.ref('contest_entries').on('value', (snapshot) => {
+    rtdb.ref('registrations').on('value', (snapshot) => {
         const body = document.getElementById('contestBody');
         body.innerHTML = "";
         if (!snapshot.exists()) {
