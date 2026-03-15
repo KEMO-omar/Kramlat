@@ -25,22 +25,6 @@
     }
     canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 
-    /* زينة رمضان - فوانيس متحركة */
-    .ramadan-decoration {
-      position: fixed; top: 0; left: 0; width: 100%; height: 80px;
-      z-index: 1001; pointer-events: none;
-      display: flex; justify-content: space-around; align-items: flex-start;
-    }
-    .fanoos {
-      color: var(--gold); font-size: 1.8rem;
-      filter: drop-shadow(0 0 10px var(--gold));
-      animation: swing 3s infinite ease-in-out; transform-origin: top center;
-    }
-    @keyframes swing {
-      0%, 100% { transform: rotate(-10deg); }
-      50% { transform: rotate(10deg); }
-    }
-
     /* نافبار */
     nav.cosmic-nav {
       position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
@@ -73,6 +57,8 @@
       font-size: clamp(40px, 12vw, 80px) !important;
       text-shadow: 0 0 20px var(--a), 0 0 40px var(--p);
       -webkit-text-fill-color: var(--a) !important;
+      display: block;
+      margin-top: 20px;
     }
 
     /* ستايل قسم الإعلان الجديد */
@@ -87,7 +73,7 @@
     .stats-card { background: linear-gradient(135deg, rgba(255,0,127,0.2), rgba(0,212,255,0.2)); border: 2px solid var(--s); padding: 15px 30px; border-radius: 20px; margin: 25px 0; font-weight: 900; color: #fff; backdrop-filter: blur(10px); }
     .stats-card span { color: var(--a); font-size: 1.5rem; text-shadow: 0 0 10px var(--a); }
 
-    .main-btn { background: linear-gradient(45deg, var(--p), var(--s)); color: #fff; padding: 18px 40px; border-radius: 50px; text-decoration: none; font-weight: 900; font-size: 1.1rem; display: inline-block; box-shadow: 0 0 30px var(--p); border:none; cursor: pointer; transition: 0.3s; text-align: center; }
+    .main-btn { background: linear-gradient(45deg, var(--p), var(--s)); color: #fff; padding: 18px 40px; border-radius: 50px; text-decoration: none; font-weight: 900; font-size: 1.1rem; display: inline-block; box-shadow: 0 0 30px var(--p); border:none; cursor: pointer; transition: 0.3s; text-align: center; margin: 5px; }
 
     /* الأقسام */
     .content-box { background: var(--glass); padding: 35px; border-radius: 40px; border: 2px solid var(--p); line-height: 1.8; backdrop-filter: blur(15px); text-align: right; }
@@ -132,9 +118,8 @@
   <a class="nav-link install-nav-btn" id="installBtn" onclick="installApp()"><i class="fa-solid fa-download"></i> تثبيت 🍭</a>
   <a class="nav-link active" onclick="nav('home', this)">الرئيسية</a>
   <a class="nav-link" onclick="nav('journey', this)">عن كرملات</a>
- <a class="nav-link" href="join.html">المسابقة</a>
+  <a class="nav-link" href="join.html">المسابقة</a>
   <a class="nav-link" href="خ.html">المتسابقون</a>
-   <a class="nav-link" href="مباشر.html">البث المباشر</a>
   <a class="nav-link" onclick="nav('hall-of-fame', this)">لوحة الشرف</a>
   <a class="nav-link" onclick="nav('events', this)">الاحتفالات</a>
   <a class="nav-link" onclick="nav('team', this)">القادة</a>
@@ -173,20 +158,7 @@
       <div class="feature-tag" onclick="spawnEmoji('👻', event)">⚡ 👻 الغموض والإثارة: حاجات هتخلي الأدرينالين يوصل للسما! زي القصص المرعبه والمشوقه اللي تخليك تقراها غصب عنك 🚨</div>
       <div class="feature-tag" onclick="spawnEmoji('🎥', event)">🎥 إبداع بصري: إيديتس مجنونة معمول بمزاج عالي ساعات بتضحك و ساعات تطير المخ.</div>
       <div class="feature-tag" onclick="spawnEmoji('🧠', event)">🧠 كبسولات معرفية: معلومات ممتعة هتصدمك بجد معلومات تخليك تقول إيه ده؟.</div>
-      <div class="feature-tag" onclick="spawnEmoji('🎥', event)">🎥 إبداع بصري: إيديتس مجنونة معمول بمزاج عالي ساعات بتضحك و ساعات تطير المخ.</div>
       <div class="feature-tag" onclick="spawnEmoji('🎮', event)">🎮 ألعاب وتحديات: مساحة للتفاعل والمغامرة بنعملها للمتابعين و كمان بين المتابعين وبعض.</div>
-    </div>
-  </section>
-
-  <section id="contest" class="page">
-    <div class="content-box" style="border-color: var(--a); text-align: center;">
-      <h2 class="section-title">🏆 المسابقة الكونية الكبرى</h2>
-      <p>المسابقه الاكبر على الاطلاق على جوائز مبهرة و رائعه و سيتم وضع اسمك في لوحة الشرف.</p>
-      <div style="max-width: 500px; margin: 0 auto;">
-        <input type="text" id="joinName" placeholder="اكتب اسمك الثلاثي هنا...">
-        <input type="tel" id="joinPhone" placeholder="رقم الواتساب الخاص بك">
-        <button class="main-btn" id="contestBtn" style="width: 100%; margin-top: 20px;" onclick="sendToFirebase()">يلا بينا🏁</button>
-      </div>
     </div>
   </section>
 
@@ -267,15 +239,14 @@
   firebase.initializeApp(firebaseConfig);
   const rtdb = firebase.database();
 
-  // جلب إعدادات الإدارة (اللوجو والنص)
+  // جلب إعدادات الإدارة
   let adminCounterText = "رمضان كريم";
   rtdb.ref('admin_control').on('value', (snapshot) => {
     const data = snapshot.val();
     if (data) {
-      if (data.logo) document.getElementById('logoImg').src = data.logo; // Base64 أو URL
+      if (data.logo) document.getElementById('logoImg').src = data.logo; 
       if (data.counterText) adminCounterText = data.counterText;
       
-      // الإعلانات
       if (data.ad && data.ad.visible) {
         document.getElementById('adBox').style.display = 'block';
         document.getElementById('adImage').src = data.ad.image;
@@ -284,7 +255,6 @@
         document.getElementById('adBox').style.display = 'none';
       }
 
-      // لوحة الشرف الديناميكية
       if (data.hall_of_fame) {
         const grid = document.getElementById('hallOfFameGrid');
         grid.innerHTML = `
@@ -298,7 +268,6 @@
         });
       }
 
-      // الاحتفالات الجديدة
       if (data.extra_events) {
         const evGrid = document.getElementById('eventsGrid');
         evGrid.innerHTML = `
@@ -334,7 +303,6 @@
   }
   startCounter();
 
-  // PWA
   let deferredPrompt;
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
@@ -350,20 +318,6 @@
         deferredPrompt = null;
       });
     }
-  }
-
-  function sendToFirebase() {
-    const name = document.getElementById('joinName').value;
-    const phone = document.getElementById('joinPhone').value;
-    const btn = document.getElementById('contestBtn');
-    if(!name || !phone) { alert('سجل بياناتك يا عسل!'); return; }
-    btn.innerText = "جاري الحفظ...";
-    rtdb.ref('contest_entries').push({ name, phone, time: new Date().toLocaleString() })
-    .then(() => { 
-      alert('تم تعبئة المسابقه لامتسابقين بنجاح🚀'); 
-      btn.innerText = "جدع اتسجلت✅";
-      btn.disabled = true;
-    });
   }
 
   function nav(id, el) {
