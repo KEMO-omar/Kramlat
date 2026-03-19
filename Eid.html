@@ -2,46 +2,26 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galleria - ألبوم العيد</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>جاليريا العيد - كرملات</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3342/3342137.png" type="image/png">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#1a1a2e">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <div id="splash-screen">
-        <div class="splash-content">
-            <div class="loader"></div>
-            <h1>جاليريا العيد</h1>
-        </div>
+        <div class="loader"></div>
+        <h2 style="margin-top:20px">جاري تجهيز الألبوم...</h2>
     </div>
 
     <header class="main-header">
         <div class="header-top">
-            <a href="index.html" class="back-home-btn" title="العودة للرئيسية">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-            </a>
-            <div class="logo">
-                <span class="logo-icon">📸</span>
-                <h1>ألبوم العيد</h1>
-            </div>
-            <button id="settings-btn" class="icon-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-            </button>
+            <a href="index.html" class="back-home-btn">🏠</a>
+            <div class="logo">📸 جاليريا العيد</div>
+            <div id="online-count" class="online-tag">1 متصل</div>
         </div>
-
         <div class="stats-bar">
-            <div class="stat-item"><span id="photo-count">0</span> صورة</div>
-            <div class="stat-item active-users"><span id="online-count">1</span> متصل الآن</div>
-        </div>
-
-        <div class="filter-bar">
-            <button class="filter-btn active" data-sort="newest">الأحدث</button>
-            <button class="filter-btn" data-sort="popular">الأكثر تفاعلاً</button>
-            <a href="https://kemo-omar.github.io/Kramlat/" target="_blank" class="kramlat-link">إمبراطورية كرملات</a>
+            <span id="photo-count">0</span> صورة في الألبوم
         </div>
     </header>
 
@@ -50,25 +30,19 @@
 
     <section class="upload-section">
         <div class="upload-container">
-            <input type="text" id="user-name-input" placeholder="اكتب اسمك هنا..." class="name-field">
+            <input type="text" id="user-name-input" placeholder="اكتب اسمك هنا (سيتم حفظه)..." class="name-field">
             <label for="image-upload" class="upload-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                <span>انشر صورتك</span>
+                <span>➕ انشر صورتك الآن</span>
             </label>
             <input type="file" id="image-upload" accept="image/*" hidden>
+            <a href="https://kemo-omar.github.io/Kramlat/" target="_blank" class="kramlat-link">إمبراطورية كرملات</a>
         </div>
     </section>
 
-    <div id="image-modal" class="modal">
+    <div id="image-modal" class="modal" onclick="this.style.display='none'">
         <div class="modal-content">
-            <div class="modal-header">
-                <span id="modal-user-name" class="publisher-name"></span>
-                <div class="modal-actions">
-                    <button id="modal-download-btn" class="action-btn">حفظ</button>
-                    <button id="modal-close-btn" class="close-btn">&times;</button>
-                </div>
-            </div>
-            <img id="modal-img" src="" alt="عرض الصورة">
+            <img id="modal-img" src="">
+            <div id="modal-user-name" class="modal-caption"></div>
         </div>
     </div>
 
