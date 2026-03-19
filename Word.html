@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>راديو كرملات | صدى الإمبراطورية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #e056fd;
+            --secondary: #9b59b6;
+            --bg: #0b0b16;
+            --card: #1a1a2e;
+            --gold: #f1c40f;
+            --glass: rgba(255, 255, 255, 0.03);
+        }
+
+        /* تصميم الخلفية المتحركة */
+        body {
+            background: var(--bg);
+            background-image: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #0b0b16 100%);
+            color: white;
+            font-family: 'Cairo', sans-serif;
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* زر الرجوع للرئيسية */
+        .back-home {
+            position: fixed; top: 20px; right: 20px;
+            background: var(--glass);
+            border: 1px solid var(--primary);
+            color: white; padding: 10px 20px;
+            border-radius: 50px; text-decoration: none;
+            font-size: 0.9rem; transition: 0.3s;
+            backdrop-filter: blur(10px); z-index: 1000;
+        }
+        .back-home:hover { background: var(--primary); box-shadow: 0 0 15px var(--primary); }
+
+        header { text-align: center; margin-bottom: 40px; margin-top: 40px; }
+        h1 { font-weight: 900; font-size: 3rem; margin: 0; letter-spacing: -1px; }
+        .highlight { color: var(--primary); text-shadow: 0 0 20px var(--primary); }
+        .subtitle { color: #888; font-size: 1.1rem; margin-top: 5px; }
+
+        /* منطقة التغذية الحية */
+        .feed { width: 100%; max-width: 550px; position: relative; }
+
+        .post-card {
+            background: var(--card);
+            margin-bottom: 25px; padding: 25px;
+            border-radius: 24px; border: 1px solid rgba(255,255,255,0.05);
+            position: relative; animation: slideIn 0.5s ease-out;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .post-card::before {
+            content: ''; position: absolute; top: 0; right: 0; width: 4px; height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+        }
+
+        .post-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
+        .avatar { width: 45px; height: 45px; background: var(--glass); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: var(--primary); border: 1px solid var(--primary); }
+        .post-name { font-weight: 800; color: var(--gold); font-size: 1.1rem; }
+
+        .post-msg { font-size: 1.2rem; line-height: 1.7; color: #ecf0f1; margin-bottom: 20px; }
+
+        .actions { display: flex; align-items: center; gap: 15px; }
+        .like-btn {
+            background: rgba(255,255,255,0.05); padding: 8px 20px;
+            border-radius: 15px; cursor: pointer; transition: 0.3s;
+            display: flex; align-items: center; gap: 10px; border: 1px solid transparent;
+        }
+        .like-btn.active { border-color: #ff4757; background: rgba(255, 71, 87, 0.1); }
+        .like-btn:hover { transform: translateY(-3px); }
+        .heart-icon { color: #ff4757; font-size: 1.3rem; transition: 0.3s; }
+
+        /* الصاروخ العائم */
+        #openInput {
+            width: 70px; height: 70px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 22px; display: flex; justify-content: center; align-items: center;
+            font-size: 30px; cursor: pointer;
+            box-shadow: 0 10px 25px rgba(224, 86, 253, 0.5);
+            position: fixed; bottom: 30px; left: 30px;
+            z-index: 1000; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #openInput:hover { transform: scale(1.1) rotate(15deg); }
+
+        /* نافذة الإرسال */
+        .overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 5, 10, 0.95); justify-content: center; align-items: center;
+            z-index: 2000; backdrop-filter: blur(15px);
+        }
+        .input-card {
+            background: #111122; padding: 40px; border-radius: 35px;
+            width: 90%; max-width: 450px; border: 1px solid var(--primary);
+            text-align: center; position: relative;
+        }
+        .input-card h3 { font-size: 2rem; margin-bottom: 25px; font-weight: 900; }
+
+        input, textarea {
+            width: 100%; padding: 18px; margin-bottom: 20px;
+            border-radius: 18px; border: 1px solid rgba(255,255,255,0.1);
+            background: #0b0b16; color: white; font-family: 'Cairo';
+            box-sizing: border-box; outline: none; transition: 0.3s;
+        }
+        input:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(224, 86, 253, 0.2); }
+
+        .send-btn {
+            background: var(--primary); color: white; border: none;
+            padding: 15px; border-radius: 18px; cursor: pointer;
+            font-weight: 900; font-size: 1.2rem; width: 100%; transition: 0.3s;
+        }
+        .send-btn:hover { background: #be2edd; letter-spacing: 1px; }
+
+        /* التنبيهات (Toast) */
+        .toast {
+            position: fixed; bottom: 110px; right: -300px;
+            background: var(--card); border-right: 5px solid var(--primary);
+            padding: 15px 25px; border-radius: 15px; color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.5s; z-index: 3000;
+        }
+        .toast.show { right: 30px; }
+
+        @keyframes slideIn { from { opacity: 0; transform: translateY(30px); } }
+
+        /* تأثيرات إضافية */
+        .stats { font-size: 0.8rem; color: #555; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="back-home"><i class="fas fa-home"></i> الرئيسية</a>
+
+    <header>
+        <h1>راديو <span class="highlight">كرملات</span> 🍭</h1>
+        <p class="subtitle">بث حي لمشاعر جيش الإمبراطورية</p>
+    </header>
+
+    <div class="feed" id="feed">
+        </div>
+
+    <div id="openInput"><i class="fas fa-paper-plane"></i></div>
+
+    <div class="overlay" id="overlay">
+        <div class="input-card">
+            <span id="close" style="position:absolute; top:20px; right:30px; cursor:pointer; font-size:24px; color:#555;">✕</span>
+            <h3>سيب بصمتك ✍️</h3>
+            <input type="text" id="uName" placeholder="اسمك (أو جندي مجهول)">
+            <textarea id="uMsg" placeholder="اكتب حاجة عظمة لكرملات..."></textarea>
+            <button class="send-btn" id="sendBtn">بث الآن 🚀</button>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">بطل جديد انضم للراديو! ❤️</div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCZr_OpkCfEFxeTrOc5fp7F_uvyVGlT5Yc",
+            authDomain: "karamlat-99e6e.firebaseapp.com",
+            databaseURL: "https://karamlat-99e6e-default-rtdb.firebaseio.com",
+            projectId: "karamlat-99e6e",
+            storageBucket: "karamlat-99e6e.firebasestorage.app",
+            messagingSenderId: "817474436731",
+            appId: "1:817474436731:web:6b4c38fd98048f1a3b6cde"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // نظام التنبيهات
+        function showToast(text) {
+            const t = document.getElementById('toast');
+            t.innerText = text;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        // فتح وقفل النافذة
+        const overlay = document.getElementById('overlay');
+        document.getElementById('openInput').onclick = () => overlay.style.display = 'flex';
+        document.getElementById('close').onclick = () => overlay.style.display = 'none';
+
+        // إرسال الرسالة
+        document.getElementById('sendBtn').onclick = () => {
+            const name = document.getElementById('uName').value.trim() || "جندي مجهول";
+            const msg = document.getElementById('uMsg').value.trim();
+            if(msg) {
+                db.ref('kramlat_radio').push({
+                    name: name,
+                    message: msg,
+                    likes: 0,
+                    time: new Date().toLocaleTimeString('ar-EG')
+                });
+                overlay.style.display = 'none';
+                document.getElementById('uMsg').value = "";
+                showToast("رسالتك بقت عالراديو يا بطل! ✨");
+            }
+        };
+
+        // عرض الرسائل
+        db.ref('kramlat_radio').on('value', (snap) => {
+            const feed = document.getElementById('feed');
+            feed.innerHTML = "";
+            const data = snap.val();
+            const likedPosts = JSON.parse(localStorage.getItem('kramlat_liked') || "[]");
+
+            if(data) {
+                Object.keys(data).reverse().forEach(key => {
+                    const post = data[key];
+                    const isLiked = likedPosts.includes(key);
+                    const card = document.createElement('div');
+                    card.className = 'post-card';
+                    card.innerHTML = `
+                        <div class="post-header">
+                            <div class="avatar"><i class="fas fa-user-shield"></i></div>
+                            <div>
+                                <div class="post-name">${post.name}</div>
+                                <div class="stats">${post.time || 'الآن'}</div>
+                            </div>
+                        </div>
+                        <div class="post-msg">${post.message}</div>
+                        <div class="actions">
+                            <div class="like-btn ${isLiked ? 'active' : ''}" onclick="handleLike('${key}', ${post.likes || 0})">
+                                <i class="${isLiked ? 'fas' : 'far'} fa-heart heart-icon"></i>
+                                <span style="font-weight:bold">${post.likes || 0}</span>
+                            </div>
+                        </div>
+                    `;
+                    feed.appendChild(card);
+                });
+            }
+        });
+
+        // نظام اللايك الواحد
+        window.handleLike = (key, current) => {
+            let likedPosts = JSON.parse(localStorage.getItem('kramlat_liked') || "[]");
+            
+            if(likedPosts.includes(key)) {
+                showToast("إنت عملت لايك قبل كدة يا بطل! 😉");
+                return;
+            }
+
+            db.ref('kramlat_radio/' + key).update({ likes: current + 1 });
+            likedPosts.push(key);
+            localStorage.setItem('kramlat_liked', JSON.stringify(likedPosts));
+            showToast("لايك من القلب وصل! ❤️");
+        };
+    </script>
+</body>
+</html>
