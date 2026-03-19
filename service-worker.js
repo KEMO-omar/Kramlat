@@ -5,7 +5,6 @@ const STATIC_ASSETS = [
     './Eid.html',
     './style.css',
     './script.js',
-    './logo8.png',
     './manifest.json',
     'https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap'
 ];
