@@ -26,6 +26,12 @@
     100% { transform: scale(1); }
 }
 
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
 @keyframes hintFade {
     0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
     20% { opacity: 1; transform: translateX(-50%) translateY(0); }
@@ -42,6 +48,7 @@
     -webkit-tap-highlight-color: transparent;
     /* إزالة الإطار الافتراضي عند التركيز */
     outline: none;
+    -webkit-font-smoothing: antialiased; /* تحسين نعومة الخطوط */
 }
 
 body {
@@ -51,6 +58,7 @@ body {
     position: relative;
     min-height: 100vh;
     overflow-x: hidden;
+    overscroll-behavior-y: none; /* يمنع تأثير المطاط عند نهاية الصفحة لتحسين الأداء */
 }
 
 /* كلاس لمنع التمرير في الخلفية عند فتح الصورة */
@@ -63,12 +71,16 @@ body.no-scroll {
 body::before {
     content: "";
     position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
+    inset: 0; /* يثبت العنصر في جميع الزوايا */
+    height: 100dvh; /* ارتفاع ديناميكي للموبايل */
     background: repeating-linear-gradient(180deg, transparent 0, rgba(67, 97, 238, 0.05) 1px, transparent 3px);
     background-size: 100% 50px;
     animation: flowWater 3s linear infinite, changeColor 24s infinite linear;
     pointer-events: none;
     z-index: -1;
+    /* تحسينات الأداء القصوى (GPU) */
+    transform: translate3d(0, 0, 0);
+    will-change: background-position, filter;
     mask-image: linear-gradient(to bottom, black 0%, transparent 90%);
 }
 
@@ -76,13 +88,16 @@ body::before {
 body::after {
     content: "";
     position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
+    inset: 0; /* يثبت العنصر في جميع الزوايا */
+    height: 100dvh; /* ارتفاع ديناميكي للموبايل */
     background-color: #1a1a2e; /* لون كحلي غامق للخلفية */
     /* تأثير النافورة المنسكبة: تدرج إشعاعي من الأعلى ينسكب للأسفل */
     background-image: 
         radial-gradient(circle at 50% -10%, #9b59b6 0%, transparent 50%),
         linear-gradient(to bottom, transparent 0%, #1a1a2e 100%);
     z-index: -2;
+    /* تحسينات الأداء القصوى (GPU) */
+    transform: translate3d(0, 0, 0);
     animation: changeColor 24s infinite linear;
 }
 
@@ -102,8 +117,10 @@ main {
     100% { filter: hue-rotate(360deg); }
 }
 
-input[type="text"] {
-   display: none; /* Removing username input */
+/* حركة دوران لأيقونات التحميل */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 input[type="file"] {
@@ -121,7 +138,7 @@ input[type="file"] {
     display: flex;
     align-items: center;
     gap: 10px;
-    z-index: 1000;
+    z-index: 2500; /* رفع الطبقة لتكون أعلى من صفحة الأصدقاء (2000) */
     background: rgba(26, 26, 46, 0.85);
     backdrop-filter: blur(12px); /* تقليل التمويه لتحسين الأداء */
     -webkit-backdrop-filter: blur(12px);
@@ -278,40 +295,98 @@ input[type="file"] {
     bottom: 30px; 
     left: 50%;
     transform: translateX(-50%);
-    /* ضبط العرض ليكون مثالياً على جميع الشاشات */
-    width: 95%; /* زيادة العرض قليلاً للموبايل */
+    width: 95%;
     max-width: 480px; 
-    padding: 8px; 
-    background: rgba(22, 33, 62, 0.9);
-    backdrop-filter: blur(15px) saturate(150%); /* تقليل التمويه لتحسين الأداء */
-    -webkit-backdrop-filter: blur(15px) saturate(150%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 60px; /* دوران كامل وناعم */
+    height: 70px; /* ارتفاع ثابت لضمان التمركز */
+    padding: 4px; /* مسافة للإطار المضيء */
+    background: transparent; /* الخلفية شفافة للسماح بظهور الإطار */
+    border-radius: 60px;
     z-index: 900;
     display: flex;
     align-items: center;
     justify-content: space-between; /* توزيع العناصر بالتساوي */
-    gap: 10px;
+    /* إزالة الظل القديم وإضافة ظل نيون */
     /* ظل احترافي متعدد الطبقات */
-    box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 10px 40px -10px rgba(142, 68, 173, 0.5);
+    overflow: hidden; /* لقص الإطار الدوار */
+}
+
+/* --- تأثير البرق النيون الدوار --- */
+.upload-container::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%; width: 200%; height: 200%;
+    background: conic-gradient(
+        transparent, 
+        transparent, 
+        transparent, 
+        #00d2ff, /* لون سماوي مشع */
+        #3a7bd5,
+        #e056fd, /* لون بنفسجي مشع */
+        #ff0099,
+        transparent 30%
+    );
+    animation: rotateBorder 4s linear infinite;
+}
+
+/* الخلفية الداخلية السوداء لتغطية الوسط وإظهار الحواف فقط */
+.upload-container::after {
+    content: '';
+    position: absolute;
+    inset: 3px; /* سمك الإطار النيون */
+    background: rgba(20, 20, 30, 0.95); /* خلفية داكنة جداً */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 56px;
+    z-index: 1;
+}
+
+/* حركة الدوران للإطار */
+@keyframes rotateBorder {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* جعل المحتوى يظهر فوق الخلفية الداخلية */
+.upload-container > * {
+    position: relative;
+    z-index: 2;
 }
 
 .upload-container:hover {
-    transform: translateX(-50%) translateY(-3px);
-    background: rgba(25, 25, 30, 0.95);
-    box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateX(-50%) translateY(-5px);
+    box-shadow: 0 20px 50px -10px rgba(142, 68, 173, 0.7);
+}
+
+/* تأثير الفلاش القوي عند نجاح الرفع */
+@keyframes flashGlow {
+    0% { box-shadow: 0 10px 40px -10px rgba(142, 68, 173, 0.5); }
+    15% { box-shadow: 0 0 100px 30px rgba(46, 204, 113, 1), 0 0 50px rgba(255, 255, 255, 0.8); }
+    100% { box-shadow: 0 10px 40px -10px rgba(142, 68, 173, 0.5); }
+}
+
+@keyframes flashBackground {
+    0% { background: rgba(20, 20, 30, 0.95); }
+    15% { background: rgba(46, 204, 113, 0.9); }
+    100% { background: rgba(20, 20, 30, 0.95); }
+}
+
+.upload-container.flash-active {
+    animation: flashGlow 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.upload-container.flash-active::after {
+    animation: flashBackground 1s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .sort-trigger-btn {
-    background: rgba(255, 255, 255, 0.08); /* خلفية خفيفة لتوحيد الشكل */
+    background: transparent;
     border: none;
-    color: var(--text-secondary);
+    color: #a29bfe; /* لون زر الفرز */
     cursor: pointer;
-    width: 44px; /* حجم ثابت ومساوي لزر المرفقات */
-    height: 44px;
-    border-radius: 50%; /* دوران كامل */
+    width: 50px;
+    height: 100%; /* ملء الارتفاع */
+    padding: 0 15px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -320,73 +395,82 @@ input[type="file"] {
 
 .sort-trigger-btn:hover {
     color: white;
+    transform: scale(1.1);
 }
 
 .attach-btn {
-    background-color: var(--primary-color);
+    /* زر إضافة الصور بتصميم متدرج */
+    background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
     color: white;
-    width: 44px; /* توحيد الحجم مع زر الفرز */
-    height: 44px;
-    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%; /* دائري */
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    transition: transform 0.2s ease, background-color 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 15px rgba(0, 210, 255, 0.4);
+    border: 2px solid rgba(255,255,255,0.1);
 }
 
 .attach-btn:hover {
-    transform: scale(1.1);
-    background-color: #9b59b6;
+    transform: scale(1.15) rotate(90deg);
+    box-shadow: 0 8px 25px rgba(0, 210, 255, 0.6);
 }
 
 .attach-btn svg {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
 }
 
 .upload-status {
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 0.9rem;
+    color: #dfe6e9;
+    font-size: 0.95rem;
     font-weight: 500;
     flex-grow: 1;
-    text-align: right; /* محاذاة النص لليمين ليكون قريباً من المشبك */
-    padding: 0 10px;
+    text-align: center; /* توسيط النص */
+    padding: 0 5px;
     margin: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     background-color: transparent !important;
+    opacity: 0.8;
 }
 
 /* زر الإرسال المصغر داخل الشريط */
 .mini-send-btn {
-    background: var(--primary-color);
+    background: linear-gradient(135deg, #e056fd 0%, #8e44ad 100%);
     border: none;
     color: white;
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    opacity: 0.5;
-    transform: scale(0.8);
+    opacity: 0.4;
+    transform: scale(0.9);
+    filter: grayscale(100%);
     pointer-events: none; /* Disabled initially */
+    margin-right: 5px; /* مسافة صغيرة من اليمين */
 }
 
 .mini-send-btn.ready {
     opacity: 1;
     transform: scale(1);
+    filter: grayscale(0%);
     pointer-events: all;
-    box-shadow: 0 0 15px var(--primary-color);
+    box-shadow: 0 0 20px rgba(224, 86, 253, 0.6);
 }
 
 .mini-send-btn:hover {
-    background: #9b59b6;
-    transform: scale(1.1);
+    transform: scale(1.15);
+    box-shadow: 0 0 30px rgba(224, 86, 253, 0.8);
 }
 
 /* قائمة الفرز المنبثقة */
@@ -535,14 +619,12 @@ input[type="file"] {
 .photo-card {
     background: transparent;
     padding: 0;
-    border-radius: var(--radius);
+    border-radius: var(--radius); /* الحواف الدائرية للبطاقة كلها */
     /* تأثير نيون محسن الأداء */
     box-shadow: 0 0 12px -4px var(--neon-color, #fff);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    overflow: hidden;
     will-change: transform, opacity; /* تحسين الأداء للهواتف */
     position: relative; /* لضمان تموضع الأزرار داخله */
-    cursor: pointer; /* لجعل شكل المؤشر يدل على أنها قابلة للنقر */
     will-change: transform, box-shadow; /* إخبار المتصفح بالتحسين */
     animation: fadeIn 0.6s ease-out forwards;
     opacity: 0; /* Start hidden for animation */
@@ -550,13 +632,21 @@ input[type="file"] {
 
 .photo-card {
     position: relative; /* ضروري لتموضع زر الحذف */
+    display: flex; /* لتنظيم المحتوى الداخلي عمودياً */
+    flex-direction: column;
+    /* --- تحسينات السرعة القصوى (Performance Boost) --- */
+    content-visibility: auto; /* يمنع المتصفح من رسم العناصر خارج الشاشة */
+    contain-intrinsic-size: 300px; /* تقدير للحجم لمنع القفز */
+    contain: layout paint; /* عزل العنصر ليسهل على المتصفح معالجته */
+    transform: translate3d(0, 0, 0); /* تفعيل تسريع الهاردوير (GPU) بشكل أقوى */
 }
 
 /* زر الحذف */
 .delete-btn {
     position: absolute;
     top: 8px;
-    right: 8px; /* يظهر في الزاوية */
+    right: 8px; /* نقل زر الحذف لليمين */
+    left: auto;
     width: 30px;
     height: 30px;
     border-radius: 50%;
@@ -599,13 +689,35 @@ input[type="file"] {
     box-shadow: 0 10px 30px -5px var(--neon-color, #fff);
 }
 
+.card-owner-name {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.photo-card-image-wrapper {
+    position: relative; /* لتموضع الأزرار الداخلية */
+    cursor: pointer; /* لجعل شكل المؤشر يدل على أنها قابلة للنقر */
+    overflow: hidden; /* ضروري لقص الصورة داخل الحواف الدائرية */
+    border-radius: var(--radius); /* تطبيق الحواف الدائرية على حاوية الصورة */
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); /* حركة ناعمة جداً */
+}
+
 .photo-card img {
     width: 100%;
     display: block;
-    height: auto; /* السماح بالارتفاع التلقائي حسب أبعاد الصورة */
-    object-fit: contain; /* ضمان ظهور الصورة بالكامل */
+    aspect-ratio: 1 / 1; /* جعل الصورة مربعة تماماً */
+    object-fit: cover; /* ضمان ملء الصورة للمساحة مع قص الأطراف */
     background-color: rgba(0,0,0,0.2); /* خلفية خفيفة في حال وجود فراغات */
+    /* --- الإطار الملون --- */
+    border: 3px solid rgba(142, 68, 173, 0.4); /* إطار بنفسجي نصف شفاف */
     border-radius: var(--radius);
+    transition: border-color 0.3s ease;
+}
+
+/* تغيير لون الإطار عند مرور الماوس */
+.photo-card:hover img {
+    border-color: #e056fd; /* لون أفتح ومضيء عند التحويم */
 }
 
 /* تصميم زر الإعجاب (Like) */
@@ -672,32 +784,37 @@ input[type="file"] {
 /* تصميم التاريخ الاحترافي */
 .card-date {
     position: absolute;
-    bottom: 10px;
-    left: 10px; /* في الزاوية اليسرى السفلية */
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    padding: 4px 10px;
-    border-radius: 12px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    /* تحويل التاريخ لشريط علوي متدرج شفاف */
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85) 0%, transparent 100%);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    padding: 10px 15px 35px; /* زيادة المساحة السفلية للتدرج */
+    border-radius: var(--radius) var(--radius) 0 0;
     pointer-events: none; /* للسماح بالنقر من خلاله */
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: none;
     z-index: 5;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: flex-end; /* محاذاة النص لليسار (عكس RTL) لتجنب زر الحذف */
     line-height: 1.4;
+    bottom: auto;
 }
 
 .date-relative {
     font-size: 0.75rem;
     font-weight: 700;
     color: #fff;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
 }
 
 .date-details {
     font-size: 0.65rem;
     color: rgba(255, 255, 255, 0.8);
     white-space: nowrap;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
 }
 
 /* Modal / Lightbox Styles */
@@ -716,7 +833,7 @@ input[type="file"] {
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.4s ease, visibility 0.4s ease;
-    z-index: 1000;
+    z-index: 3500; /* رفع الطبقة لتظهر فوق قائمة الأصدقاء (2000) والتسجيل (3000) */
 }
 
 .modal-overlay.active {
@@ -732,15 +849,18 @@ input[type="file"] {
     gap: 15px;
     width: 100%;
     padding: 0 10px;
-    transform: scale(0.95); 
+    transform: scale(0.98); /* تصغير بسيط جداً عند البداية */
     opacity: 0;
-    transition: transform 0.2s cubic-bezier(0.1, 0.9, 0.2, 1), opacity 0.2s ease; /* حركة فورية واحترافية */
+    /* تسريع حركة الإغلاق لتكون سلسة وغير مزعجة */
+    transition: transform 0.2s ease-in, opacity 0.15s ease-in;
     will-change: transform, opacity;
 }
 
 .modal-overlay.active .modal-viewer {
     transform: scale(1);
     opacity: 1;
+    /* حركة الفتح أبطأ قليلاً وفيها نعومة */
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease-out;
 }
 
 .modal-content {
@@ -773,10 +893,37 @@ input[type="file"] {
     border-top-right-radius: 20px;
 }
 
+/* تصميم معلومات المستخدم في المودال */
+.modal-user-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.modal-owner-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.modal-owner-avatar:hover {
+    transform: scale(1.1);
+    border-color: var(--primary-color);
+}
+
 .modal-date-container {
     display: flex;
     flex-direction: column;
-    line-height: 1.2;
+}
+
+.modal-text-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
 }
 
 .modal-actions {
@@ -924,23 +1071,25 @@ input[type="file"] {
     object-fit: contain; /* يضمن ظهور الصورة كاملة دون قص أو تشويه */
     cursor: zoom-in;
     transition: transform 0.3s ease;
+    touch-action: none; /* ضروري جداً لتعطيل تفاعل المتصفح الافتراضي مع اللمس */
 }
 
 /* كلاس التكبير */
 .modal-img.zoomed {
     max-width: none;
     max-height: none;
-    transform: scale(1.5); /* تكبير بنسبة 1.5 */
+    /* transform يتم التحكم به عبر JS */
     cursor: zoom-out;
+    transition: none; /* إيقاف الترانزيشن أثناء التكبير باللمس ليكون فورياً */
 }
 
-.modal-date-container .date-relative {
+.modal-text-info .date-relative {
     font-size: 0.9rem;
     font-weight: 700;
     color: #fff;
 }
 
-.modal-date-container .date-details {
+.modal-text-info .date-details {
     font-size: 0.7rem;
     color: rgba(255, 255, 255, 0.7);
 }
@@ -978,6 +1127,24 @@ input[type="file"] {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* عمودين للموبايل لعرض أفضل */
         gap: 15px; /* تقليل المسافات */
     }
+
+    /* تخصيص الشريط العلوي للموبايل */
+    .card-date {
+        top: 0;
+        left: 0;
+        max-width: 100%;
+        padding: 8px 10px 25px;
+    }
+
+    /* تصغير النصوص لتناسب الكروت الصغيرة */
+    .date-relative {
+        font-size: 0.7rem;
+    }
+    
+    .date-details {
+        font-size: 0.6rem;
+        white-space: normal; /* السماح بالتفاف النص */
+    }
 }
 
 /* إظهار أزرار التنقل الجانبية فقط على الشاشات الكبيرة */
@@ -986,6 +1153,293 @@ input[type="file"] {
         display: flex;
     }
 }
+
+/* --- تصميم نافذة التسجيل الاحترافية --- */
+.modal-overlay.registration-mode {
+    z-index: 3000; /* أعلى من كل شيء */
+    background: rgba(0, 0, 0, 0.85); /* تعتيم قوي للخلفية للتركيز */
+    backdrop-filter: blur(8px);
+}
+
+.reg-card {
+    position: relative;
+    background: linear-gradient(145deg, rgba(28, 28, 35, 0.95) 0%, rgba(15, 15, 20, 0.98) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    padding: 50px 30px 40px;
+    border-radius: 30px;
+    width: 92%;
+    max-width: 380px;
+    text-align: center;
+    transform: translateY(20px);
+    animation: fadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    overflow: hidden;
+}
+
+/* تأثير إضاءة خلفية متحركة */
+.reg-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(90deg, #6c5ce7, #a29bfe, #e056fd);
+    animation: shimmer 3s infinite linear;
+    background-size: 200% 100%;
+}
+
+@keyframes shimmer {
+    0% { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+}
+
+.reg-header h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #fff;
+    letter-spacing: -0.5px;
+}
+
+.reg-header p {
+    color: #8395a7;
+    font-size: 0.9rem;
+    margin-bottom: 40px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.avatar-upload-wrapper {
+    position: relative;
+    width: 110px;
+    height: 110px;
+    margin: 0 auto 35px;
+}
+
+/* حلقة ملونة متحركة حول الصورة */
+.avatar-upload-wrapper::after {
+    content: 'اضغط هنا';
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.75rem;
+    color: #636e72;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+.avatar-preview {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: #1e1e24;
+    border: 2px dashed rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #636e72;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.avatar-preview:hover {
+    border-color: var(--primary-color);
+    background: rgba(142, 68, 173, 0.1);
+    color: var(--primary-color);
+}
+
+.avatar-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-upload-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 34px;
+    height: 34px;
+    background: var(--primary-color);
+    color: white;
+    border: 4px solid #16161d; /* لون الخلفية */
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.avatar-upload-btn:hover {
+    transform: scale(1.1);
+}
+
+.reg-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    margin-top: 10px;
+}
+
+.input-wrapper {
+    position: relative;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    transition: all 0.3s ease;
+    height: 56px;
+}
+
+.input-wrapper:focus-within {
+    border-color: var(--primary-color);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 0 2px rgba(142, 68, 173, 0.2);
+    transform: translateY(-2px);
+}
+
+/* تنسيق حالة الخطأ */
+.input-wrapper.error {
+    border-color: #ff7675;
+    animation: shake 0.4s ease-in-out;
+}
+
+.input-wrapper svg {
+    color: #636e72;
+    flex-shrink: 0;
+    transition: color 0.3s;
+}
+
+.input-wrapper:focus-within svg {
+    color: #a29bfe;
+}
+
+.input-wrapper input {
+    width: 100%;
+    height: 100%;
+    padding: 0 12px;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.input-wrapper input::placeholder {
+    color: #636e72;
+}
+
+.reg-submit-btn {
+    background: #fff;
+    color: #000; /* نص أسود لتباين عالي */
+    border: none;
+    padding: 16px;
+    border-radius: 16px;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+}
+
+.reg-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+    background: #f0f0f0;
+}
+
+.reg-submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* --- نافذة بروفايل المستخدم --- */
+.profile-card {
+    background: rgba(30, 30, 40, 0.8);
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    width: 90%;
+    max-width: 360px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    animation: fadeIn 0.4s ease-out forwards;
+    position: relative;
+    padding-bottom: 30px;
+}
+
+.profile-card .close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 1;
+}
+
+.profile-card-header {
+    height: 120px;
+    background: linear-gradient(135deg, var(--primary-color), #1a1a2e);
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    position: relative;
+}
+
+#profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 4px solid #1a1a2e;
+    object-fit: cover;
+    position: absolute;
+    bottom: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    cursor: zoom-in; /* مؤشر التكبير */
+    transition: transform 0.2s;
+}
+
+#profile-avatar:hover {
+    transform: translateX(-50%) scale(1.05); /* الحفاظ على التمركز مع التكبير */
+}
+
+.profile-card-body {
+    padding-top: 80px; /* Space for the avatar */
+}
+
+#profile-name { font-size: 1.6rem; color: white; margin-bottom: 5px; }
+#profile-phone { font-size: 1.1rem; color: var(--text-secondary); direction: ltr; }
+
+.whatsapp-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+    padding: 12px 20px;
+    background: #25D366;
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: 700;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.whatsapp-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(37, 211, 102, 0.4);
+}
+.whatsapp-btn svg { width: 20px; height: 20px; }
 
 /* --- شاشة البداية (Splash Screen) --- */
 #splash-screen {
@@ -1049,6 +1503,194 @@ input[type="file"] {
     border-radius: 2px;
     animation: loadingMove 1.5s infinite ease-in-out;
 }
+
+/* --- تصميم قائمة المستخدمين --- */
+/* تحويل النافذة إلى صفحة كاملة */
+#users-list-modal.modal-overlay {
+    background: #0d0d0d;
+    z-index: 2000;
+    padding-top: 60px; /* ترك مساحة للهيدر العلوي */
+    align-items: flex-start; /* المحاذاة للأعلى */
+}
+
+.users-list-content {
+    width: 100%;
+    height: 100%;
+    max-width: 100%; /* ملء الشاشة */
+    max-height: 100%;
+    border-radius: 0;
+    background: transparent;
+    border: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.users-modal-body {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 20px 5%; /* هوامش جانبية مثل الصفحة الرئيسية */
+    background: transparent;
+    padding-bottom: 80px;
+    /* تأثير ظهور ناعم للمحتوى */
+    animation: fadeIn 0.5s ease-out;
+}
+
+.users-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* تكبير حجم الكروت */
+    gap: 25px;
+    padding-top: 20px;
+}
+
+.user-card-item {
+    background: rgba(30, 30, 40, 0.6); /* خلفية كحلي شفاف */
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
+    padding: 25px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.user-card-item:hover {
+    background: rgba(40, 40, 55, 0.8);
+    transform: translateY(-8px);
+    border-color: rgba(142, 68, 173, 0.5);
+    box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+/* غلاف الصورة لجعل المؤشر يدل على النقر */
+.user-avatar-wrapper {
+    position: relative;
+    cursor: zoom-in; /* مؤشر التكبير */
+    transition: transform 0.2s;
+}
+
+.user-avatar-wrapper:hover {
+    transform: scale(1.05);
+}
+
+.user-card-avatar {
+    width: 100px; /* تكبير الصورة */
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    transition: border-color 0.3s;
+}
+
+.user-card-item:hover .user-card-avatar {
+    border-color: #e056fd;
+}
+
+/* نقطة الحالة (أونلاين) */
+.status-indicator {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 18px;
+    height: 18px;
+    background-color: #2ecc71;
+    border: 3px solid #1e1e28; /* لون الخلفية لعمل فاصل */
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.2);
+    opacity: 0; /* مخفية افتراضياً */
+    transform: scale(0);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.status-indicator.online {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 10px #2ecc71;
+}
+
+.user-card-name {
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
+    word-break: break-all;
+    direction: ltr; /* للأرقام */
+    letter-spacing: 0.5px;
+}
+
+.user-card-whatsapp {
+    color: #25D366;
+    background: rgba(37, 211, 102, 0.1);
+    padding: 8px 20px;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    transition: all 0.2s;
+    width: 100%;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: 1px solid rgba(37, 211, 102, 0.2);
+}
+
+.user-card-whatsapp:hover {
+    background: #25D366;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+}
+
+/* عنوان الصفحة الداخلية */
+.users-page-title {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 15px;
+}
+
+/* زر إغلاق الصفحة داخل العنوان */
+.page-close-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: var(--text-secondary);
+    padding: 8px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+
+.page-close-btn:hover {
+    background: rgba(239, 35, 60, 0.2);
+    color: #ef233c;
+}
+
+/* زر حذف المستخدم للمراقب */
+.admin-delete-user-btn {
+    background: rgba(239, 35, 60, 0.15);
+    color: #ef233c;
+    border: 1px solid rgba(239, 35, 60, 0.3);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    width: 100%;
+    justify-content: center;
+    transition: 0.2s;
+}
+.admin-delete-user-btn:hover { background: #ef233c; color: white; }
 
 @keyframes loadingMove {
     0% { left: -40%; }
