@@ -240,7 +240,7 @@
   const rtdb = firebase.database();
 
   // جلب إعدادات الإدارة
-  let adminCounterText = "رمضان كريم";
+  let adminCounterText = "عيد سعيد";
   rtdb.ref('admin_control').on('value', (snapshot) => {
     const data = snapshot.val();
     if (data) {
