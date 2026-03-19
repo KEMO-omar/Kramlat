@@ -1,6 +1,6 @@
 // استيراد مكتبات Firebase (الإصدار الحديث 10)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import { getDatabase, ref, push, onValue, get, remove, runTransaction, off } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+import { getDatabase, ref, push, onValue, get, remove, runTransaction, off, set, onDisconnect } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 
 // إعدادات Firebase الخاصة بك
@@ -24,7 +24,23 @@ let currentUserUid = null;
 // تسجيل الدخول المجهول (Anonymous Auth)
 signInAnonymously(auth).catch((error) => console.error("Auth Failed:", error));
 onAuthStateChanged(auth, (user) => {
-    if (user) currentUserUid = user.uid;
+    if (user) {
+        currentUserUid = user.uid;
+        
+        // --- نظام التواجد (Online Status System) ---
+        const connectedRef = ref(db, ".info/connected");
+        const userStatusRef = ref(db, `status/${currentUserUid}`);
+
+        onValue(connectedRef, (snap) => {
+            if (snap.val() === true) {
+                // عندما نتصل بالإنترنت
+                set(userStatusRef, { state: 'online', last_changed: Date.now() });
+
+                // عندما نفقد الاتصال (نقوم بإغلاق التطبيق)
+                onDisconnect(userStatusRef).set({ state: 'offline', last_changed: Date.now() });
+            }
+        });
+    }
 });
 
 // إعدادات ImgBB
@@ -59,8 +75,32 @@ const installPwaBtn = document.getElementById('install-pwa-btn');
 const notificationsBtn = document.getElementById('enable-notifications-btn');
 const headerSettingsBtn = document.getElementById('header-settings-btn');
 const headerDropdown = document.getElementById('header-dropdown');
+const adminLoginBtn = document.getElementById('admin-login-btn');
+
+
+// عناصر التسجيل
+const registrationModal = document.getElementById('registration-modal');
+const regPhoneInput = document.getElementById('reg-phone');
+const regAvatarInput = document.getElementById('reg-avatar-input');
+const regAvatarBtn = document.getElementById('reg-avatar-btn');
+const regAvatarPreview = document.getElementById('reg-avatar-preview');
+const regSubmitBtn = document.getElementById('reg-submit-btn');
+
+// عناصر نافذة بروفايل المستخدم
+const userProfileModal = document.getElementById('user-profile-modal');
+const profileAvatar = document.getElementById('profile-avatar');
+const profilePhone = document.getElementById('profile-phone');
+const profileWhatsappBtn = document.getElementById('profile-whatsapp-btn');
+const profileModalCloseBtn = document.getElementById('profile-modal-close-btn');
 
 let shownNotifications = new Set();
+
+// متغير لتخزين بيانات المستخدم المسجل
+let userProfile = JSON.parse(localStorage.getItem('user_profile')) || null;
+
+// متغيرات النظام
+let isAdmin = false; // حالة المراقب
+const CACHE_KEY = 'galleria_photos_cache'; // مفتاح التخزين المحلي
 
 // تحديث نص عدد الصور المحددة
 fileInput.addEventListener('change', () => {
@@ -100,7 +140,7 @@ const addWatermark = (file) => {
                 let height = img.height;
 
                 // تحسين السرعة: تقليل أبعاد الصورة إذا كانت كبيرة جداً (للتسريع وتقليل حجم البيانات)
-                const MAX_SIZE = 1280; 
+                const MAX_SIZE = 1024; // تقليل الأبعاد إلى 1024 لسرعة "صاروخية" في الرفع والعرض
                 if (width > height) {
                     if (width > MAX_SIZE) {
                         height *= MAX_SIZE / width;
@@ -156,7 +196,7 @@ const addWatermark = (file) => {
                 // تحويل الـ canvas إلى Blob بصيغة JPEG مضغوطة لتسريع الرفع
                 canvas.toBlob((blob) => {
                     resolve(blob);
-                }, 'image/jpeg', 0.8);
+                }, 'image/jpeg', 0.7); // ضغط الجودة إلى 70% لتقليل الحجم دون فقدان ملحوظ في الجودة
             };
             img.onerror = reject;
             img.src = e.target.result;
@@ -177,7 +217,8 @@ const handleUpload = async () => {
     }
 
     uploadBtn.disabled = true;
-    uploadBtn.innerHTML = "⏳"; // رمز الانتظار
+    // أيقونة تحميل SVG متحركة بدلاً من الإيموجي
+    uploadBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation: spin 1s linear infinite;"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>`;
     uploadBtn.classList.remove('ready');
     showStatus("جاري رفع الصور...", false, 0); // Show status in the main bar
 
@@ -228,6 +269,7 @@ const handleUpload = async () => {
                     mediumUrl: imgbbData.data.medium ? imgbbData.data.medium.url : "", // الرابط المتوسط (إن وجد)
                     likes: 0, // عدد الإعجابات المبدئي
                     ownerUid: currentUserUid, // ربط الصورة بالمستخدم الحالي لتمكينه من الحذف لاحقاً
+                    ownerAvatar: userProfile ? userProfile.avatar : null,
                     timestamp: Date.now()
                 });
                 uploadedCount++;
@@ -237,16 +279,23 @@ const handleUpload = async () => {
         }
 
         showStatus(`✅ تم رفع ${uploadedCount} صورة بنجاح!`, false, 5000);
-        hidePreview();
+        hidePreview(false); // عدم مسح رسالة النجاح فوراً
+
+        // تفعيل تأثير الفلاش على الحاوية
+        const uploadContainer = document.querySelector('.upload-container');
+        if (uploadContainer) {
+            uploadContainer.classList.add('flash-active');
+            setTimeout(() => uploadContainer.classList.remove('flash-active'), 1000);
+        }
         
     } catch (error) {
         console.error("حدث خطأ في عملية الرفع:", error);
         // Show error in the preview screen before closing it
         const uploadBtnRef = document.getElementById('upload-btn');
-        uploadBtnRef.innerHTML = '❌';
+        uploadBtnRef.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #ef233c;"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
         setTimeout(() => {
             showStatus("❌ حدث خطأ أثناء الرفع. حاول مرة أخرى.", true, 8000);
-            hidePreview();
+            hidePreview(false); // عدم مسح رسالة الخطأ فوراً
         }, 2000);
     }
 };
@@ -292,6 +341,30 @@ const BATCH_SIZE = 12; // عدد الصور في كل دفعة
 let lastMaxTimestamp = 0; // لتتبع آخر صورة تم تحميلها ومعرفة الجديد
 let isInitialLoad = true; // لتجنب الإشعارات عند فتح الصفحة لأول مرة
 
+// --- 1. التحميل الفوري من الذاكرة المحلية (Cache) لتسريع العرض ---
+const loadCachedPhotos = () => {
+    const cachedData = localStorage.getItem(CACHE_KEY);
+    if (cachedData) {
+        try {
+            const parsedData = JSON.parse(cachedData);
+            if (Array.isArray(parsedData) && parsedData.length > 0) {
+                allPhotosData = parsedData;
+                // ترتيب مبدئي
+                allPhotosData.sort((a, b) => b.timestamp - a.timestamp);
+                if (totalPhotosCountEl) totalPhotosCountEl.textContent = allPhotosData.length;
+                renderedCount = BATCH_SIZE;
+                renderGallery();
+                console.log("تم تحميل الصور من الذاكرة المحلية بنجاح 🚀");
+            }
+        } catch (e) {
+            console.error("خطأ في قراءة الكاش", e);
+        }
+    }
+};
+
+// استدعاء التحميل من الكاش فوراً
+loadCachedPhotos();
+
 // جلب الصور من Firebase وعرضها في المعرض بشكل لحظي (Realtime) مع ترتيبها حسب الأحدث
 const photosRef = ref(db, 'photos');
 onValue(photosRef, (snapshot) => {
@@ -333,6 +406,14 @@ onValue(photosRef, (snapshot) => {
         allPhotosData.sort((a, b) => b.timestamp - a.timestamp);
     } else { // popular
         allPhotosData.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+    }
+
+    // --- 2. تحديث الذاكرة المحلية بالبيانات الجديدة ---
+    localStorage.setItem(CACHE_KEY, JSON.stringify(allPhotosData));
+
+    // إصلاح: إزالة رسالة "لا توجد صور" إذا كانت موجودة وجاءت بيانات جديدة
+    if (galleryDiv.querySelector('p')) {
+        galleryDiv.innerHTML = '';
     }
 
     // عند وصول بيانات جديدة، نعيد رسم المعرض بناءً على العدد الحالي المعروض (للحفاظ على مكان التمرير)
@@ -398,22 +479,23 @@ const createCard = (photoData) => {
     card.dataset.id = photoData.id; // تعيين معرف للصورة للرجوع إليه
     card.dataset.timestamp = photoData.timestamp;
 
-    card.style.setProperty('--neon-color', getRandomNeonColor());
-
+    // --- حاوية الصورة والأزرار الداخلية ---
+    const imageWrapper = document.createElement('div');
+    imageWrapper.className = 'photo-card-image-wrapper';
+    
     const img = document.createElement('img');
     img.src = photoData.mediumUrl || photoData.url; 
     img.alt = `صورة تمت مشاركتها`;
     img.loading = "lazy";
-    card.appendChild(img);
+    imageWrapper.appendChild(img);
     
     // حاوية زر الإعجاب
     const likeContainer = document.createElement('div');
     likeContainer.className = 'like-container';
-    card.appendChild(likeContainer); // سيتم ملؤها في updateCardData
+    imageWrapper.appendChild(likeContainer); // سيتم ملؤها في updateCardData
 
-    // زر الحذف
-    // التحقق من الملكية باستخدام UID القادم من Firebase Auth
-    if (currentUserUid && photoData.ownerUid === currentUserUid) {
+    // زر الحذف (يظهر للمالك أو للمراقب)
+    if ((currentUserUid && photoData.ownerUid === currentUserUid) || isAdmin) {
         const deleteBtn = document.createElement('button');
         deleteBtn.className = 'delete-btn';
         deleteBtn.innerHTML = '&times;';
@@ -424,7 +506,7 @@ const createCard = (photoData) => {
                 remove(ref(db, `photos/${photoData.id}`));
             }
         };
-        card.appendChild(deleteBtn);
+        imageWrapper.appendChild(deleteBtn);
     }
 
     // --- إضافة التاريخ الاحترافي ---
@@ -443,8 +525,10 @@ const createCard = (photoData) => {
             <span class="date-details">${timeStr} | ${dateStr}</span>
         `;
         
-        card.appendChild(dateDiv);
+        imageWrapper.appendChild(dateDiv);
     }
+
+    card.appendChild(imageWrapper);
 
     // تحديث البيانات الأولية (بما في ذلك زر اللايك ورابط النقر)
     updateCardData(card, photoData, true);
@@ -462,11 +546,10 @@ const updateCardData = (card, photoData, updateClickEvent = false) => {
 
     // تحديث حدث النقر (مهم جداً عند إعادة استخدام العناصر أو إعادة الترتيب)
     if (updateClickEvent) {
-        // إزالة المستمعين القدامى عن طريق استنساخ العنصر (أو تحديث خاصية مخصصة)
-        // الطريقة الأفضل والأسرع هنا هي تخزين البيانات في العنصر واستخدامها،
-        // أو ببساطة تحديث الدالة عند النقر.
-        // لتبسيط الأمر، سنعيد تعيين وظيفة onclick مباشرة (تستبدل المستمعين السابقين من نوع onclick)
-        card.onclick = () => openImageModal(photoData);
+        const imageWrapper = card.querySelector('.photo-card-image-wrapper');
+        if (imageWrapper) {
+            imageWrapper.onclick = () => openImageModal(photoData);
+        }
     }
 
     const likeContainer = card.querySelector('.like-container');
@@ -553,14 +636,20 @@ let touchStartX = 0;
 let touchEndX = 0;
 let slideshowInterval = null; // متغير لتخزين مؤقت العرض التلقائي
 let slideshowSpeed = 3000; // سرعة العرض الافتراضية (3 ثواني)
+let currentScale = 1; // متغير لتخزين نسبة التكبير الحالية
+let isPinching = false; // هل يقوم المستخدم بالقرص حالياً؟
+let startPinchDistance = 0; // المسافة بين الإصبعين عند بدء القرص
 
 // دالة لتحديث محتوى المودال (لإعادة استخدامها في التنقل)
 const updateModalContent = (photoData) => {
+    // التحقق مما إذا كانت الصورة جزءاً من المعرض الرئيسي أم صورة فردية (مثل البروفايل)
+    const isGalleryImage = allPhotosData.some(p => p.id === photoData.id);
+
+    // إعادة تعيين التكبير عند تغيير الصورة
     modalImage.classList.remove('zoomed');
-    modalImage.style.transition = 'filter 0.3s ease, transform 0.3s ease';
-    modalImage.style.filter = 'blur(10px)';
-    const placeholder = photoData.mediumUrl || photoData.thumbUrl || photoData.url;
-    modalImage.src = placeholder;
+    modalImage.style.transform = 'scale(1)';
+    currentScale = 1;
+
     downloadBtn.href = photoData.url;
     
     if (photoData.timestamp && modalDate) {
@@ -568,30 +657,72 @@ const updateModalContent = (photoData) => {
         const timeStr = new Intl.DateTimeFormat('ar-EG', { hour: 'numeric', minute: 'numeric' }).format(dateObj);
         const dateStr = new Intl.DateTimeFormat('ar-EG', { weekday: 'long', day: 'numeric', month: 'long' }).format(dateObj);
         const relativeTime = getRelativeTime(photoData.timestamp);
-        modalDate.innerHTML = `<span class="date-relative">${relativeTime}</span><span class="date-details">${timeStr} | ${dateStr}</span>`;
+        const ownerAvatarUrl = photoData.ownerAvatar || "https://cdn-icons-png.flaticon.com/512/3342/3342137.png";
+
+        // تفريغ المحتوى القديم
+        modalDate.innerHTML = '';
+        
+        // إنشاء حاوية المعلومات في المودال
+        const userWrapper = document.createElement('div');
+        userWrapper.className = 'modal-user-wrapper';
+        userWrapper.innerHTML = `
+            <img src="${ownerAvatarUrl}" class="modal-owner-avatar" alt="User" loading="lazy">
+            <div class="modal-text-info">
+                <span class="date-relative">${relativeTime}</span>
+                <span class="date-details">${timeStr} | ${dateStr}</span>
+            </div>
+        `;
+        // إضافة حدث النقر على الصورة في المودال
+        userWrapper.querySelector('.modal-owner-avatar').onclick = () => photoData.ownerUid && showUserProfile(photoData.ownerUid);
+        
+        modalDate.appendChild(userWrapper);
     } else if (modalDate) {
          modalDate.innerHTML = '';
     }
 
-    // تحديث حالة أزرار التنقل (تفعيل/تعطيل حسب الموقع)
-    if (prevBtn && nextBtn) {
-        // جعلنا التنقل دائرياً، لذا الأزرار متاحة دائماً ما دام هناك أكثر من صورة
-        const hasMultiple = allPhotosData.length > 1;
-        prevBtn.style.opacity = hasMultiple ? '1' : '0.3';
-        prevBtn.style.pointerEvents = hasMultiple ? 'auto' : 'none';
-        
-        nextBtn.style.opacity = hasMultiple ? '1' : '0.3';
-        nextBtn.style.pointerEvents = hasMultiple ? 'auto' : 'none';
-    }
-
+    // التحميل الذكي (Smart Loading): إذا كانت الصورة محملة مسبقاً، اعرضها فوراً بدون تأثيرات
     const highResImg = new Image();
     highResImg.src = photoData.url;
-    highResImg.onload = () => {
-        if (imageModal.classList.contains('active') && downloadBtn.href === photoData.url) {
-            modalImage.src = photoData.url;
-            modalImage.style.filter = 'blur(0px)';
-        }
-    };
+
+    if (highResImg.complete) {
+        modalImage.src = photoData.url;
+        modalImage.style.transition = 'none'; // إلغاء الحركة لتظهر فوراً
+        modalImage.style.filter = 'none';
+    } else {
+        // إذا لم تكن محملة، اعرض المصغرة مع تأثير ضبابي سريع
+        modalImage.style.transition = 'filter 0.2s ease';
+        modalImage.style.filter = 'blur(10px)';
+        modalImage.src = photoData.mediumUrl || photoData.thumbUrl || photoData.url;
+        
+        highResImg.onload = () => {
+            if (imageModal.classList.contains('active') && downloadBtn.href === photoData.url) {
+                modalImage.src = photoData.url;
+                modalImage.style.filter = 'blur(0px)';
+            }
+        };
+    }
+
+    // تحديث حالة أزرار التنقل (تفعيل/تعطيل حسب الموقع)
+    // إذا كانت الصورة ليست من المعرض (صورة بروفايل)، نخفي أزرار التنقل تماماً
+    const navDisplay = isGalleryImage && allPhotosData.length > 1 ? 'flex' : 'none';
+    
+    if (prevBtn) prevBtn.style.display = navDisplay;
+    if (nextBtn) nextBtn.style.display = navDisplay;
+    
+    // إخفاء زر العرض التلقائي والسرعة إذا كانت صورة فردية
+    if (slideshowBtn) slideshowBtn.style.display = isGalleryImage ? 'flex' : 'none';
+    if (document.querySelector('.speed-control-container')) {
+        document.querySelector('.speed-control-container').style.display = isGalleryImage ? 'block' : 'none';
+    }
+
+    // التحميل المسبق للصور المجاورة (Preloading) لضمان سرعة التنقل
+    if (isGalleryImage && allPhotosData.length > 1) {
+        const nextIndex = (currentPhotoIndex + 1) % allPhotosData.length;
+        const prevIndex = (currentPhotoIndex - 1 + allPhotosData.length) % allPhotosData.length;
+        
+        const nextImg = new Image(); nextImg.src = allPhotosData[nextIndex].url;
+        const prevImg = new Image(); prevImg.src = allPhotosData[prevIndex].url;
+    }
 };
 
 // دالة منفصلة لفتح المودال
@@ -640,13 +771,61 @@ if (nextBtn) nextBtn.addEventListener('click', (e) => {
 });
 
 // أحداث اللمس للسحب
-imageModal.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
-imageModal.addEventListener('touchend', (e) => { 
-    touchEndX = e.changedTouches[0].screenX;
-    if (modalImage.classList.contains('zoomed')) return;
-    if (touchEndX < touchStartX - 50) navigateGallery('next');
-    if (touchEndX > touchStartX + 50) navigateGallery('prev');
-}, {passive: true});
+imageModal.addEventListener('touchstart', (e) => {
+    // إذا كان هناك إصبعين، ابدأ عملية التكبير (Pinch)
+    if (e.touches.length === 2) {
+        e.preventDefault(); // منع تكبير المتصفح الافتراضي
+        isPinching = true;
+        startPinchDistance = Math.hypot(
+            e.touches[0].pageX - e.touches[1].pageX,
+            e.touches[0].pageY - e.touches[1].pageY
+        );
+    } else {
+        // تسجيل بداية السحب العادي (Swipe)
+        touchStartX = e.changedTouches[0].screenX;
+    }
+}, {passive: false});
+
+imageModal.addEventListener('touchmove', (e) => {
+    if (isPinching && e.touches.length === 2) {
+        e.preventDefault();
+        const currentDistance = Math.hypot(
+            e.touches[0].pageX - e.touches[1].pageX,
+            e.touches[0].pageY - e.touches[1].pageY
+        );
+        
+        // حساب نسبة التكبير الجديدة
+        const scaleChange = currentDistance / startPinchDistance;
+        const newScale = Math.max(1, Math.min(currentScale * scaleChange, 5)); // حد أدنى 1 وحد أقصى 5
+        
+        modalImage.style.transform = `scale(${newScale})`;
+        
+        // تحديث حالة الزوم لمنع السحب
+        if (newScale > 1.1) modalImage.classList.add('zoomed');
+    }
+}, {passive: false});
+
+imageModal.addEventListener('touchend', (e) => {
+    if (isPinching && e.touches.length < 2) {
+        isPinching = false;
+        // حفظ نسبة التكبير الحالية للمرة القادمة
+        const style = window.getComputedStyle(modalImage);
+        const matrix = new WebKitCSSMatrix(style.transform);
+        currentScale = matrix.a; // الحصول على قيمة الـ Scale X الحالية
+        
+        // إذا كان التكبير صغيراً جداً، أعده للحجم الطبيعي
+        if (currentScale < 1.1) {
+            currentScale = 1;
+            modalImage.style.transform = 'scale(1)';
+            modalImage.classList.remove('zoomed');
+        }
+    } else if (!isPinching && !modalImage.classList.contains('zoomed')) {
+        // منطق السحب (Swipe) فقط إذا لم يكن هناك تكبير
+        touchEndX = e.changedTouches[0].screenX;
+        if (touchEndX < touchStartX - 50) navigateGallery('next');
+        if (touchEndX > touchStartX + 50) navigateGallery('prev');
+    }
+}, {passive: false});
 
 // أحداث لوحة المفاتيح
 document.addEventListener('keydown', (e) => {
@@ -715,16 +894,281 @@ if (slideshowSpeedBtn) {
     });
 }
 
-// حدث التمرير للتحميل اللانهائي
-window.addEventListener('scroll', () => {
+// --- منطق التسجيل (Registration) ---
+
+const checkRegistration = () => {
+    // إذا لم يكن هناك بروفايل محفوظ، أظهر نافذة التسجيل
+    if (!userProfile && registrationModal) {
+        // ننتظر قليلاً حتى تختفي شاشة البداية
+        setTimeout(() => {
+            registrationModal.classList.add('active');
+        }, 2500);
+    }
+};
+
+if (regAvatarBtn) regAvatarBtn.addEventListener('click', () => regAvatarInput.click());
+
+// إضافة ميزة النقر على الدائرة بالكامل لفتح الملفات
+if (regAvatarPreview) regAvatarPreview.addEventListener('click', () => regAvatarInput.click());
+
+if (regAvatarInput) {
+    regAvatarInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                regAvatarPreview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                // إخفاء النص التوضيحي (اضغط هنا) بعد اختيار صورة
+                document.querySelector('.avatar-upload-wrapper').style.setProperty('--after-content', '""');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+}
+
+if (regSubmitBtn) {
+    regSubmitBtn.addEventListener('click', async () => {
+        const phone = regPhoneInput.value.trim();
+        const avatarFile = regAvatarInput.files[0];
+
+        // إزالة علامات الخطأ السابقة
+        regPhoneInput.parentElement.classList.remove('error');
+        document.querySelector('.avatar-upload-wrapper').classList.remove('error-shake'); // كلاس اهتزاز اختياري يمكن إضافته
+
+        if (!phone) {
+            regPhoneInput.parentElement.classList.add('error');
+            showNotification("يرجى إدخال رقم الهاتف.");
+            return;
+        }
+
+        // التحقق من وجود الصورة (مطلوب للصورة والرقم)
+        if (!avatarFile) {
+            showNotification("يرجى اختيار صورة شخصية 📷");
+            // إضافة تأثير بصري للصورة لتنبيه المستخدم
+            const wrapper = document.querySelector('.avatar-upload-wrapper');
+            wrapper.style.animation = 'shake 0.4s ease-in-out';
+            setTimeout(() => wrapper.style.animation = '', 400); // إزالة الحركة لإعادتها لاحقاً
+            return;
+        }
+
+        regSubmitBtn.disabled = true;
+        regSubmitBtn.innerHTML = `<span>جاري الحفظ...</span> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation: spin 1s linear infinite;"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>`;
+
+        let avatarUrl = "https://cdn-icons-png.flaticon.com/512/3342/3342137.png"; // صورة افتراضية
+
+        if (avatarFile) {
+            const formData = new FormData();
+            formData.append('image', avatarFile);
+            try {
+                const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData });
+                const data = await response.json();
+                if (data.success) {
+                    avatarUrl = data.data.thumb.url || data.data.url;
+                }
+            } catch (error) {
+                console.error("فشل رفع الصورة الرمزية", error);
+            }
+        }
+
+        userProfile = { phone, avatar: avatarUrl, uid: currentUserUid };
+        localStorage.setItem('user_profile', JSON.stringify(userProfile));
+        
+        if (currentUserUid) {
+            set(ref(db, `users/${currentUserUid}`), userProfile);
+        }
+
+        registrationModal.classList.remove('active');
+        showNotification(`تم حفظ ملفك بنجاح! 🎉`);
+    });
+}
+
+// --- منطق نافذة بروفايل المستخدم ---
+const showUserProfile = async (uid) => {
+    userProfileModal.classList.add('active');
+    profilePhone.textContent = 'جاري التحميل...';
+    profileAvatar.src = "https://cdn-icons-png.flaticon.com/512/3342/3342137.png";
+
+    try {
+        const snapshot = await get(ref(db, `users/${uid}`));
+        if (snapshot.exists()) {
+            const user = snapshot.val();
+            profilePhone.textContent = user.phone;
+            profileAvatar.src = user.avatar;
+            if (profileWhatsappBtn) {
+                const whatsappNumber = user.phone.replace(/[^0-9]/g, '');
+                profileWhatsappBtn.href = `https://wa.me/${whatsappNumber}`;
+            }
+        } else {
+            profilePhone.textContent = 'مستخدم غير موجود';
+        }
+    } catch (error) {
+        profilePhone.textContent = 'خطأ في جلب البيانات';
+    }
+};
+
+const closeUserProfileModal = () => userProfileModal.classList.remove('active');
+
+if(profileModalCloseBtn) profileModalCloseBtn.addEventListener('click', closeUserProfileModal);
+if(userProfileModal) userProfileModal.addEventListener('click', (e) => { if (e.target === userProfileModal) closeUserProfileModal(); });
+
+// إضافة ميزة تكبير صورة البروفايل عند الضغط عليها
+if (profileAvatar) {
+    profileAvatar.addEventListener('click', () => {
+        if (profileAvatar.src) {
+             const fakePhotoData = {
+                id: 'profile_' + Date.now(),
+                url: profileAvatar.src,
+                ownerUid: null,
+                timestamp: null
+            };
+            openImageModal(fakePhotoData);
+        }
+    });
+}
+
+// --- منطق صفحة الأصدقاء الكاملة ---
+const showUsersBtn = document.getElementById('show-users-btn');
+const usersListModal = document.getElementById('users-list-modal');
+const usersModalCloseBtn = document.getElementById('users-modal-close-btn');
+const usersGrid = document.getElementById('users-grid');
+
+if (showUsersBtn) {
+    showUsersBtn.addEventListener('click', () => {
+        // إغلاق القائمة المنسدلة
+        headerDropdown.classList.remove('active');
+        
+        // فتح النافذة
+        usersListModal.classList.add('active');
+        document.body.classList.add('no-scroll'); // منع التمرير في الخلفية
+        
+        usersGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: white; padding: 20px;">جاري تحميل الأصدقاء... 🔄</div>';
+
+        // 1. جلب بيانات المستخدمين
+        // 2. جلب حالة الاتصال (Status) لكل المستخدمين
+        Promise.all([
+            get(ref(db, 'users')),
+            get(ref(db, 'status'))
+        ]).then(([usersSnap, statusSnap]) => {
+            usersGrid.innerHTML = '';
+            if (usersSnap.exists()) {
+                const users = usersSnap.val();
+                const statuses = statusSnap.exists() ? statusSnap.val() : {};
+
+                // تحويل المستخدمين لمصفوفة وترتيبهم (المتصل أولاً)
+                const usersArray = Object.values(users).sort((a, b) => {
+                    const statusA = (statuses[a.uid] && statuses[a.uid].state === 'online') ? 1 : 0;
+                    const statusB = (statuses[b.uid] && statuses[b.uid].state === 'online') ? 1 : 0;
+                    return statusB - statusA; // المتصل يظهر أولاً
+                });
+
+                usersArray.forEach(user => {
+                    const card = document.createElement('div');
+                    card.className = 'user-card-item';
+                    
+                    const avatar = user.avatar || "https://cdn-icons-png.flaticon.com/512/3342/3342137.png";
+                    const phone = user.phone || "بدون رقم";
+                    const waNumber = phone.replace(/[^0-9]/g, '');
+                    
+                    // التحقق من حالة الاتصال
+                    const isOnline = statuses[user.uid] && statuses[user.uid].state === 'online';
+                    const onlineClass = isOnline ? 'online' : '';
+                    const onlineText = isOnline ? 'متصل الآن' : 'غير متصل';
+
+                    card.innerHTML = `
+                        <div class="user-avatar-wrapper" title="اضغط للتكبير">
+                            <img src="${avatar}" class="user-card-avatar" loading="lazy" alt="User">
+                            <span class="status-indicator ${onlineClass}" title="${onlineText}"></span>
+                        </div>
+                        <div class="user-card-name">${phone}</div>
+                        
+                        ${isAdmin ? `
+                        <button class="admin-delete-user-btn" title="حذف المستخدم (صلاحية مراقب)" onclick="deleteUser('${user.uid}')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                            حذف
+                        </button>
+                        ` : ''}
+
+                        <a href="https://wa.me/${waNumber}" target="_blank" class="user-card-whatsapp" title="مراسلة واتساب">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.433-9.89-9.889-9.89-5.452 0-9.887 4.434-9.889 9.891.001 2.23.654 4.28 1.849 5.978l-1.138 4.156 4.274-1.119zM9.266 8.89c-.195-.319-.42-.39-.617-.406-1.238-.13-2.131.23-2.476.925-.344.696-.652 1.39-.891 2.088-.239.696-.213 1.469.041 2.138.255.67.935 1.551 1.051 1.715.115.163.231.321.357.49.564.653 1.215 1.163 1.965 1.599 1.583.906 3.16 1.177 4.525.939 1.11-.193 1.965-.838 2.23-1.85.264-1.01.265-1.855.183-2.013-.082-.158-.319-.24-.617-.407-.297-.167-1.76-.867-2.031-.967-.271-.099-.47-.149-.666.149-.196.297-.767.966-.94 1.164-.173.199-.347.223-.617.074-.27-.149-1.13-1.024-2.12-1.864-.82-.695-1.41-1.56-1.59-1.816-.18-.255-.01-1.03.11-1.265z"></path></svg>
+                             مراسلة واتساب
+                        </a>
+                    `;
+                    
+                    // إضافة حدث النقر على الصورة للتكبير
+                    const avatarImg = card.querySelector('.user-card-avatar');
+                    const avatarWrapper = card.querySelector('.user-avatar-wrapper');
+                    
+                    avatarWrapper.addEventListener('click', () => {
+                        // إنشاء كائن بيانات "وهمي" لفتح الصورة في العارض الموجود
+                        const fakePhotoData = {
+                            id: 'user_' + user.uid,
+                            url: avatar, // استخدام صورة البروفايل كصورة أصلية
+                            ownerUid: user.uid,
+                            timestamp: null
+                        };
+                        openImageModal(fakePhotoData);
+                    });
+
+                    usersGrid.appendChild(card);
+                });
+            } else {
+                usersGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #aaa; padding: 20px;">لا يوجد مستخدمين مسجلين بعد.</div>';
+            }
+        }).catch(error => {
+            usersGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #ff7675;">حدث خطأ في جلب البيانات</div>';
+            console.error(error);
+        });
+    });
+}
+
+if (usersModalCloseBtn) {
+    usersModalCloseBtn.addEventListener('click', () => {
+        usersListModal.classList.remove('active');
+        document.body.classList.remove('no-scroll');
+    });
+}
+
+// دالة حذف المستخدم (للمراقبين فقط)
+window.deleteUser = (uid) => {
+    if (!isAdmin) return;
+    if (confirm("هل أنت متأكد من حذف هذا المستخدم نهائياً؟")) {
+        remove(ref(db, `users/${uid}`))
+            .then(() => {
+                alert("تم حذف المستخدم بنجاح.");
+                document.getElementById('show-users-btn').click(); // تحديث القائمة
+            })
+            .catch(err => alert("حدث خطأ: " + err.message));
+    }
+};
+
+// --- تحسين الأداء: دالة كبح (Throttle) ---
+// تمنع تنفيذ الكود مئات المرات عند التمرير، وتنفذه مرة واحدة كل فترة زمنية
+const throttle = (func, limit) => {
+    let inThrottle;
+    return function() {
+        const args = arguments;
+        const context = this;
+        if (!inThrottle) {
+            func.apply(context, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    }
+};
+
+// حدث التمرير للتحميل اللانهائي (محسن للأداء)
+window.addEventListener('scroll', throttle(() => {
     // إذا وصلنا لنهاية الصفحة (ناقص 200 بكسل)
     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200) {
         if (renderedCount < allPhotosData.length) {
-            renderedCount += BATCH_SIZE;
-            renderGallery();
+            // استخدام requestAnimationFrame لجعل الرسم متزامناً مع تحديث الشاشة
+            requestAnimationFrame(() => {
+                renderedCount += BATCH_SIZE;
+                renderGallery();
+            });
         }
     }
-});
+}, 200)); // الفحص كل 200 ملي ثانية فقط
 
 // --- أحداث أزرار الفرز ---
 // دالة موحدة للفرز مع تأثير حركة
@@ -798,6 +1242,25 @@ if (headerSettingsBtn && headerDropdown) {
     });
 }
 
+// --- منطق المراقب (Admin) ---
+if (adminLoginBtn) {
+    adminLoginBtn.addEventListener('click', () => {
+        const password = prompt("الرجاء إدخال كلمة مرور المراقب:");
+        // كلمة المرور الافتراضية هنا هي 123456
+        if (password === "123456") {
+            isAdmin = true;
+            alert("✅ تم تفعيل وضع المراقب بنجاح!\nيمكنك الآن حذف أي صورة أو مستخدم.");
+            adminLoginBtn.querySelector('span').textContent = "مراقب (نشط)";
+            adminLoginBtn.style.color = "#2ecc71";
+            // إعادة رسم المعرض لإظهار أزرار الحذف
+            galleryDiv.innerHTML = ''; 
+            renderGallery();
+        } else if (password !== null) {
+            alert("❌ كلمة المرور غير صحيحة.");
+        }
+    });
+}
+
 // تفعيل أزرار القائمة
 document.querySelectorAll('.sort-option').forEach(btn => {
     btn.addEventListener('click', () => handleSort(btn.dataset.sort));
@@ -829,15 +1292,18 @@ const showPreview = (files) => {
     miniPreviewContainer.classList.add('active');
 };
 
-const hidePreview = () => {
+const hidePreview = (resetText = true) => {
     miniPreviewContainer.classList.remove('active');
     uploadBtn.classList.remove('ready');
     uploadBtn.disabled = true;
-    statusDiv.textContent = 'اختر الصور من هنا لتشارك لحظاتك';
+    // إعادة أيقونة الإرسال الأصلية لإلغاء حالة التحميل
+    uploadBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>`;
+    
+    if (resetText) statusDiv.textContent = 'اختر الصور من هنا لتشارك لحظاتك';
     fileInput.value = ''; // Clear the file input to allow re-selection
 };
 
-clearPreviewBtn.addEventListener('click', hidePreview);
+clearPreviewBtn.addEventListener('click', () => hidePreview(true));
 
 // إغلاق الـ Modal
 const closeModal = () => {
@@ -849,7 +1315,15 @@ const closeModal = () => {
 
 // ميزة التكبير عند النقر المزدوج
 modalImage.addEventListener('dblclick', () => {
-    modalImage.classList.toggle('zoomed');
+    if (currentScale > 1) {
+        currentScale = 1;
+        modalImage.style.transform = 'scale(1)';
+        modalImage.classList.remove('zoomed');
+    } else {
+        currentScale = 2; // تكبير ×2
+        modalImage.style.transform = 'scale(2)';
+        modalImage.classList.add('zoomed');
+    }
 });
 
 // --- منطق التعليقات ---
@@ -989,7 +1463,8 @@ window.addEventListener('load', () => {
     // تأخير بسيط (2 ثانية) لضمان رؤية الشاشة ولتحميل البيانات في الخلفية
     setTimeout(() => {
         if(splash) splash.classList.add('hidden');
-    }, 2000); 
+        checkRegistration(); // التحقق من التسجيل بعد انتهاء شاشة البداية
+    }, 2000);
 });
 
 // --- منطق الإشعارات (Push Notifications) ---
