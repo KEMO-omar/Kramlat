@@ -68,6 +68,8 @@
         }
         .btn:hover { transform: scale(1.02); box-shadow: 0 8px 25px rgba(0, 212, 255, 0.5); }
         .btn-danger { background: linear-gradient(45deg, #ff4b2b, #ff416c); width: auto; padding: 8px 15px; font-size: 0.9rem; }
+        .btn-pin { background: linear-gradient(45deg, #f1c40f, #f39c12); width: auto; padding: 8px 15px; font-size: 0.9rem; color: #000; }
+        .btn-edit { background: linear-gradient(45deg, #4facfe, #00f2fe); width: auto; padding: 8px 15px; font-size: 0.9rem; }
 
         .table-responsive { overflow-x: auto; border-radius: 15px; border: 1px solid var(--border); }
         table { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.4); }
@@ -84,12 +86,28 @@
         #toast-container { position: fixed; bottom: 20px; left: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
         .toast { background: rgba(0, 0, 0, 0.9); border-right: 5px solid var(--a); color: #fff; padding: 15px 25px; border-radius: 10px; font-weight: bold; animation: slideIn 0.5s ease-out; }
         @keyframes slideIn { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        
+        .pinned-row { background: rgba(241, 196, 15, 0.1) !important; border-right: 4px solid var(--gold); }
     </style>
 </head>
 <body>
 
 <div class="admin-container">
     <h1><i class="fas fa-user-astronaut"></i> مركز القيادة | KAREEM 👑</h1>
+
+    <div class="card">
+        <div class="card-title"><i class="fas fa-comments"></i> إدارة كلمات الجيش (الراديو)</div>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr><th>الاسم</th><th>الرسالة</th><th>الحالة</th><th>إجراءات</th></tr>
+                </thead>
+                <tbody id="messagesBody">
+                    <tr><td colspan="4" style="text-align:center;">جاري تحميل الكلمات...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
     <div class="card">
         <div class="card-title"><i class="fas fa-trophy"></i> التحكم في المسابقة الكبرى</div>
@@ -225,6 +243,49 @@
         });
     }
 
+    // --- إدارة الكلمات (الراديو) ---
+    rtdb.ref('kramlat_radio').on('value', (s) => {
+        const body = document.getElementById('messagesBody');
+        body.innerHTML = "";
+        if(!s.exists()) { body.innerHTML = "<tr><td colspan='4'>لا توجد كلمات منشورة</td></tr>"; return; }
+        
+        s.forEach(child => {
+            const v = child.val();
+            const isPinned = v.pinned === true;
+            body.innerHTML += `<tr class="${isPinned ? 'pinned-row' : ''}">
+                <td><input type="text" id="name_${child.key}" value="${v.name}" style="padding:5px; border-radius:5px;"></td>
+                <td><textarea id="msg_${child.key}" style="padding:5px; height:40px; border-radius:5px;">${v.message}</textarea></td>
+                <td>${isPinned ? '📌 مثبتة' : 'عادية'}</td>
+                <td style="display:flex; gap:5px;">
+                    <button class="btn-edit" onclick="updateMessage('${child.key}')"><i class="fas fa-save"></i></button>
+                    <button class="btn-pin" onclick="togglePin('${child.key}', ${isPinned})"><i class="fas fa-thumbtack"></i></button>
+                    <button class="btn-danger" onclick="deleteMessage('${child.key}')"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>`;
+        });
+    });
+
+    function updateMessage(key) {
+        const newName = document.getElementById(`name_${key}`).value;
+        const newMsg = document.getElementById(`msg_${key}`).value;
+        rtdb.ref('kramlat_radio').child(key).update({
+            name: newName,
+            message: newMsg
+        }).then(() => showToast('تم تحديث الرسالة!'));
+    }
+
+    function togglePin(key, currentStatus) {
+        rtdb.ref('kramlat_radio').child(key).update({
+            pinned: !currentStatus
+        }).then(() => showToast(currentStatus ? 'تم إلغاء التثبيت' : 'تم التثبيت بنجاح!'));
+    }
+
+    function deleteMessage(key) {
+        if(confirm('هل تريد حذف هذه الكلمة نهائياً؟')) {
+            rtdb.ref('kramlat_radio').child(key).remove().then(() => showToast('تم الحذف!'));
+        }
+    }
+
     // إدارة المسابقة
     function saveContestSettings() {
         const settings = {
@@ -300,7 +361,7 @@
         rtdb.ref('admin_control/extra_events').push({
             title: document.getElementById('eventTitle').value,
             image: img
-        }).then(() => showToast('تم التوثيق!'));
+        }).then(() => showToast('تم توثيق الاحتفال!'));
     }
 
     function deleteItem(path, key) {
@@ -310,7 +371,7 @@
         }
     }
 
-    // عرض العناصر (لوحة الشرف والاحتفالات)
+    // عرض العناصر
     rtdb.ref('admin_control/hall_of_fame').on('value', s => {
         const g = document.getElementById('legendsGrid'); g.innerHTML = "";
         s.forEach(c => {
