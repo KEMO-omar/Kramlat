@@ -26,16 +26,64 @@
     canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 
     /* نافبار */
-    nav.cosmic-nav {
-      position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
-      background: rgba(0,0,0,0.92); backdrop-filter: blur(20px);
-      padding: 8px 12px; border-radius: 20px; border: 1px solid var(--p);
-      display: flex; gap: 6px; z-index: 1000; box-shadow: 0 0 25px rgba(255, 0, 127, 0.4);
-      width: 95%; max-width: 750px; justify-content: center; flex-wrap: wrap;
-    }
-    .nav-link { color: #fff; text-decoration: none; font-weight: 900; font-size: clamp(0.7rem, 2.2vw, 0.85rem); cursor: pointer; white-space: nowrap; transition: 0.3s; padding: 8px 12px; border-radius: 12px; }
-    .nav-link.active { color: var(--a); text-shadow: 0 0 10px var(--a); background: rgba(255,255,255,0.1); }
-    
+   /* ستايل النافبار المطور */
+nav.cosmic-nav {
+  position: fixed; top: 15px; left: 50%; transform: translateX(-50%);
+  background: rgba(1, 1, 3, 0.85); backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  padding: 12px 25px; border-radius: 25px; border: 1px solid rgba(255, 0, 127, 0.4);
+  display: flex; justify-content: space-between; align-items: center;
+  z-index: 1000; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 0, 127, 0.2);
+  width: 90%; max-width: 1000px;
+}
+
+.nav-brand {
+  font-weight: 900; font-size: 1.1rem; color: #fff;
+  text-shadow: 0 0 10px var(--p); display: none; /* يظهر في الموبايل فقط */
+}
+
+.nav-links-wrapper {
+  display: flex; gap: 8px; width: 100%; justify-content: center; transition: 0.4s ease;
+}
+
+.nav-link { 
+  color: #b0b0b0; text-decoration: none; font-weight: 700; font-size: 0.9rem; 
+  cursor: pointer; white-space: nowrap; transition: 0.3s; padding: 8px 16px; border-radius: 12px; 
+}
+.nav-link:hover { color: #fff; background: rgba(255, 255, 255, 0.05); }
+.nav-link.active { color: var(--a); text-shadow: 0 0 12px var(--a); background: rgba(204, 255, 0, 0.15); font-weight: 900; }
+
+.install-nav-btn { background: var(--a); color: #000 !important; font-weight: 900; display: none; animation: pulse 2s infinite; }
+
+/* زر المنيو للموبايل */
+.menu-toggle {
+  display: none; background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; transition: 0.3s;
+}
+
+/* غطاء الشاشة الخلفي للموبايل */
+.nav-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 998;
+  opacity: 0; pointer-events: none; transition: 0.3s ease;
+}
+.nav-overlay.show { opacity: 1; pointer-events: auto; }
+
+/* شاشات الموبايل والتابلت */
+@media (max-width: 992px) {
+  .nav-brand, .menu-toggle { display: block; }
+  
+  .nav-links-wrapper {
+    position: fixed; top: 85px; right: -100%; /* مخفية خارج الشاشة يميناً */
+    width: 260px; max-height: calc(100vh - 110px); background: rgba(1, 1, 3, 0.95); 
+    border: 1px solid var(--p); border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+    flex-direction: column; padding: 20px 10px; gap: 5px; overflow-y: auto; justify-content: flex-start;
+  }
+  
+  /* عندما تفتح القائمة */
+  .nav-links-wrapper.open { right: 5%; }
+  
+  .nav-link { width: 100%; text-align: right; padding: 12px 20px; font-size: 1rem; border-radius: 15px; }
+}
+ 
     .install-nav-btn { background: var(--a); color: #000 !important; border: 1px solid #fff; display: none; animation: pulse 2s infinite; }
     @keyframes pulse { 0% {transform: scale(1);} 50% {transform: scale(1.05);} 100% {transform: scale(1);} }
 
@@ -114,17 +162,31 @@
 
 <canvas id="cosmos"></canvas>
 
+<!-- نافبار مطور واحترافي -->
 <nav class="cosmic-nav">
-  <a class="nav-link install-nav-btn" id="installBtn" onclick="installApp()"><i class="fa-solid fa-download"></i> تثبيت 🍭</a>
-  <a class="nav-link active" onclick="nav('home', this)">الرئيسية</a>
-  <a class="nav-link" onclick="nav('journey', this)">عن كرملات</a>
-  <a class="nav-link" href="join.html">المسابقة</a>
-  <a class="nav-link" href="خ.html">المتسابقون</a>
-  <a class="nav-link" onclick="nav('hall-of-fame', this)">لوحة الشرف</a>
-  <a class="nav-link" onclick="nav('events', this)">الاحتفالات</a>
-  <a class="nav-link" onclick="nav('team', this)">القادة</a>
-   <a class="nav-link" href="Word.html">قول كلمة لكرملات</a>
+  <div class="nav-brand">إمبراطورية كرملات 🍭</div>
+  
+  <!-- زر الهامبرغر للموبايل -->
+  <button class="menu-toggle" id="menuToggle" onclick="toggleMenu()">
+    <i class="fa-solid fa-bars"></i>
+  </button>
+
+  <!-- الروابط -->
+  <div class="nav-links-wrapper" id="navLinksWrapper">
+    <a class="nav-link install-nav-btn" id="installBtn" onclick="installApp()"><i class="fa-solid fa-download"></i> تثبيت التطبيق</a>
+    <a class="nav-link active" onclick="nav('home', this)">الرئيسية</a>
+    <a class="nav-link" onclick="nav('journey', this)">عن كرملات</a>
+    <a class="nav-link" href="join.html">المسابقة</a>
+    <a class="nav-link" href="خ.html">المتسابقون</a>
+    <a class="nav-link" onclick="nav('hall-of-fame', this)">لوحة الشرف</a>
+    <a class="nav-link" onclick="nav('events', this)">الاحتفالات</a>
+    <a class="nav-link" onclick="nav('team', this)">القادة</a>
+    <a class="nav-link" href="Word.html">قول كلمة لكرملات</a>
+  </div>
 </nav>
+
+<!-- غطاء خلفي يظهر عند فتح القائمة في الموبايل لإغلاقها عند الضغط في أي مكان فارغ -->
+<div class="nav-overlay" id="navOverlay" onclick="toggleMenu()"></div>
 
 <div class="container">
   
@@ -335,6 +397,35 @@
       setTimeout(() => el.remove(), 800);
     }
   }
+  // دالة فتح وإغلاق قائمة الموبايل
+function toggleMenu() {
+  const wrapper = document.getElementById('navLinksWrapper');
+  const overlay = document.getElementById('navOverlay');
+  const icon = document.querySelector('#menuToggle i');
+  
+  wrapper.classList.toggle('open');
+  overlay.classList.toggle('show');
+  
+  // تغيير شكل الأيقونة من قائمة إلى علامة X عند الفتح
+  if(wrapper.classList.contains('open')) {
+    icon.className = "fa-solid fa-xmark";
+  } else {
+    icon.className = "fa-solid fa-bars";
+  }
+}
+
+// تعديل على دالة التنقل الأصلية لضمان إغلاق القائمة بعد الضغط بالموبايل
+const originalNav = nav;
+nav = function(id, el) {
+  originalNav(id, el); // تشغيل الكود الأصلي للتنقل
+  
+  // إغلاق المنيو إذا كانت مفتوحة
+  const wrapper = document.getElementById('navLinksWrapper');
+  if(wrapper.classList.contains('open')) {
+    toggleMenu();
+  }
+}
+
 
   const canvas = document.getElementById('cosmos');
   const ctx = canvas.getContext('2d');
