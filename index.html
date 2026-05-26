@@ -3,26 +3,44 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>إمبراطورية كرملات | Kramlat Ultimate 🍭</title>
   
+  <!-- --- قسم الميتا والـ SEO الاحترافي --- -->
+  <title>إمبراطورية كرملات الفضائية | Kramlat Ultimate 🍭</title>
+  <meta name="description" content="المقر الرسمي لإمبراطورية كرملات - مجرة الفوضى الإبداعية، الميمز، التحديات الأسطورية والغموض الذي لا ينتهي. هنا حيث لا مكان للملل!" />
+  <meta name="keywords" content="كرملات, kramlat, ميمز, ألعاب, مجرة كرملات, كريم عمر, ترفيه, قصص غموض, إمبراطورية كرملات" />
+  <meta name="author" content="Kareem Omar" />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://kemo-omar.github.io/Karamlat/" />
+  <meta property="og:title" content="إمبراطورية كرملات الفضائية | Kramlat Ultimate 🍭" />
+  <meta property="og:description" content="انضم إلى مجرة الفوضى الإبداعية واكتشف كبسولات الغموض والميمز الحصرية." />
+  <meta property="og:image" content="logo8.png" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:title" content="إمبراطورية كرملات الفضائية 🍭" />
+  <meta property="twitter:description" content="المقر الرسمي لعالم الكرملات السحري والمستقبلي." />
+  <meta property="twitter:image" content="logo8.png" />
+
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0a0a12">
+  <meta name="theme-color" content="#ff007f">
   <link rel="apple-touch-icon" href="logo.png">
 
-  <!-- الخطوط والأيقونات -->
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet" />
+  <!-- تحسين الخطوط الفخمة والأيقونات -->
+  <link href="https://fonts.googleapis.com/css2?family=Reem_Kufi:wght@500;700;900&family=Plus+Jakarta+Sans:wght@700;800&family=Space+Grotesk:wght@700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
-    /* --- المتغيرات والتصميم العام --- */
+    /* --- الهوية البصرية الجديدة 180 درجة (Neon Candy Tech) --- */
     :root {
       --primary: #ff007f;
-      --secondary: #00d4ff;
-      --accent: #ccff00;
-      --bg-dark: #06060c;
-      --card-bg: rgba(255, 255, 255, 0.03);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --glass-glow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      --secondary: #00f0ff;
+      --accent: #b9ff00;
+      --bg: #05021a;
+      --glass: rgba(15, 10, 48, 0.45);
+      --border: rgba(255, 0, 127, 0.25);
+      --glow: 0 0 25px rgba(255, 0, 127, 0.35);
     }
 
     * { 
@@ -35,12 +53,16 @@
     }
 
     body { 
-      background-color: var(--bg-dark);
-      background-image: radial-gradient(circle at 50% 50%, #101026 0%, #06060c 100%);
+      background: var(--bg);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(255, 0, 127, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(0, 240, 255, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(15, 10, 48, 1) 0%, #03010f 100%);
       color: #ffffff; 
-      font-family: 'Cairo', sans-serif; 
+      font-family: 'Reem Kufi', sans-serif; 
       overflow-x: hidden;
       min-height: 100vh;
+      background-attachment: fixed;
     }
 
     canvas#cosmos { 
@@ -50,167 +72,207 @@
       pointer-events: none; 
     }
 
-    /* --- شاشة الإنترو السينمائية --- */
+    /* --- إنترو سينمائي فائق النعومة والمرح --- */
     #intro-screen {
       position: fixed;
       inset: 0;
-      background: #06060c;
+      background: #040114;
       z-index: 9999;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), visibility 1s;
+      transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
     }
     .intro-logo-wrap {
       position: relative;
-      animation: pulseGlow 2s infinite alternate;
+      animation: introFloat 2s ease-in-out infinite alternate;
     }
     .intro-logo {
-      width: 150px; height: 150px; border-radius: 50%;
-      border: 3px solid var(--primary);
+      width: 140px; height: 140px; border-radius: 40px;
+      border: 3px dashed var(--secondary);
+      box-shadow: 0 0 40px rgba(0, 240, 255, 0.4);
+      transform: rotate(-10deg);
     }
-    .intro-loading-bar {
-      width: 200px; height: 4px; background: rgba(255,255,255,0.1);
-      border-radius: 10px; margin-top: 30px; overflow: hidden;
+    .intro-text {
+      font-family: 'Reem Kufi', sans-serif;
+      font-weight: 900;
+      font-size: 1.8rem;
+      margin-top: 25px;
+      background: linear-gradient(45deg, #fff, var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 2px;
     }
-    .intro-progress {
-      width: 0%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary));
-      animation: loadProgress 2.5s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+    @keyframes introFloat { 
+      from { transform: translateY(0) rotate(-10deg); filter: drop-shadow(0 0 10px var(--primary)); } 
+      to { transform: translateY(-15px) rotate(5deg); filter: drop-shadow(0 0 30px var(--secondary)); } 
     }
-    @keyframes loadProgress { to { width: 100%; } }
-    @keyframes pulseGlow { from { transform: scale(0.98); filter: drop-shadow(0 0 10px var(--primary)); } to { transform: scale(1.02); filter: drop-shadow(0 0 30px var(--secondary)); } }
 
-    /* --- الهيكل الرئيسي --- */
+    /* --- الهيكل ومساحات العرض النفسية (غير خانق) --- */
     .container { 
       position: relative; 
       z-index: 1; 
-      max-width: 1100px; 
+      max-width: 1050px; 
       margin: 0 auto; 
-      padding: 120px 20px 40px 20px; 
+      padding: 140px 24px 60px 24px; 
     }
 
     .page { 
       display: none; 
-      animation: pageReveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards; 
+      animation: pageIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; 
       width: 100%; 
     }
     .page.active { display: block; }
     
-    @keyframes pageReveal { 
-      from { opacity: 0; transform: translateY(30px) scale(0.98); } 
-      to { opacity: 1; transform: translateY(0) scale(1); } 
+    @keyframes pageIn { 
+      from { opacity: 0; transform: scale(0.95) translateY(15px); } 
+      to { opacity: 1; transform: scale(1) translateY(0); } 
     }
 
-    /* --- النافبار الكوني --- */
+    /* --- النافبار الزجاجي المتفاعل السلس --- */
     nav.cosmic-nav {
-      position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-      background: rgba(10, 10, 18, 0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      padding: 10px 25px; border-radius: 100px; border: 1px solid var(--card-border);
+      position: fixed; top: 25px; left: 50%; transform: translateX(-50%);
+      background: var(--glass); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+      padding: 12px 30px; border-radius: 30px; border: 1px solid var(--border);
       display: flex; justify-content: space-between; align-items: center;
-      z-index: 1000; box-shadow: var(--glass-glow); width: 92%; max-width: 1050px;
-      transition: all 0.3s ease;
+      z-index: 1000; box-shadow: var(--glow); width: 92%; max-width: 1000px;
+      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     }
-    .nav-brand { font-weight: 900; font-size: 1.1rem; text-shadow: 0 0 10px var(--primary); }
-    .nav-links-wrapper { display: flex; gap: 5px; align-items: center; }
+    nav.cosmic-nav:hover {
+      border-color: var(--secondary);
+      box-shadow: 0 0 35px rgba(0, 240, 255, 0.25);
+    }
+    .nav-brand { font-weight: 900; font-size: 1.3rem; text-shadow: 0 0 15px var(--primary); font-family: 'Reem Kufi'; }
+    .nav-links-wrapper { display: flex; gap: 8px; align-items: center; }
     .nav-link { 
-      color: #a0a0ba; text-decoration: none; font-weight: 700; font-size: 0.85rem; 
-      padding: 8px 16px; border-radius: 50px; transition: all 0.3s;
+      color: #cbd5e1; text-decoration: none; font-weight: 700; font-size: 0.9rem; 
+      padding: 10px 20px; border-radius: 20px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .nav-link:hover { color: #fff; background: rgba(255, 255, 255, 0.05); }
-    .nav-link.active { color: #000; background: var(--accent); font-weight: 900; box-shadow: 0 0 15px var(--accent); }
+    .nav-link:hover { color: var(--secondary); background: rgba(0, 240, 255, 0.08); transform: translateY(-2px); }
+    .nav-link.active { color: #000; background: var(--accent); font-weight: 900; box-shadow: 0 0 20px var(--accent); }
     
-    .menu-toggle { display: none; background: none; border: none; color: #fff; font-size: 1.3rem; }
-    .nav-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 998; opacity: 0; pointer-events: none; transition: 0.3s; }
+    .menu-toggle { display: none; background: none; border: none; color: #fff; font-size: 1.5rem; }
+    .nav-overlay { position: fixed; inset: 0; background: rgba(3, 1, 15, 0.8); backdrop-filter: blur(8px); z-index: 998; opacity: 0; pointer-events: none; transition: 0.4s; }
     .nav-overlay.show { opacity: 1; pointer-events: auto; }
 
     @media (max-width: 992px) {
       .menu-toggle { display: block; }
       .nav-links-wrapper {
-        position: fixed; top: 90px; right: -100%; width: 280px; 
-        background: rgba(10, 10, 18, 0.98); border: 1px solid var(--card-border); border-radius: 24px;
-        flex-direction: column; padding: 20px; gap: 10px; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: fixed; top: 100px; right: -100%; width: 88%; 
+        background: rgba(10, 5, 36, 0.98); border: 1px solid var(--border); border-radius: 24px;
+        flex-direction: column; padding: 25px; gap: 12px; box-shadow: var(--glow);
+        transition: 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
       }
-      .nav-links-wrapper.open { right: 4%; }
-      .nav-link { width: 100%; text-align: center; padding: 12px; font-size: 0.95rem; }
+      .nav-links-wrapper.open { right: 6%; }
+      .nav-link { width: 100%; text-align: center; padding: 14px; font-size: 1rem; }
     }
 
-    /* --- قسم الرئيسية والهيرو --- */
-    .hero { text-align: center; min-height: 70vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-    .main-logo { width: 140px; height: 140px; border-radius: 50%; border: 3px solid var(--primary); box-shadow: 0 0 30px rgba(255,0,127,0.3); transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); object-fit: cover; }
-    .main-logo:hover { transform: scale(1.05) rotate(15deg); }
+    /* --- قسم الهيرو والعداد الخرافي --- */
+    .hero { text-align: center; min-height: 65vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+    .main-logo { 
+      width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--primary); 
+      box-shadow: 0 0 40px rgba(255,0,127,0.5); 
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); object-fit: cover; 
+    }
+    .main-logo:hover { transform: scale(1.15) rotate(360deg); border-color: var(--secondary); box-shadow: 0 0 40px rgba(0,240,255,0.6); }
     
     .hero-title { 
-      font-family: 'Orbitron', sans-serif; font-size: clamp(60px, 20vw, 130px); font-weight: 900;
-      background: linear-gradient(180deg, #ffffff 30%, var(--secondary) 70%, var(--primary) 100%);
+      font-family: 'Space Grotesk', sans-serif; font-size: clamp(65px, 22vw, 140px); font-weight: 900;
+      background: linear-gradient(180deg, #ffffff 20%, var(--primary) 60%, var(--secondary) 100%);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 2px 10px rgba(0,212,255,0.3)); line-height: 0.9; margin: 15px 0;
+      filter: drop-shadow(0 4px 15px rgba(255,0,127,0.4)); line-height: 0.85; margin: 20px 0;
+      animation: pulseTitle 3s ease-in-out infinite alternate;
     }
+    @keyframes pulseTitle { from { filter: drop-shadow(0 4px 10px rgba(255,0,127,0.4)); } to { filter: drop-shadow(0 4px 25px rgba(0,240,255,0.5)); } }
     
     .counter-text-style {
-      color: var(--accent) !important; font-weight: 900 !important; font-size: clamp(35px, 9vw, 65px) !important;
-      text-shadow: 0 0 20px var(--accent); -webkit-text-fill-color: var(--accent) !important;
+      color: var(--accent) !important; font-weight: 900 !important; font-size: clamp(40px, 10vw, 75px) !important;
+      text-shadow: 0 0 25px var(--accent); -webkit-text-fill-color: var(--accent) !important;
     }
 
-    /* الصناديق والبطاقات */
-    .content-box { background: var(--card-bg); backdrop-filter: blur(10px); padding: 40px; border-radius: 32px; border: 1px solid var(--card-border); box-shadow: var(--glass-glow); }
-    .section-title { color: #fff; font-size: 2.2rem; font-weight: 900; text-align: center; margin-bottom: 30px; position: relative; }
-    .section-title::after { content: ''; display: block; width: 60px; height: 4px; background: var(--primary); margin: 10px auto 0 auto; border-radius: 10px; }
-
-    .stats-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(0,212,255,0.2); padding: 16px 32px; border-radius: 100px; margin: 20px 0; font-weight: 700; font-size: 0.95rem; }
-    .stats-card span { color: var(--secondary); text-shadow: 0 0 10px var(--secondary); font-weight: 900; }
-
-    .main-btn { background: linear-gradient(45deg, var(--primary), #d4006b); color: #fff; padding: 16px 38px; border-radius: 50px; text-decoration: none; font-weight: 800; border: none; box-shadow: 0 4px 25px rgba(255,0,127,0.4); transition: 0.3s ease; }
-    .main-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 30px rgba(255,0,127,0.6); }
-
-    /* الإعلانات الديناميكية */
-    .announcement-box { width: 100%; max-width: 450px; background: rgba(255,255,255,0.02); border: 1px dashed var(--accent); border-radius: 24px; padding: 15px; margin: 20px 0; display: none; }
-    .announcement-box img { width: 100%; border-radius: 16px; margin-bottom: 12px; }
-
-    /* الميزات */
-    .feature-tag { background: rgba(255,255,255,0.01); padding: 20px; border-radius: 16px; margin-bottom: 15px; border-right: 4px solid var(--secondary); font-weight: 700; transition: 0.3s ease; }
-    .feature-tag:hover { background: rgba(255,255,255,0.04); transform: translateX(-5px); border-right-color: var(--accent); }
-
-    /* لوحات العرض والشبكات */
-    .winner-grid, .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; }
-    .winner-item { background: rgba(255,215,0,0.02); border: 1px solid rgba(255,215,0,0.3); padding: 20px; border-radius: 20px; text-align: center; font-weight: 800; color: #ffd700; transition: 0.3s; }
-    .winner-item:hover { background: rgba(255,215,0,0.08); transform: translateY(-5px); }
-
-    .gallery-item { border-radius: 20px; overflow: hidden; border: 1px solid var(--card-border); position: relative; height: 180px; }
-    .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
-    .gallery-label { position: absolute; bottom: 0; width: 100%; background: linear-gradient(transparent, rgba(0,0,0,0.9)); padding: 15px 10px 10px; text-align: center; color: var(--secondary); font-weight: 800; font-size: 0.8rem; }
-
-    /* كروت القادة المطورين */
-    .leader-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
-    .leader-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 32px; padding: 30px; text-align: center; box-shadow: var(--glass-glow); transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
-    .leader-card:hover { transform: translateY(-10px); border-color: rgba(0,212,255,0.4); }
-    .leader-pic { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--accent); margin-bottom: 20px; object-fit: cover; }
+    /* الصناديق الزجاجية ومساحات المحتوى الناعمة */
+    .content-box { 
+      background: var(--glass); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+      padding: 45px 35px; border-radius: 36px; border: 1px solid var(--border); 
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3); transition: all 0.4s ease;
+    }
+    .content-box:hover { border-color: rgba(255,0,127,0.5); box-shadow: 0 25px 50px rgba(255, 0, 127, 0.15); }
     
-    .contact-wa { background: rgba(37, 211, 102, 0.1); color: #25d366; border: 1px solid rgba(37, 211, 102, 0.4); padding: 10px 22px; border-radius: 50px; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem; margin-top: 15px; transition: 0.3s; }
-    .contact-wa:hover { background: #25d366; color: #fff; }
+    .section-title { font-size: 2.4rem; font-weight: 900; text-align: center; margin-bottom: 35px; color: #fff; }
+    .section-title i { color: var(--secondary); margin-left: 10px; animation: bounceIcon 2s infinite; }
+    @keyframes bounceIcon { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 
-    .floating-emoji { position: fixed; pointer-events: none; z-index: 9999; animation: flyUp 0.8s ease-out forwards; font-size: 1.8rem; }
-    @keyframes flyUp { 0% { transform: translateY(0) scale(0.5); opacity: 1; } 100% { transform: translateY(-120px) rotate(15deg) scale(1.3); opacity: 0; } }
+    .stats-card { background: rgba(0, 240, 255, 0.05); border: 1px solid rgba(0,240,255,0.25); padding: 18px 36px; border-radius: 100px; margin: 25px 0; font-weight: 700; font-size: 1rem; transition: 0.3s; }
+    .stats-card:hover { transform: scale(1.03); background: rgba(0, 240, 255, 0.1); }
+    .stats-card span { color: var(--secondary); text-shadow: 0 0 15px var(--secondary); font-weight: 900; }
 
-    footer { text-align: center; padding: 40px 20px; margin-top: 60px; border-top: 1px solid var(--card-border); color: #666680; font-size: 0.85rem; font-weight: 700; }
-    footer i { color: var(--primary); margin: 0 5px; }
+    .main-btn { 
+      background: linear-gradient(45deg, var(--primary), #ff00c8); color: #fff; 
+      padding: 18px 45px; border-radius: 50px; text-decoration: none; font-weight: 900; font-size: 1.05rem;
+      border: none; box-shadow: 0 8px 30px rgba(255,0,127,0.45); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    }
+    .main-btn:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 12px 35px rgba(255,0,127,0.65); }
+
+    /* الإعلانات المتفاعلة */
+    .announcement-box { width: 100%; max-width: 460px; background: rgba(255,255,255,0.03); border: 2px dashed var(--accent); border-radius: 28px; padding: 18px; margin: 25px 0; display: none; transition: 0.3s; }
+    .announcement-box img { width: 100%; border-radius: 20px; margin-bottom: 15px; }
+
+    /* ميزات ومكونات "عن كرملات" الموسعة والتفاعلية بالكامل */
+    .feature-tag { 
+      background: rgba(255, 255, 255, 0.02); padding: 22px; border-radius: 20px; margin-bottom: 18px; 
+      border-right: 5px solid var(--primary); font-weight: 700; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+    }
+    .feature-tag:hover { 
+      background: rgba(255, 255, 255, 0.06); transform: translateX(-8px) scale(1.01); 
+      border-right-color: var(--secondary); box-shadow: -5px 5px 20px rgba(0,240,255,0.1);
+    }
+    
+    .channel-badges { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 25px; }
+    .badge-item { background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 8px 18px; border-radius: 50px; font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+    .badge-item i { color: var(--accent); }
+
+    /* الشبكات الأنيقة المتجاوبة */
+    .winner-grid, .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 18px; }
+    .winner-item { background: rgba(255, 217, 0, 0.03); border: 1px solid rgba(255, 217, 0, 0.25); padding: 25px 15px; border-radius: 24px; text-align: center; font-weight: 800; color: #ffd700; transition: all 0.4s ease; }
+    .winner-item:hover { background: rgba(255, 217, 0, 0.1); transform: translateY(-6px) rotate(2deg); box-shadow: 0 10px 20px rgba(255, 217, 0, 0.15); }
+
+    .gallery-item { border-radius: 24px; overflow: hidden; border: 1px solid var(--border); position: relative; height: 190px; transition: 0.4s; }
+    .gallery-item:hover { transform: scale(1.04); border-color: var(--secondary); }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
+    .gallery-label { position: absolute; bottom: 0; width: 100%; background: linear-gradient(transparent, rgba(5,2,26,0.95)); padding: 20px 10px 12px; text-align: center; color: var(--secondary); font-weight: 800; font-size: 0.85rem; }
+
+    /* كروت القادة المستقبلية المشبعة بالنيون */
+    .leader-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 30px; }
+    .leader-card { background: var(--glass); border: 1px solid var(--border); border-radius: 36px; padding: 35px 25px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.2); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .leader-card:hover { transform: translateY(-12px); border-color: var(--secondary); box-shadow: 0 20px 45px rgba(0, 240, 255, 0.2); }
+    .leader-pic { width: 130px; height: 130px; border-radius: 35px; border: 3px solid var(--accent); margin-bottom: 22px; object-fit: cover; transform: rotate(-5deg); transition: 0.4s; }
+    .leader-card:hover { .leader-pic { transform: rotate(0deg) scale(1.05); border-color: var(--primary); } }
+    
+    .contact-wa { background: rgba(37, 211, 102, 0.08); color: #25d366; border: 1px solid rgba(37, 211, 102, 0.3); padding: 12px 25px; border-radius: 50px; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem; margin-top: 18px; transition: 0.3s; }
+    .contact-wa:hover { background: #25d366; color: #fff; box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4); }
+
+    .floating-emoji { position: fixed; pointer-events: none; z-index: 9999; animation: flyUp 0.9s cubic-bezier(0.1, 0.8, 0.3, 1) forwards; font-size: 2.2rem; filter: drop-shadow(0 0 10px rgba(255,255,255,0.5)); }
+    @keyframes flyUp { 0% { transform: translateY(0) scale(0.4); opacity: 1; } 100% { transform: translateY(-140px) rotate(25deg) scale(1.4); opacity: 0; } }
+
+    footer { text-align: center; padding: 50px 20px; margin-top: 80px; border-top: 1px solid var(--border); color: #94a3b8; font-size: 0.9rem; font-weight: 700; }
+    footer i { color: var(--primary); margin: 0 6px; animation: heartBeat 1.2s infinite; display: inline-block; }
+    @keyframes heartBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
   </style>
 </head>
 <body>
 
-<!-- شاشة الانترو السينمائية -->
+<!-- الإنترو السينمائي السلس المطور -->
 <div id="intro-screen">
   <div class="intro-logo-wrap">
     <img src="logo8.png" class="intro-logo" onerror="this.src='https://via.placeholder.com/150'">
   </div>
-  <div class="intro-loading-bar">
-    <div class="intro-progress"></div>
-  </div>
+  <div class="intro-text">جاري دخول مجرة كرملات...</div>
 </div>
 
 <canvas id="cosmos"></canvas>
 
-<!-- القائمة العلوية -->
+<!-- القائمة العلوية اللامعة -->
 <nav class="cosmic-nav">
   <div class="nav-brand">إمبراطورية كرملات 🍭</div>
   <button class="menu-toggle" id="menuToggle" onclick="toggleMenu()">
@@ -232,50 +294,54 @@
 
 <div class="container">
   
-  <!-- الرئيسية -->
+  <!-- صفحة الرئيسية -->
   <section id="home" class="page active">
     <div class="hero">
       <img src="logo8.png" class="main-logo" id="logoImg">
       <h1 class="hero-title" id="counter">0</h1>
 
-      <!-- صندوق الإعلانات المدعوم بالفايربيز -->
       <div id="adBox" class="announcement-box">
         <img id="adImage" src="" alt="إعلان الإمبراطورية">
         <p id="adText" style="font-weight: 700; color: #fff;"></p>
       </div>
 
-      <div style="color: var(--secondary); font-weight: 900; letter-spacing: 6px; font-size: 1.1rem; margin-top: 10px;">KRAMLAT KINGDOM</div>
-      <h3 style="font-weight: 600; opacity: 0.7; margin-top: 5px;">مرحباً بك في المقر الرسمي للمجرة</h3>
+      <div style="color: var(--secondary); font-weight: 900; letter-spacing: 5px; font-size: 1.1rem; margin-top: 15px;">WELCOME TO KRAMLAT UNIVERSE</div>
       
       <div class="stats-card">
-        <i class="fa-solid fa-satellite-dish"></i> إجمالي الزيارات الفضائية: <span id="visitCount">0</span>
+        <i class="fa-solid fa-bolt-lightning"></i> إجمالي الهبوط الفضائي والزيارات: <span id="visitCount">0</span>
       </div>
       
       <a href="https://whatsapp.com/channel/0029VbAqgz23WHTOe8lXeM1N" class="main-btn" target="_blank">انضم للمجرة الرسمية 🚀🍭</a>
     </div>
   </section>
 
-  <!-- عن كرملات -->
+  <!-- عن كرملات (نسخة موسعة وتفاعلية بالكامل) -->
   <section id="journey" class="page">
     <div class="content-box">
-      <h2 class="section-title">🔮 قصة إمبراطورية كرملات</h2>
-      <p style="text-align: center; font-weight: 800; color: var(--accent); margin-bottom: 20px;">"حيث لا مكان للملل!" 😎🔥</p>
-      <p style="color: #bcbcde; text-align: center; margin-bottom: 25px;">لو بتدور على التقليدي يبقى أنت في المكان الغلط، لأن كرملات مش مجرد قناة، دي عالم موازي فيه كل حاجة وأي حاجة تخطر على بالك! خلي بالك دي بوابة الفوضى الإبداعية 🌀✨</p>
+      <h2 class="section-title"><i class="fa-solid fa-wand-magic-sparkles"></i> قصة إمبراطورية كرملات الفضائية</h2>
+      <p style="text-align: center; font-weight: 900; color: var(--accent); margin-bottom: 25px; font-size: 1.3rem;">"حيث لا مكان للملل.. هنا تحكم الفوضى الممتعة!" 😎🔥</p>
+      <p style="color: #cbd5e1; text-align: center; margin-bottom: 30px; line-height: 2;">لو كنت تبحث عن الأفكار النمطية والمحتوى التقليدي فقد ضللت الطريق تماماً! كرملات ليست مجرد قناة اجتماعية أو ترفيهية، بل هي مجرة متكاملة وعالم موازي يجمع بين الفن، الفكاهة، والجنون الإبداعي المنظم. ندعوك لتجربة المغامرة بنفسك واكتشاف أركاننا السحرية:</p>
   
-      <div class="feature-tag" onclick="spawnEmoji('😂', event)">🌟 😹 ركن الضحك الهستيري: ميمز خرافية هيروق ع الآخر وملصقات حصرية لن تجدها إلا هنا لتفاجئ بها أصدقائك.</div>
-      <div class="feature-tag" onclick="spawnEmoji('👻', event)">⚡ 👻 الغموض والإثارة: تجارب ترفع الأدرينالين للقمة! قصص غامضة ومشوقة تجبرك على متابعتها حتى الحرف الأخير 🚨</div>
-      <div class="feature-tag" onclick="spawnEmoji('🎥', event)">🎥 إبداع بصري: تصميم ومونتاج مجنون معمول بمزاج عالي، أحياناً يضحكك وأحياناً يبهرك.</div>
-      <div class="feature-tag" onclick="spawnEmoji('🧠', event)">🧠 كبسولات معرفية: حقائق ممتعة ومعلومات مدهشة ستجعلك تتساءل في كل مرة: كيف هذا؟!</div>
-      <div class="feature-tag" onclick="spawnEmoji('🎮', event)">🎮 ألعاب وتحديات: ساحة مخصصة للتفاعل والمغامرات المثيرة بين أعضاء الإمبراطورية.</div>
+      <div class="feature-tag" onclick="spawnEmoji('😂', event)">🌟 😹 ركن الميمز والضحك الهستيري: مصنع متكامل لإنتاج الكوميديا والميمز الحصرية، بالإضافة إلى حزم ملصقات مخصصة ومبتكرة لن تجدها في أي مكان آخر لتفاجئ بها أصدقائك في المحادثات.</div>
+      <div class="feature-tag" onclick="spawnEmoji('👻', event)">⚡ 👻 الغموض والقصص المرعبة: مساحة خاصة جداً لعشاق الأدرينالين! هنا نسرد القصص المشوقة، الألغاز الغامضة، والأحداث الواقعية المرعبة التي تجبرك على قراءتها ومتابعتها بشغف حتى السطر الأخير.</div>
+      <div class="feature-tag" onclick="spawnEmoji('🎬', event)">🎥 سينماتوغرافيا وإيديتس مجنونة: مقاطع بصرية وتصاميم ومونتاج احترافي صُنع بحب ومزاج عالٍ جداً؛ ليمزج بين المتعة البصرية وتأثيرات تخطف الأنظار والعقول.</div>
+      <div class="feature-tag" onclick="spawnEmoji('🧠', event)">🧠 كبسولات المعرفة الصادمة: معلومات غريبة وحقائق ممتعة يتم صياغتها بأسلوب شيق ومبسط يجعلك تردد في كل مرة تلقائياً: "إيه ده؟ وكيف حدث هذا حقاً؟!"</div>
+      <div class="feature-tag" onclick="spawnEmoji('🎮', event)">🎮 ساحة الألعاب والمسابقات التفاعلية: بيئة ترفيهية تفاعلية دائمًا تشهد منافسات وتحديات حية بين المتابعين، لتعزيز الروح الحماسية واكتشاف الأبطال الجدد للمجرة.</div>
+
+      <div class="channel-badges">
+        <div class="badge-item"><i class="fa-solid fa-users"></i> مجتمع متفاعل 24/7</div>
+        <div class="badge-item"><i class="fa-solid fa-shield-halved"></i> إدارة قوية</div>
+        <div class="badge-item"><i class="fa-solid fa-bolt"></i> تحديثات مستمرة</div>
+        <div class="badge-item"><i class="fa-solid fa-clapperboard"></i> محتوى مبتكر</div>
+      </div>
     </div>
   </section>
 
   <!-- لوحة الشرف -->
   <section id="hall-of-fame" class="page">
     <div class="content-box">
-      <h2 class="section-title" style="color: #ffd700;">🏆 لوحة شرف الأساطير</h2>
+      <h2 class="section-title" style="color: #ffd700;"><i class="fa-solid fa-trophy"></i> لوحة شرف الأساطير</h2>
       <div class="winner-grid" id="hallOfFameGrid">
-        <!-- يتم التحميل ديناميكياً من الفايربيز مع بقاء الثوابت -->
         <div class="winner-item"><i class="fas fa-crown"></i><br>جودة</div>
         <div class="winner-item"><i class="fas fa-star"></i><br>سراچ</div>
         <div class="winner-item"><i class="fas fa-bolt"></i><br>حمزة</div>
@@ -284,56 +350,56 @@
     </div>
   </section>
 
-  <!-- الاحتفالات -->
+  <!-- سجل الاحتفالات -->
   <section id="events" class="page">
-    <h2 class="section-title">🗓️ سجل الاحتفالات التاريخية</h2>
+    <h2 class="section-title"><i class="fa-solid fa-cake-candles"></i> سجل الاحتفالات التاريخية للمجرة</h2>
     <div class="gallery-grid" id="eventsGrid">
-      <div class="gallery-item"><img src="100.png"><div class="gallery-label">🎉 احتفال الـ 100</div></div>
-      <div class="gallery-item"><img src="200.png"><div class="gallery-label">🔥 احتفال الـ 200</div></div>
-      <div class="gallery-item"><img src="300.png"><div class="gallery-label">🚀 احتفال الـ 300</div></div>
-      <div class="gallery-item"><img src="400.png"><div class="gallery-label">💎 احتفال الـ 400</div></div>
-      <div class="gallery-item"><img src="500.png"><div class="gallery-label">👑 جمدان الـ 500</div></div>
+      <div class="gallery-item"><img src="100.png"><div class="gallery-label">🎉 احتفال الـ 100 المشهود</div></div>
+      <div class="gallery-item"><img src="200.png"><div class="gallery-label">🔥 احتفال الـ 200 الأسطوري</div></div>
+      <div class="gallery-item"><img src="300.png"><div class="gallery-label">🚀 احتفال الـ 300 الناري</div></div>
+      <div class="gallery-item"><img src="400.png"><div class="gallery-label">💎 احتفال الـ 400 الماسي</div></div>
+      <div class="gallery-item"><img src="500.png"><div class="gallery-label">👑 جمدان الـ 500 الملكي</div></div>
     </div>
   </section>
 
-  <!-- القادة -->
+  <!-- القادة والمسؤولين -->
   <section id="team" class="page">
-    <h2 class="section-title">🎖️ مجلس إدارة الإمبراطورية</h2>
+    <h2 class="section-title"><i class="fa-solid fa-user-shield"></i> مجلس إدارة الإمبراطورية الكوني</h2>
     <div class="leader-grid">
       <div class="leader-card">
         <img src="Kareem.png" class="leader-pic">
-        <div style="font-family:'Orbitron'; color:var(--accent); font-size:1.3rem; font-weight:900;">KAREEM 👑</div>
-        <p style="margin-top:10px; font-size:0.9rem; color:#a0a0ba;"><b>كريم عمر (البلدوزر)</b><br>المؤسس والمبرمج الأول والمخطط الأساسي للمجرة.</p>
+        <div style="font-family:'Space Grotesk'; color:var(--accent); font-size:1.4rem; font-weight:900;">KAREEM 👑</div>
+        <p style="margin-top:10px; font-size:0.95rem; color:#cbd5e1;"><b>كريم عمر (البلدوزر)</b><br>المؤسس، المبرمج الأول، وصاحب الرؤية والمخطط الهيكلي الأساسي للإمبراطورية بأكملها.</p>
         <a href="https://wa.me/201101258549" class="contact-wa" target="_blank"><i class="fab fa-whatsapp"></i> تواصل مع الكينج</a>
-        <br><a href="https://kemo-omar.github.io/Kareem/" class="main-btn" style="padding:8px 20px; font-size:0.75rem; margin-top:15px; background:var(--card-border); box-shadow:none;" target="_blank">الموقع الرسمي 🚀</a>
+        <br><a href="https://kemo-omar.github.io/Kareem/" class="main-btn" style="padding:10px 25px; font-size:0.8rem; margin-top:18px; background:rgba(255,255,255,0.05); box-shadow:none;" target="_blank">الموقع الشخصي للمؤسس 🚀</a>
       </div>
       <div class="leader-card">
-        <img src="shreef.png" class="leader-pic">
-        <div style="font-family:'Orbitron'; color:var(--secondary); font-size:1.3rem; font-weight:900;">SHREEF ⚡</div>
-        <p style="margin-top:10px; font-size:0.9rem; color:#a0a0ba;"><b>شريف سيد (العميل)</b><br>قائد العمليات الميدانية والمسؤول عن النظام والتوسع الفضائي.</p>
+        <img src="shreef.png" class="leader-pic" style="border-color: var(--secondary);">
+        <div style="font-family:'Space Grotesk'; color:var(--secondary); font-size:1.4rem; font-weight:900;">SHREEF ⚡</div>
+        <p style="margin-top:10px; font-size:0.95rem; color:#cbd5e1;"><b>شريف سيد (العميل)</b><br>قائد العمليات الميدانية، المسؤول التنفيذي عن ضبط النظام والنمو والتوسع الخارجي.</p>
         <a href="https://wa.me/201060843290" class="contact-wa" target="_blank"><i class="fab fa-whatsapp"></i> تواصل مع العميل</a>
       </div>
       <div class="leader-card">
-        <img src="apqareno.png" class="leader-pic">
-        <div style="font-family:'Orbitron'; color:var(--primary); font-size:1.3rem; font-weight:900;">ABQARIENO 🧪</div>
-        <p style="margin-top:10px; font-size:0.9rem; color:#a0a0ba;"><b>مصطفى محمد (العبقري)</b><br>الممول الإبداعي ومهندس الأفكار المرئية الجذابة.</p>
+        <img src="apqareno.png" class="leader-pic" style="border-color: var(--primary);">
+        <div style="font-family:'Space Grotesk'; color:var(--primary); font-size:1.4rem; font-weight:900;">ABQARIENO 🧪</div>
+        <p style="margin-top:10px; font-size:0.95rem; color:#cbd5e1;"><b>مصطفى محمد (العبقري)</b><br>الممول الإبداعي الجاحد، مهندس الأفكار البصرية، وصانع اللمسات الفنية السحرية.</p>
         <a href="https://wa.me/201158606601" class="contact-wa" target="_blank"><i class="fab fa-whatsapp"></i> تواصل مع العبقري</a>
-        <br><a href="https://mostafa7html7-pixel.github.io/AbuTaleb/" class="main-btn" style="padding:8px 20px; font-size:0.75rem; margin-top:15px; background:var(--card-border); box-shadow:none;" target="_blank">موقع عبقرينو 🚀</a>
+        <br><a href="https://mostafa7html7-pixel.github.io/AbuTaleb/" class="main-btn" style="padding:10px 25px; font-size:0.8rem; margin-top:18px; background:rgba(255,255,255,0.05); box-shadow:none;" target="_blank">موقع العبقري الخاص 🚀</a>
       </div>
     </div>
   </section>
 
   <footer>
-    <p>تم التطوير بكل حب <i class="fa-solid fa-heart"></i> بواسطة KAREEM OMAR © 2026</p>
+    <p>صنع بكل شغف وإبداع وتحدي <i class="fa-solid fa-heart"></i> بواسطة KAREEM OMAR © 2026</p>
   </footer>
 </div>
 
-<!-- مكتبات الفايربيز الموثوقة -->
+<!-- مكاتب Firebase متوافقة وثابتة بنسبة 100% -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
 <script>
-  // إعدادات Firebase الخاصة بك (دون تغيير)
+  // تهيئة وتثبيت مشروع Firebase المعتمد
   const firebaseConfig = {
     apiKey: "AIzaSyCZr_OpkCfEFxeTrOc5fp7F_uvyVGlT5Yc",
     authDomain: "karamlat-99e6e.firebaseapp.com",
@@ -348,27 +414,24 @@
 
   let adminCounterText = "عيد سعيد";
 
-  // إخفاء شاشة الانترو السينمائية بعد اكتمال التحميل المبرمج
+  // إنهاء حركة الترحيب (Intro) بنعومة بعد التحميل المبدئي للعناصر البصرية
   window.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
       const intro = document.getElementById('intro-screen');
       intro.style.opacity = '0';
-      intro.style.visibility = 'hidden';
-    }, 2500); 
+      intro.style.transform = 'translateY(-100vh)';
+      setTimeout(() => intro.remove(), 800);
+    }, 2200); 
   });
 
-  // الاستماع المباشر لقاعدة البيانات لضمان التحكم الكامل للمشرف
+  // مزامنة حية كاملة مع الـ Realtime Database للتحكم المرن
   rtdb.ref('admin_control').on('value', (snapshot) => {
     const data = snapshot.val();
     if (data) {
-      if (data.logo) {
-        document.getElementById('logoImg').src = data.logo;
-      }
-      if (data.counterText) {
-        adminCounterText = data.counterText;
-      }
+      if (data.logo) document.getElementById('logoImg').src = data.logo;
+      if (data.counterText) adminCounterText = data.counterText;
       
-      // التحكم بالإعلان
+      // مزامنة صندوق الإعلان
       const adBox = document.getElementById('adBox');
       if (data.ad && data.ad.visible) {
         adBox.style.display = 'block';
@@ -378,7 +441,7 @@
         adBox.style.display = 'none';
       }
 
-      // تحديث لوحة الشرف ديناميكياً مع الحفاظ على الأساطير الأوائل
+      // إضافة الفائزين للوحة الشرف مع الحفاظ على الأبطال الأساسيين
       if (data.hall_of_fame) {
         const grid = document.getElementById('hallOfFameGrid');
         grid.innerHTML = `
@@ -392,15 +455,15 @@
         });
       }
 
-      // تحديث سجل الاحتفالات من لوحة التحكم
+      // تحميل أحداث واحتفالات إضافية حية من الفايربيز
       if (data.extra_events) {
         const evGrid = document.getElementById('eventsGrid');
         evGrid.innerHTML = `
-          <div class="gallery-item"><img src="100.png"><div class="gallery-label">🎉 احتفال الـ 100</div></div>
-          <div class="gallery-item"><img src="200.png"><div class="gallery-label">🔥 احتفال الـ 200</div></div>
-          <div class="gallery-item"><img src="300.png"><div class="gallery-label">🚀 احتفال الـ 300</div></div>
-          <div class="gallery-item"><img src="400.png"><div class="gallery-label">💎 احتفال الـ 400</div></div>
-          <div class="gallery-item"><img src="500.png"><div class="gallery-label">👑 جمدان الـ 500</div></div>
+          <div class="gallery-item"><img src="100.png"><div class="gallery-label">🎉 احتفال الـ 100 المشهود</div></div>
+          <div class="gallery-item"><img src="200.png"><div class="gallery-label">🔥 احتفال الـ 200 الأسطوري</div></div>
+          <div class="gallery-item"><img src="300.png"><div class="gallery-label">🚀 احتفال الـ 300 الناري</div></div>
+          <div class="gallery-item"><img src="400.png"><div class="gallery-label">💎 احتفال الـ 400 الماسي</div></div>
+          <div class="gallery-item"><img src="500.png"><div class="gallery-label">👑 جمدان الـ 500 الملكي</div></div>
         `;
         Object.values(data.extra_events).forEach(ev => {
           evGrid.innerHTML += `<div class="gallery-item"><img src="${ev.image}"><div class="gallery-label">${ev.title}</div></div>`;
@@ -409,14 +472,14 @@
     }
   });
 
-  // عداد الزيارات التلقائي المستقر
+  // معالجة وحساب إجمالي الزيارات بدقة بالغة
   const visitRef = rtdb.ref('site_stats/total_visits');
   visitRef.transaction(current => (current || 0) + 1);
   visitRef.on('value', snap => { 
     document.getElementById('visitCount').innerText = snap.val() || 0; 
   });
 
-  // أنيميشن العداد الرئيسي المطور
+  // أنيميشن العداد الصاعد التفاعلي
   function startCounter() {
     let count = 0; 
     const el = document.getElementById('counter');
@@ -431,11 +494,11 @@
         explode(window.innerWidth / 2, window.innerHeight / 3); 
         clearInterval(timer); 
       }
-    }, 40);
+    }, 35);
   }
   startCounter();
 
-  // التنقل السلس والذكي بين الصفحات
+  // نظام التنقل السلس وغير المعقد بين علامات التبويب
   function nav(id, el) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
@@ -445,7 +508,6 @@
     
     if(id === 'home') startCounter();
     
-    // إغلاق قائمة الموبايل فورياً بعد الضغط
     const wrapper = document.getElementById('navLinksWrapper');
     if(wrapper.classList.contains('open')) {
       toggleMenu();
@@ -453,7 +515,7 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // قائمة الهاتف الذكية
+  // معالجة القائمة الجانبية المخصصة للهواتف الذكية
   function toggleMenu() {
     const wrapper = document.getElementById('navLinksWrapper');
     const overlay = document.getElementById('navOverlay');
@@ -465,22 +527,22 @@
     icon.className = wrapper.classList.contains('open') ? "fa-solid fa-xmark" : "fa-solid fa-bars";
   }
 
-  // تأثير الرموز التعبيرية المتطايرة البصرية
+  // جيل وتوليد الإيموجي الطائر الممتاز عند التفاعل والضغط
   function spawnEmoji(text, event) {
     const x = event.clientX || (event.touches ? event.touches[0].clientX : 0);
     const y = event.clientY || (event.touches ? event.touches[0].clientY : 0);
-    for(let i=0; i<5; i++){
+    for(let i=0; i<6; i++){
       const el = document.createElement('div'); 
       el.className = 'floating-emoji'; 
       el.innerText = text;
-      el.style.left = (x + (Math.random() - 0.5) * 30) + 'px'; 
-      el.style.top = y + 'px'; 
+      el.style.left = (x + (Math.random() - 0.5) * 40) + 'px'; 
+      el.style.top = (y + (Math.random() - 0.5) * 15) + 'px'; 
       document.body.appendChild(el);
-      setTimeout(() => el.remove(), 800);
+      setTimeout(() => el.remove(), 900);
     }
   }
 
-  /* --- تأثير جزيئات الخلفية الكونى (Cosmos Particle Engine) --- */
+  /* --- نظام الجزيئات الكوني الفخم المطور بالكامل ليعطي عمق للموقع --- */
   const canvas = document.getElementById('cosmos');
   const ctx = canvas.getContext('2d');
   let particles = [];
@@ -491,24 +553,26 @@
   class Particle {
     constructor(x, y) {
       this.x = x; this.y = y; 
-      this.velocity = {x: (Math.random() - 0.5) * 12, y: (Math.random() - 0.5) * 12}; 
+      this.velocity = {x: (Math.random() - 0.5) * 14, y: (Math.random() - 0.5) * 14}; 
       this.alpha = 1; 
-      this.size = Math.random() * 3 + 1; 
-      this.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+      this.size = Math.random() * 3.5 + 1; 
+      this.color = `hsl(${Math.random() * 60 + 320}, 100%, 65%)`; // ألوان نيون متناسقة مع الهوية الجديدة
     }
     draw() { 
       ctx.save();
       ctx.globalAlpha = this.alpha; 
       ctx.fillStyle = this.color; 
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = this.color;
       ctx.beginPath(); 
       ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); 
       ctx.fill(); 
       ctx.restore();
     }
-    update() { this.x += this.velocity.x; this.y += this.velocity.y; this.alpha -= 0.015; }
+    update() { this.x += this.velocity.x; this.y += this.velocity.y; this.alpha -= 0.012; }
   }
   
-  function explode(x, y) { for(let i=0; i<70; i++) particles.push(new Particle(x, y)); }
+  function explode(x, y) { for(let i=0; i<75; i++) particles.push(new Particle(x, y)); }
   
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
