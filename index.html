@@ -27,10 +27,10 @@
   <meta name="theme-color" content="#ff007f">
   <link rel="apple-touch-icon" href="logo.png">
 
-  <!-- تحسين الخطوط الفخمة والأيقونات --><!-- رابط الخطوط الجديد من Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&family=Orbitron:wght@700;900&family=Plus+Jakarta+Sans:wght@500;700&display=swap" rel="stylesheet">
-<!-- مكتبة Font Awesome للـ Icons (زي ما هي) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- الخطوط الجديدة الاحترافية (Cairo للعربي و Orbitron للانجليزي والأرقام) -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&family=Orbitron:wght@700;900&family=Plus+Jakarta+Sans:wght@500;700&display=swap" rel="stylesheet">
+  <!-- مكتبة Font Awesome للـ Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
     /* --- الهوية البصرية الجديدة 180 درجة (Neon Candy Tech) --- */
@@ -60,7 +60,7 @@
         radial-gradient(circle at 90% 80%, rgba(0, 240, 255, 0.15) 0%, transparent 40%),
         radial-gradient(circle at 50% 50%, rgba(15, 10, 48, 1) 0%, #03010f 100%);
       color: #ffffff; 
-      font-family: 'Reem Kufi', sans-serif; 
+      font-family: 'Cairo', sans-serif; /* تطبيق خط Cairo كخط أساسي للموقع */
       overflow-x: hidden;
       min-height: 100vh;
       background-attachment: fixed;
@@ -96,21 +96,20 @@
       transform: rotate(-10deg);
     }
     .intro-text {
-      font-family: 'Reem Kufi', sans-serif;
+      font-family: 'Cairo', sans-serif;
       font-weight: 900;
       font-size: 1.8rem;
       margin-top: 25px;
       background: linear-gradient(45deg, #fff, var(--primary));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      letter-spacing: 2px;
     }
     @keyframes introFloat { 
       from { transform: translateY(0) rotate(-10deg); filter: drop-shadow(0 0 10px var(--primary)); } 
       to { transform: translateY(-15px) rotate(5deg); filter: drop-shadow(0 0 30px var(--secondary)); } 
     }
 
-    /* --- الهيكل ومساحات العرض النفسية (غير خانق) --- */
+    /* --- الهيكل ومساحات العرض النفسية --- */
     .container { 
       position: relative; 
       z-index: 1; 
@@ -144,7 +143,7 @@
       border-color: var(--secondary);
       box-shadow: 0 0 35px rgba(0, 240, 255, 0.25);
     }
-    .nav-brand { font-weight: 900; font-size: 1.3rem; text-shadow: 0 0 15px var(--primary); font-family: 'Reem Kufi'; }
+    .nav-brand { font-weight: 900; font-size: 1.3rem; text-shadow: 0 0 15px var(--primary); font-family: 'Cairo', sans-serif; }
     .nav-links-wrapper { display: flex; gap: 8px; align-items: center; }
     .nav-link { 
       color: #cbd5e1; text-decoration: none; font-weight: 700; font-size: 0.9rem; 
@@ -179,20 +178,30 @@
     .main-logo:hover { transform: scale(1.15) rotate(360deg); border-color: var(--secondary); box-shadow: 0 0 40px rgba(0,240,255,0.6); }
     
     .hero-title { 
-      font-family: 'Space Grotesk', sans-serif; font-size: clamp(65px, 22vw, 140px); font-weight: 900;
+      font-family: 'Orbitron', sans-serif; /* تحويل العداد لـ Orbitron عشان أرقام النيون والـ Cyber */
+      font-size: clamp(55px, 18vw, 120px); font-weight: 900;
       background: linear-gradient(180deg, #ffffff 20%, var(--primary) 60%, var(--secondary) 100%);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 4px 15px rgba(255,0,127,0.4)); line-height: 0.85; margin: 20px 0;
+      filter: drop-shadow(0 4px 15px rgba(255,0,127,0.4)); line-height: 1.1; margin: 20px 0;
       animation: pulseTitle 3s ease-in-out infinite alternate;
+      letter-spacing: -2px;
     }
     @keyframes pulseTitle { from { filter: drop-shadow(0 4px 10px rgba(255,0,127,0.4)); } to { filter: drop-shadow(0 4px 25px rgba(0,240,255,0.5)); } }
     
+    /* الستايل اللي بيتطبق لما العداد يخلص ويجيب الكلمة من الفايربيز */
     .counter-text-style {
+      font-family: 'Cairo', sans-serif !important; /* يرجع Cairo لو النص اللي راجع عربي */
       color: var(--accent) !important; font-weight: 900 !important; font-size: clamp(40px, 10vw, 75px) !important;
       text-shadow: 0 0 25px var(--accent); -webkit-text-fill-color: var(--accent) !important;
+      letter-spacing: 0px !important;
     }
 
-    /* الصناديق الزجاجية ومساحات المحتوى الناعمة */
+    .welcome-subtitle {
+      font-family: 'Orbitron', sans-serif; /* خط تكنولوجي للترحيب الإنجليزي */
+      color: var(--secondary); font-weight: 900; letter-spacing: 4px; font-size: 1.1rem; margin-top: 15px;
+    }
+
+    /* الصناديق الزجاجية ومساحات المحتوى */
     .content-box { 
       background: var(--glass); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
       padding: 45px 35px; border-radius: 36px; border: 1px solid var(--border); 
@@ -206,7 +215,7 @@
 
     .stats-card { background: rgba(0, 240, 255, 0.05); border: 1px solid rgba(0,240,255,0.25); padding: 18px 36px; border-radius: 100px; margin: 25px 0; font-weight: 700; font-size: 1rem; transition: 0.3s; }
     .stats-card:hover { transform: scale(1.03); background: rgba(0, 240, 255, 0.1); }
-    .stats-card span { color: var(--secondary); text-shadow: 0 0 15px var(--secondary); font-weight: 900; }
+    .stats-card span { font-family: 'Orbitron', sans-serif; color: var(--secondary); text-shadow: 0 0 15px var(--secondary); font-weight: 900; }
 
     .main-btn { 
       background: linear-gradient(45deg, var(--primary), #ff00c8); color: #fff; 
@@ -219,7 +228,7 @@
     .announcement-box { width: 100%; max-width: 460px; background: rgba(255,255,255,0.03); border: 2px dashed var(--accent); border-radius: 28px; padding: 18px; margin: 25px 0; display: none; transition: 0.3s; }
     .announcement-box img { width: 100%; border-radius: 20px; margin-bottom: 15px; }
 
-    /* ميزات ومكونات "عن كرملات" الموسعة والتفاعلية بالكامل */
+    /* ميزات ومكونات "عن كرملات" */
     .feature-tag { 
       background: rgba(255, 255, 255, 0.02); padding: 22px; border-radius: 20px; margin-bottom: 18px; 
       border-right: 5px solid var(--primary); font-weight: 700; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
@@ -248,8 +257,10 @@
     .leader-card { background: var(--glass); border: 1px solid var(--border); border-radius: 36px; padding: 35px 25px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.2); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     .leader-card:hover { transform: translateY(-12px); border-color: var(--secondary); box-shadow: 0 20px 45px rgba(0, 240, 255, 0.2); }
     .leader-pic { width: 130px; height: 130px; border-radius: 35px; border: 3px solid var(--accent); margin-bottom: 22px; object-fit: cover; transform: rotate(-5deg); transition: 0.4s; }
-    .leader-card:hover { .leader-pic { transform: rotate(0deg) scale(1.05); border-color: var(--primary); } }
+    .leader-card:hover .leader-pic { transform: rotate(0deg) scale(1.05); border-color: var(--primary); }
     
+    .leader-name { font-family: 'Orbitron', sans-serif; font-size: 1.4rem; font-weight: 900; }
+
     .contact-wa { background: rgba(37, 211, 102, 0.08); color: #25d366; border: 1px solid rgba(37, 211, 102, 0.3); padding: 12px 25px; border-radius: 50px; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem; margin-top: 18px; transition: 0.3s; }
     .contact-wa:hover { background: #25d366; color: #fff; box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4); }
 
@@ -306,7 +317,7 @@
         <p id="adText" style="font-weight: 700; color: #fff;"></p>
       </div>
 
-      <div style="color: var(--secondary); font-weight: 900; letter-spacing: 5px; font-size: 1.1rem; margin-top: 15px;">WELCOME TO KRAMLAT UNIVERSE</div>
+      <div class="welcome-subtitle">WELCOME TO KRAMLAT UNIVERSE</div>
       
       <div class="stats-card">
         <i class="fa-solid fa-bolt-lightning"></i> إجمالي الهبوط الفضائي والزيارات: <span id="visitCount">0</span>
@@ -316,7 +327,7 @@
     </div>
   </section>
 
-  <!-- عن كرملات (نسخة موسعة وتفاعلية بالكامل) -->
+  <!-- عن كرملات -->
   <section id="journey" class="page">
     <div class="content-box">
       <h2 class="section-title"><i class="fa-solid fa-wand-magic-sparkles"></i> قصة إمبراطورية كرملات الفضائية</h2>
@@ -369,20 +380,20 @@
     <div class="leader-grid">
       <div class="leader-card">
         <img src="Kareem.png" class="leader-pic">
-        <div style="font-family:'Space Grotesk'; color:var(--accent); font-size:1.4rem; font-weight:900;">KAREEM 👑</div>
+        <div class="leader-name" style="color:var(--accent);">KAREEM 👑</div>
         <p style="margin-top:10px; font-size:0.95rem; color:#cbd5e1;"><b>كريم عمر (البلدوزر)</b><br>المؤسس، المبرمج الأول، وصاحب الرؤية والمخطط الهيكلي الأساسي للإمبراطورية بأكملها.</p>
         <a href="https://wa.me/201101258549" class="contact-wa" target="_blank"><i class="fab fa-whatsapp"></i> تواصل مع الكينج</a>
         <br><a href="https://kemo-omar.github.io/Kareem/" class="main-btn" style="padding:10px 25px; font-size:0.8rem; margin-top:18px; background:rgba(255,255,255,0.05); box-shadow:none;" target="_blank">الموقع الشخصي للمؤسس 🚀</a>
       </div>
       <div class="leader-card">
         <img src="shreef.png" class="leader-pic" style="border-color: var(--secondary);">
-        <div style="font-family:'Space Grotesk'; color:var(--secondary); font-size:1.4rem; font-weight:900;">SHREEF ⚡</div>
+        <div class="leader-name" style="color:var(--secondary);">SHREEF ⚡</div>
         <p style="margin-top:10px; font-size:0.95rem; color:#cbd5e1;"><b>شريف سيد (العميل)</b><br>قائد العمليات الميدانية، المسؤول التنفيذي عن ضبط النظام والنمو والتوسع الخارجي.</p>
         <a href="https://wa.me/201060843290" class="contact-wa" target="_blank"><i class="fab fa-whatsapp"></i> تواصل مع العميل</a>
       </div>
       <div class="leader-card">
         <img src="apqareno.png" class="leader-pic" style="border-color: var(--primary);">
-        <div style="font-family:'Space Grotesk'; color:var(--primary); font-size:1.4rem; font-weight:900;">ABQARIENO 🧪</div>
+        <div class="leader-name" style="color:var(--primary);">ABQARIENO 🧪</div>
         <p style="margin-top:10px; font-size:0.95rem; color:#cbd5e1;"><b>مصطفى محمد (العبقري)</b><br>الممول الإبداعي الجاحد، مهندس الأفكار البصرية، وصانع اللمسات الفنية السحرية.</p>
         <a href="https://wa.me/201158606601" class="contact-wa" target="_blank"><i class="fab fa-whatsapp"></i> تواصل مع العبقري</a>
         <br><a href="https://mostafa7html7-pixel.github.io/AbuTaleb/" class="main-btn" style="padding:10px 25px; font-size:0.8rem; margin-top:18px; background:rgba(255,255,255,0.05); box-shadow:none;" target="_blank">موقع العبقري الخاص 🚀</a>
@@ -415,7 +426,7 @@
 
   let adminCounterText = "عيد سعيد";
 
-  // إنهاء حركة الترحيب (Intro) بنعومة بعد التحميل المبدئي للعناصر البصرية
+  // إنهاء حركة الترحيب (Intro) بنعومة
   window.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
       const intro = document.getElementById('intro-screen');
@@ -425,7 +436,7 @@
     }, 2200); 
   });
 
-  // مزامنة حية كاملة مع الـ Realtime Database للتحكم المرن
+  // مزامنة حية كاملة مع الـ Realtime Database
   rtdb.ref('admin_control').on('value', (snapshot) => {
     const data = snapshot.val();
     if (data) {
@@ -442,7 +453,7 @@
         adBox.style.display = 'none';
       }
 
-      // إضافة الفائزين للوحة الشرف مع الحفاظ على الأبطال الأساسيين
+      // إضافة الفائزين للوحة الشرف
       if (data.hall_of_fame) {
         const grid = document.getElementById('hallOfFameGrid');
         grid.innerHTML = `
@@ -473,7 +484,7 @@
     }
   });
 
-  // معالجة وحساب إجمالي الزيارات بدقة بالغة
+  // معالجة وحساب إجمالي الزيارات
   const visitRef = rtdb.ref('site_stats/total_visits');
   visitRef.transaction(current => (current || 0) + 1);
   visitRef.on('value', snap => { 
@@ -499,7 +510,7 @@
   }
   startCounter();
 
-  // نظام التنقل السلس وغير المعقد بين علامات التبويب
+  // نظام التنقل بين علامات التبويب
   function nav(id, el) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
@@ -516,7 +527,7 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // معالجة القائمة الجانبية المخصصة للهواتف الذكية
+  // معالجة القائمة الجانبية للهواتف
   function toggleMenu() {
     const wrapper = document.getElementById('navLinksWrapper');
     const overlay = document.getElementById('navOverlay');
@@ -528,7 +539,7 @@
     icon.className = wrapper.classList.contains('open') ? "fa-solid fa-xmark" : "fa-solid fa-bars";
   }
 
-  // جيل وتوليد الإيموجي الطائر الممتاز عند التفاعل والضغط
+  // جيل وتوليد الإيموجي الطائر
   function spawnEmoji(text, event) {
     const x = event.clientX || (event.touches ? event.touches[0].clientX : 0);
     const y = event.clientY || (event.touches ? event.touches[0].clientY : 0);
@@ -543,7 +554,7 @@
     }
   }
 
-  /* --- نظام الجزيئات الكوني الفخم المطور بالكامل ليعطي عمق للموقع --- */
+  /* --- نظام الجزيئات الكوني --- */
   const canvas = document.getElementById('cosmos');
   const ctx = canvas.getContext('2d');
   let particles = [];
@@ -557,7 +568,7 @@
       this.velocity = {x: (Math.random() - 0.5) * 14, y: (Math.random() - 0.5) * 14}; 
       this.alpha = 1; 
       this.size = Math.random() * 3.5 + 1; 
-      this.color = `hsl(${Math.random() * 60 + 320}, 100%, 65%)`; // ألوان نيون متناسقة مع الهوية الجديدة
+      this.color = `hsl(${Math.random() * 60 + 320}, 100%, 65%)`;
     }
     draw() { 
       ctx.save();
