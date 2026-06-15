@@ -17,6 +17,7 @@
             background: #050508 url('https://www.transparenttextures.com/patterns/stardust.png');
             color: white; min-height: 100vh;
             display: flex; justify-content: center; align-items: center;
+            overflow-x: hidden;
         }
 
         .container {
@@ -45,6 +46,22 @@
         }
         .warning-box h2 { color: #ff4444; margin: 0 0 10px 0; }
         .warning-box p { color: #fff; }
+
+        /* نافذة طلب البيانات */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(15px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 2000; opacity: 0; pointer-events: none; transition: 0.4s ease;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-box {
+            width: 85%; max-width: 450px; padding: 30px;
+            background: rgba(15, 15, 25, 0.9); border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 25px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+            transform: scale(0.8); transition: 0.4s ease;
+        }
+        .modal-overlay.active .modal-box { transform: scale(1); }
 
         .timer-container { margin: 20px 0; display: none; }
         .timer-text { font-size: 3rem; font-weight: 900; color: #ff4444; text-shadow: 0 0 20px rgba(255,0,0,0.5); font-family: monospace; }
@@ -144,12 +161,31 @@
 
         .back-link { margin-top: 25px; display: inline-block; color: #888; text-decoration: none; font-size: 0.85rem; }
 
-        #alert { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 15px 30px; border-radius: 12px; z-index: 1000; display: none; font-weight: bold; font-family: 'Cairo', sans-serif; }
+        #alert { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 15px 30px; border-radius: 12px; z-index: 3000; display: none; font-weight: bold; font-family: 'Cairo', sans-serif; }
     </style>
 </head>
 <body>
 
 <div id="alert"></div>
+
+<div class="modal-overlay" id="userDataModal">
+    <div class="modal-box">
+        <div style="font-size: 2.5rem; margin-bottom: 10px;">📝</div>
+        <h3 style="color: #ccff00; font-size: 1.4rem;">سجل بياناتك لاستلام الجائزة</h3>
+        <p>اكتب بياناتك الحقيقية عشان نتحقق من فوزك ونبعتلك الجائزة</p>
+        
+        <div class="input-group">
+            <input type="text" id="userNameInput" class="puzzle-input" placeholder="الاسم بالكامل">
+        </div>
+        <div class="input-group">
+            <input type="tel" id="userPhoneInput" class="puzzle-input" placeholder="رقم الواتساب (مثال: 01xxxxxxxxx)">
+        </div>
+
+        <button class="btn-action btn-submit" id="saveUserDataBtn">
+            <i class="fas fa-play"></i> دخول التحدي ديلوكس 🚀
+        </button>
+    </div>
+</div>
 
 <div class="container">
     <div class="logo-icon">👑</div>
@@ -289,9 +325,32 @@
     let userName = '';
     let userPhone = '';
 
-    function getUserData() {
-        userName = localStorage.getItem('kramlatUserName') || 'مجهول';
-        userPhone = localStorage.getItem('kramlatUserPhone') || 'مجهول';
+    function openDataModal() {
+        document.getElementById('userDataModal').classList.add('active');
+    }
+
+    function handleUserData() {
+        const nameInput = document.getElementById('userNameInput').value.trim();
+        const phoneInput = document.getElementById('userPhoneInput').value.trim();
+
+        if (nameInput.length < 3) {
+            showAlert('⚠️ يرجى كتابة الاسم الثلاثي بالكامل الفعلي!', false);
+            return;
+        }
+        if (!/^01[0125]\d{8}$/.test(phoneInput)) {
+            showAlert('⚠️ يرجى كتابة رقم تليفون مصري صحيح مكون من 11 رقم!', false);
+            return;
+        }
+
+        // حفظ البيانات في الذاكرة و local storage احتياطاً
+        userName = nameInput;
+        userPhone = phoneInput;
+        localStorage.setItem('kramlatUserName', userName);
+        localStorage.setItem('kramlatUserPhone', userPhone);
+
+        // إغلاق النافذة والبدء فوراً
+        document.getElementById('userDataModal').classList.remove('active');
+        startGame();
     }
 
     async function saveWinner() {
@@ -306,15 +365,19 @@
                 completed: true
             };
 
-            await set(ref(db, 'winners/' + userPhone.replace(/\D/g,'')), winnerData);
+            // رفع في المسار الرئيسي بالرقم لسهولة الفلترة والدقة
+            const cleanPhone = userPhone.replace(/\D/g,'');
+            await set(ref(db, 'winners/' + cleanPhone), winnerData);
+
+            // رفع في قائمة السجل الزمني العشوائي
             const winnerKey = Date.now();
             await set(ref(db, 'winners_list/' + winnerKey), winnerData);
 
-            console.log('Winner saved:', winnerData);
-            showAlert('🏆 تم تسجيل فوزك! بنشوفك في القناة!', true);
+            console.log('Winner saved to Firebase:', winnerData);
+            showAlert('🏆 تم إرسال بياناتك وتسجيل فوزك بنجاح بالفايرباز!', true);
         } catch(err) {
             console.error('Error saving winner:', err);
-            showAlert('⚠️ فزت بس فيه مشكلة في التسجيل', false);
+            showAlert('⚠️ فزت لكن حدث خطأ في الشبكة أثناء إرسال البيانات للفايرباز', false);
         }
     }
 
@@ -323,13 +386,10 @@
         box.innerText = msg;
         box.style.background = success ? '#2ecc71' : '#e74c3c';
         box.style.display = 'block';
-        setTimeout(() => box.style.display = 'none', 3000);
+        setTimeout(() => box.style.display = 'none', 3500);
     }
 
     function startGame() {
-        getUserData();
-        console.log('User:', userName, userPhone);
-
         document.getElementById('warningBox').style.display = 'none';
         document.getElementById('startBtn').style.display = 'none';
         document.getElementById('timerContainer').style.display = 'block';
@@ -344,7 +404,7 @@
         generateColors();
         startTimer();
 
-        showAlert('🎮 اللعبة بدأت! 60 ثانية!', true);
+        showAlert('🎮 انطلق! معك 60 ثانية فقط لتفك التشفير!', true);
     }
 
     function startTimer() {
@@ -373,7 +433,7 @@
         document.getElementById('puzzleContainer').style.display = 'none';
         document.getElementById('timerContainer').style.display = 'none';
         document.getElementById('failBox').style.display = 'block';
-        showAlert('💀 انتهى الوقت!', false);
+        showAlert('💀 للأسف، انتهى الوقت المسموح!', false);
     }
 
     function checkLayer1() {
@@ -382,7 +442,7 @@
         const value = input.value.trim();
 
         if(value === '617802') {
-            showAlert('🎉 طبقة 1 مفكوكة!', true);
+            showAlert('🎉 كفو! تم فك الطبقة الأولى بنجاح!', true);
             input.classList.add('correct');
             setTimeout(() => {
                 document.getElementById('layer1').classList.remove('active');
@@ -390,7 +450,7 @@
                 currentLayer = 2;
             }, 1500);
         } else {
-            showAlert('❌ غلط! حاول تاني', false);
+            showAlert('❌ الناتج غير صحيح! أعد الحساب بدقة', false);
             input.classList.add('wrong');
             setTimeout(() => input.classList.remove('wrong'), 500);
         }
@@ -423,14 +483,14 @@
 
         if(isCorrect) {
             element.classList.add('selected');
-            showAlert('🎉 لقيت اللون المخفي!', true);
+            showAlert('🎉 رائع! عثرت على اللون المختلف السري!', true);
             setTimeout(() => {
                 document.getElementById('layer2').classList.remove('active');
                 document.getElementById('layer3').classList.add('active');
                 currentLayer = 3;
             }, 1500);
         } else {
-            showAlert('❌ ده مش اللون المختلف!', false);
+            showAlert('❌ ليس هذا المربع المطلوب، ركز في الأبعاد الرقمية!', false);
             element.style.animation = 'shake 0.5s';
             setTimeout(() => element.style.animation = '', 500);
         }
@@ -442,7 +502,7 @@
         const value = input.value.trim().toUpperCase();
 
         if(value === 'TEST') {
-            showAlert('🎉 مبروك! فكيت كل الطبقات!', true);
+            showAlert('🎉 أسطوري! تم اختراق الشفرة الأخيرة بالكامل!', true);
             input.classList.add('correct');
 
             clearInterval(timerInterval);
@@ -454,7 +514,7 @@
                 document.getElementById('successBox').style.display = 'block';
             }, 2000);
         } else {
-            showAlert('❌ غلط! حاول تاني', false);
+            showAlert('❌ الشفرة غير مطابقة لنظام الإزاحة، حاول مرة أخرى!', false);
             input.classList.add('wrong');
             setTimeout(() => input.classList.remove('wrong'), 500);
         }
@@ -465,12 +525,13 @@
     }
 
     function shareWin() {
-        const text = '👑 أنا كسبت لغز كرملات النهائي!\n🔓 فكيت 3 طبقات تشفير!\n🎁 كود الجايزة: KRAMLAT-VIP-2026\n\nجرب أنت كمان: https://kemo-omar.github.io/Kramlat/';
+        const text = `👑 أنا تخطيت لغز كرملات الكوني النهائي!\n🔓 فكيت 3 طبقات حماية معقدة بقائمة المتصدرين!\n🎁 كود جائزتي الخاص: KRAMLAT-VIP-2026\n\nتحدى نفسك وجرب فوراً من هنا: https://kemo-omar.github.io/Kramlat/`;
         window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
     }
 
-    // ربط الأحداث بالأزرار عن طريق الـ ID داخل الـ Module
-    document.getElementById('startBtn').addEventListener('click', startGame);
+    // إدارة مستمعي الأحداث البرمجية الصارمة والآمنة
+    document.getElementById('startBtn').addEventListener('click', openDataModal);
+    document.getElementById('saveUserDataBtn').addEventListener('click', handleUserData);
     document.getElementById('checkLayer1Btn').addEventListener('click', checkLayer1);
     document.getElementById('checkLayer3Btn').addEventListener('click', checkLayer3);
     
@@ -480,13 +541,10 @@
     
     document.getElementById('shareWinBtn').addEventListener('click', shareWin);
 
-    // الـ Enter للإدخال السريع
-    document.getElementById('layer1Input').addEventListener('keypress', function(e) {
-        if(e.key === 'Enter') checkLayer1();
-    });
-    document.getElementById('layer3Input').addEventListener('keypress', function(e) {
-        if(e.key === 'Enter') checkLayer3();
-    });
+    // التحقق السريع عبر زر الـ Enter لإدخال البيانات بسلاسة
+    document.getElementById('layer1Input').addEventListener('keypress', function(e) { if(e.key === 'Enter') checkLayer1(); });
+    document.getElementById('layer3Input').addEventListener('keypress', function(e) { if(e.key === 'Enter') checkLayer3(); });
+    document.getElementById('userPhoneInput').addEventListener('keypress', function(e) { if(e.key === 'Enter') handleUserData(); });
 </script>
 </body>
 </html>
