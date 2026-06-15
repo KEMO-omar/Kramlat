@@ -67,9 +67,9 @@
         }
 
         .math-equation {
-            font-size: 1.3rem; font-weight: 900; color: #fff;
+            font-size: 1.2rem; font-weight: 900; color: #fff;
             background: rgba(0,0,0,0.5); padding: 20px; border-radius: 15px;
-            margin: 15px 0; font-family: monospace; direction: ltr;
+            margin: 15px 0; font-family: monospace; direction: ltr; word-break: break-all;
         }
 
         .color-grid {
@@ -186,7 +186,7 @@
             <h3>🔢 المعادلة المجنونة</h3>
             <p>حل المعادلة دي:</p>
             <div class="math-equation">
-                (K × R × A × M × L × A × T) + (6 × 7) = ?
+                (11 x 18 x 1 x 13 x 12 x 1 x 20) + 42 = ?
             </div>
             <p style="font-size: 0.8rem; color: #888;">K=11, R=18, A=1, M=13, L=12, A=1, T=20</p>
             <div class="input-group">
@@ -200,8 +200,8 @@
             </button>
             <div class="hint-box" id="hint1">
                 <h4>💡 تلميح:</h4>
-                <p>اضرب الحروف: 11 × 18 × 1 × 13 × 12 × 1 × 20</p>
-                <p>بعدين اجمع عليها: 6 × 7 = 42</p>
+                <p>اضرب الحروف: 11 x 18 x 1 x 13 x 12 x 1 x 20</p>
+                <p>بعدين اجمع عليها: 42</p>
             </div>
         </div>
 
@@ -273,12 +273,64 @@
     <a href="67.html" class="back-link"><i class="fas fa-arrow-right"></i> العودة للمرحلة السابقة</a>
 </div>
 
-<script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+    import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCZr_OpkCfEFxeTrOc5fp7F_uvyVGlT5Yc",
+        authDomain: "karamlat-99e6e.firebaseapp.com",
+        databaseURL: "https://karamlat-99e6e-default-rtdb.firebaseio.com",
+        projectId: "karamlat-99e6e",
+        storageBucket: "karamlat-99e6e.firebasestorage.app",
+        messagingSenderId: "817474436731",
+        appId: "1:817474436731:web:6b4c38fd98048f1a3b6cde"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
     let timeLeft = 60;
     let timerInterval;
     let gameActive = false;
     let currentLayer = 1;
     let correctColorIndex = 0;
+    let userName = '';
+    let userPhone = '';
+
+    // جلب بيانات المستخدم من localStorage
+    function getUserData() {
+        userName = localStorage.getItem('kramlatUserName') || 'مجهول';
+        userPhone = localStorage.getItem('kramlatUserPhone') || 'مجهول';
+    }
+
+    // تسجيل الفائز في Firebase
+    async function saveWinner() {
+        try {
+            const timestamp = new Date().toISOString();
+            const winnerData = {
+                name: userName,
+                phone: userPhone,
+                prizeCode: 'KRAMLAT-VIP-2026',
+                timeRemaining: timeLeft,
+                timestamp: timestamp,
+                completed: true
+            };
+
+            // حفظ في winners/phone
+            await set(ref(db, 'winners/' + userPhone.replace(/\D/g,'')), winnerData);
+
+            // حفظ في winners_list للسهولة
+            const winnerKey = Date.now();
+            await set(ref(db, 'winners_list/' + winnerKey), winnerData);
+
+            console.log('Winner saved:', winnerData);
+            showAlert('🏆 تم تسجيل فوزك! بنشوفك في القناة!', true);
+        } catch(err) {
+            console.error('Error saving winner:', err);
+            showAlert('⚠️ فزت بس فيه مشكلة في التسجيل', false);
+        }
+    }
 
     function showAlert(msg, success) {
         const box = document.getElementById('alert');
@@ -289,6 +341,9 @@
     }
 
     function startGame() {
+        getUserData();
+        console.log('User:', userName, userPhone);
+
         document.getElementById('warningBox').style.display = 'none';
         document.getElementById('startBtn').style.display = 'none';
         document.getElementById('timerContainer').style.display = 'block';
@@ -302,6 +357,8 @@
 
         generateColors();
         startTimer();
+
+        showAlert('🎮 اللعبة بدأت! 60 ثانية!', true);
     }
 
     function startTimer() {
@@ -357,12 +414,12 @@
         const grid = document.getElementById('colorGrid');
         grid.innerHTML = '';
 
-        // 24 لون عادي + 1 لون مختلف
         const colors = [];
         for(let i = 0; i < 24; i++) {
-            colors.push('#ff00' + String(100 + i * 5).padStart(2, '0'));
+            const hex = (0x66 + i * 4).toString(16).padStart(2, '0');
+            colors.push('#ff00' + hex);
         }
-        // اللون المختلف (مختلف بـ 1)
+
         correctColorIndex = Math.floor(Math.random() * 25);
         colors.splice(correctColorIndex, 0, '#ff00ed');
 
@@ -398,18 +455,20 @@
         const input = document.getElementById('layer3Input');
         const value = input.value.trim().toUpperCase();
 
-        // WHVW → Caesar -3 → TEST
         if(value === 'TEST') {
             showAlert('🎉 مبروك! فكيت كل الطبقات!', true);
             input.classList.add('correct');
 
             clearInterval(timerInterval);
 
+            // تسجيل الفائز في Firebase
+            saveWinner();
+
             setTimeout(() => {
                 document.getElementById('puzzleContainer').style.display = 'none';
                 document.getElementById('timerContainer').style.display = 'none';
                 document.getElementById('successBox').style.display = 'block';
-            }, 1500);
+            }, 2000);
         } else {
             showAlert('❌ غلط! حاول تاني', false);
             input.classList.add('wrong');
@@ -422,11 +481,7 @@
     }
 
     function shareWin() {
-        const text = '👑 أنا كسبت لغز كرملات النهائي!
-🔓 فكيت 3 طبقات تشفير!
-🎁 كود الجايزة: KRAMLAT-VIP-2026
-
-جرب أنت كمان: https://kemo-omar.github.io/Kramlat/';
+        const text = '👑 أنا كسبت لغز كرملات النهائي!\n🔓 فكيت 3 طبقات تشفير!\n🎁 كود الجايزة: KRAMLAT-VIP-2026\n\nجرب أنت كمان: https://kemo-omar.github.io/Kramlat/';
         window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
     }
 
