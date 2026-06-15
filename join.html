@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مسابقات كرملات 👑</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #f806cc; --secondary: #3f5efb;
+            --glass: rgba(255, 255, 255, 0.05);
+            --neon: 0 0 20px rgba(248, 6, 204, 0.5);
+        }
+
+        body {
+            margin: 0; font-family: 'Cairo', sans-serif;
+            background: #050508 url('https://www.transparenttextures.com/patterns/stardust.png');
+            color: white; min-height: 100vh;
+            display: flex; justify-content: center; align-items: center; overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%; max-width: 450px; padding: 40px 20px;
+            background: var(--glass); backdrop-filter: blur(20px);
+            border-radius: 30px; border: 1px solid rgba(255,255,255,0.1);
+            text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+            position: relative; animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .logo-icon { font-size: 3.5rem; margin-bottom: 10px; display: inline-block; animation: bounce 2s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        h1 { margin: 10px 0; font-weight: 900; background: linear-gradient(45deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.8rem; }
+        h3 { color: #ccff00; font-size: 1.1rem; margin-bottom: 15px; }
+        p { color: #bbb; font-size: 0.9rem; line-height: 1.6; }
+
+        .form-section { display: none; margin-top: 30px; }
+        .congrats-section { display: none; margin-top: 30px; border: 2px solid #00ff88; padding: 25px; border-radius: 20px; background: rgba(0,255,136,0.05); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { box-shadow: 0 0 10px rgba(0,255,136,0.3); } 50% { box-shadow: 0 0 25px rgba(0,255,136,0.6); } }
+        
+        .closed-section { display: none; margin-top: 30px; border: 2px dashed #ff4444; padding: 20px; border-radius: 20px; }
+
+        .input-group { position: relative; margin-bottom: 20px; }
+        .input-group i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--primary); }
+        
+        input {
+            width: 100%; padding: 14px 45px 14px 15px; background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 15px;
+            color: white; font-family: 'Cairo'; outline: none; transition: 0.3s; box-sizing: border-box;
+        }
+        input:focus { border-color: var(--primary); box-shadow: var(--neon); }
+
+        .btn-action {
+            width: 100%; padding: 16px; border: none; border-radius: 15px;
+            color: white; font-weight: 900; font-size: 1.1rem; cursor: pointer;
+            transition: 0.4s; display: block; text-decoration: none;
+        }
+        .btn-reg { background: linear-gradient(45deg, var(--primary), var(--secondary)); box-shadow: 0 5px 15px rgba(248, 6, 204, 0.3); }
+        .btn-channel { background: #25d366; margin-top: 20px; }
+        .btn-action:hover { transform: scale(1.03); filter: brightness(1.2); }
+
+        .back-link { margin-top: 25px; display: inline-block; color: #888; text-decoration: none; font-size: 0.85rem; }
+        #alert { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 15px 30px; border-radius: 12px; z-index: 1000; display: none; font-weight: bold; }
+        
+        .secret-input {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+            color: white;
+            font-size: 2rem;
+            text-align: center;
+            letter-spacing: 10px;
+            width: 200px;
+            margin: 20px auto;
+            padding: 10px;
+        }
+        .secret-input:focus {
+            border-bottom-color: var(--primary);
+            box-shadow: none;
+        }
+        .secret-input::placeholder {
+            color: rgba(255,255,255,0.3);
+            font-size: 1rem;
+        }
+        .trophy { font-size: 4rem; margin-bottom: 15px; animation: rotate 3s infinite linear; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div id="alert"></div>
+
+<div class="container">
+    <div class="logo-icon">🍭</div>
+    <h1 id="mainTitle">مسابقة كرملات الكبرى</h1>
+    <h3 id="subTitle">👑 عالم موازي مليان مفاجآت</h3>
+    <p id="descText">أول ما تكتب الرقم السري هتبدأ المغامرة...</p>
+
+    <!-- المرحلة الأولى: إدخال الرقم السري -->
+    <div id="secretPhase">
+        <input type="text" id="secretCode" class="secret-input" placeholder="الرقم السري" maxlength="3" autocomplete="off">
+    </div>
+
+    <!-- رسالة التهنئة -->
+    <div id="congratsView" class="congrats-section">
+        <div class="trophy">🏆</div>
+        <h2 style="color: #00ff88; margin-bottom: 10px;">مبروك يا بطل! 🎉</h2>
+        <p style="color: #fff;">أنت تخطيت المرحلة الأولى من اللغز بنجاح!</p>
+        <p style="color: #ccff00; font-weight: bold;">اكتب اسمك ورقمك عشان تكمل المغامرة</p>
+    </div>
+
+    <!-- نموذج التسجيل -->
+    <div id="openView" class="form-section">
+        <form id="regForm">
+            <div class="input-group">
+                <i class="fas fa-user-ninja"></i>
+                <input type="text" id="uName" placeholder="اسمك الثلاثي يا بطل" required>
+            </div>
+            <div class="input-group">
+                <i class="fab fa-whatsapp"></i>
+                <input type="text" id="uHandle" placeholder="رقم الواتساب الخاص بك" required>
+            </div>
+            <button type="submit" id="sBtn" class="btn-action btn-reg">تأكيد الانضمام للمنافسة 🔥</button>
+        </form>
+    </div>
+
+    <div id="closedView" class="closed-section">
+        <h4 style="color: #ff4444;"><i class="fas fa-lock"></i> التسجيل متوقف حالياً</h4>
+        <p>لا تقلق! نحن نحضر لشيء ضخم. تابع القناة الرسمية لتكون أول من يعرف عند فتح الموسم الجديد.</p>
+        <a href="https://whatsapp.com/channel/0029VbAqgz23WHTOe8lXeM1N" class="btn-action btn-channel">
+            <i class="fab fa-whatsapp"></i> متابعة آخر الأخبار
+        </a>
+    </div>
+
+    <a href="index.html" class="back-link"><i class="fas fa-arrow-right"></i> العودة للمجرة الرئيسية</a>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+    import { getDatabase, ref, set, get, child, onValue } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCZr_OpkCfEFxeTrOc5fp7F_uvyVGlT5Yc",
+        authDomain: "karamlat-99e6e.firebaseapp.com",
+        databaseURL: "https://karamlat-99e6e-default-rtdb.firebaseio.com",
+        projectId: "karamlat-99e6e",
+        storageBucket: "karamlat-99e6e.firebasestorage.app",
+        messagingSenderId: "817474436731",
+        appId: "1:817474436731:web:6b4c38fd98048f1a3b6cde"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // مراقبة إعدادات الإدارة
+    onValue(ref(db, 'admin_control/contest_settings'), (snapshot) => {
+        const data = snapshot.val() || { status: 'open', mainTitle: 'مسابقة كرملات الكبرى', desc: 'أول ما تكتب الرقم السري هتبدأ المغامرة...' };
+        
+        document.getElementById('mainTitle').innerText = data.mainTitle;
+        document.getElementById('subTitle').innerText = data.subTitle || '👑 عالم موازي مليان مفاجآت';
+        document.getElementById('descText').innerText = data.desc;
+
+        if(data.status === 'open') {
+            document.getElementById('closedView').style.display = 'none';
+        } else {
+            document.getElementById('secretPhase').style.display = 'none';
+            document.getElementById('openView').style.display = 'none';
+            document.getElementById('congratsView').style.display = 'none';
+            document.getElementById('closedView').style.display = 'block';
+        }
+    });
+
+    function showAlert(msg, success) {
+        const box = document.getElementById('alert');
+        box.innerText = msg;
+        box.style.background = success ? '#2ecc71' : '#e74c3c';
+        box.style.display = 'block';
+        setTimeout(() => box.style.display = 'none', 3000);
+    }
+
+    // التحقق من الرقم السري
+    const secretInput = document.getElementById('secretCode');
+    secretInput.addEventListener('input', function() {
+        if(this.value === '615') {
+            showAlert('🎉 مبروك! تخطيت المرحلة الأولى!', true);
+            document.getElementById('secretPhase').style.display = 'none';
+            document.getElementById('congratsView').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('congratsView').style.display = 'none';
+                document.getElementById('openView').style.display = 'block';
+            }, 3000);
+        }
+    });
+
+    document.getElementById('regForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('sBtn');
+        const name = document.getElementById('uName').value;
+        const handle = document.getElementById('uHandle').value.replace(/\\D/g,'');
+
+        if(!name || !handle) {
+            showAlert("اكتب اسمك ورقمك يا بطل!", false);
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerText = "جاري الفحص...";
+
+        try {
+            const snap = await get(child(ref(db), `registrations/${handle}`));
+            if(snap.exists()) {
+                showAlert("عذراً! هذا الرقم مسجل بالفعل في جيش كرملات 🍭", false);
+                btn.disabled = false;
+                btn.innerText = "تأكيد الانضمام 🔥";
+            } else {
+                await set(ref(db, 'registrations/' + handle), {
+                    fullName: name,
+                    userHandle: handle,
+                    timestamp: new Date().toISOString()
+                });
+                showAlert("تم تسجيلك بنجاح! جاري التوجيه... 🚀", true);
+                setTimeout(() => {
+                    window.location.href = '85.html';
+                }, 2000);
+            }
+        } catch(err) {
+            showAlert("حدث خطأ، يرجى المحاولة لاحقاً", false);
+            btn.disabled = false;
+            btn.innerText = "تأكيد الانضمام 🔥";
+        }
+    };
+</script>
+</body>
+</html>
