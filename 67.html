@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لغز الزرار المجنون - كرملات 👑</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #f806cc; --secondary: #3f5efb;
+            --glass: rgba(255, 255, 255, 0.05);
+            --neon: 0 0 20px rgba(248, 6, 204, 0.5);
+        }
+
+        body {
+            margin: 0; font-family: 'Cairo', sans-serif;
+            background: #050508 url('https://www.transparenttextures.com/patterns/stardust.png');
+            color: white; min-height: 100vh;
+            display: flex; justify-content: center; align-items: center; overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%; max-width: 500px; padding: 30px 20px;
+            background: var(--glass); backdrop-filter: blur(20px);
+            border-radius: 30px; border: 1px solid rgba(255,255,255,0.1);
+            text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+            position: relative;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes glitch { 0% { transform: translate(0); } 20% { transform: translate(-2px, 2px); } 40% { transform: translate(-2px, -2px); } 60% { transform: translate(2px, 2px); } 80% { transform: translate(2px, -2px); } 100% { transform: translate(0); } }
+        @keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-15px) rotate(2deg); } }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .logo-icon { font-size: 3rem; margin-bottom: 10px; display: inline-block; animation: bounce 2s infinite; }
+        h1 { margin: 10px 0; font-weight: 900; background: linear-gradient(45deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.6rem; }
+        h2 { color: #ccff00; font-size: 1.2rem; margin: 15px 0; }
+        p { color: #bbb; font-size: 0.9rem; line-height: 1.8; }
+
+        /* صفحة الشرح */
+        .intro-box {
+            animation: fadeIn 0.8s ease;
+        }
+        .rules-box {
+            background: rgba(0,0,0,0.4);
+            border-radius: 20px; padding: 20px; margin: 20px 0;
+            border: 1px solid rgba(248,6,204,0.3);
+            text-align: right;
+        }
+        .rules-box h3 { color: var(--primary); margin: 0 0 15px 0; text-align: center; }
+        .rules-box ul { margin: 0; padding-right: 20px; }
+        .rules-box li { margin: 10px 0; color: #ddd; }
+        .rules-box li i { color: #ccff00; margin-left: 8px; }
+
+        .btn-action {
+            width: 100%; padding: 16px; border: none; border-radius: 15px;
+            color: white; font-weight: 900; font-size: 1.1rem; cursor: pointer;
+            transition: 0.4s; display: block; text-decoration: none;
+            margin: 15px 0; font-family: 'Cairo', sans-serif;
+        }
+        .btn-start { background: linear-gradient(45deg, #ff4444, #ff8800); animation: pulse 2s infinite; }
+        .btn-action:hover { transform: scale(1.03); filter: brightness(1.2); }
+
+        /* صفحة اللعبة */
+        .game-box { display: none; }
+
+        .timer-bar {
+            width: 100%; height: 8px; background: rgba(255,255,255,0.1);
+            border-radius: 10px; margin: 15px 0; overflow: hidden;
+        }
+        .timer-fill {
+            height: 100%; background: linear-gradient(90deg, #ff4444, #ff8800);
+            border-radius: 10px; transition: width 0.1s linear;
+        }
+
+        .attempts-box {
+            display: flex; justify-content: center; gap: 10px; margin: 15px 0;
+        }
+        .attempt-heart {
+            font-size: 1.5rem; color: #ff4444;
+            transition: 0.3s;
+        }
+        .attempt-heart.lost { color: #333; filter: grayscale(1); }
+
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+            position: relative;
+        }
+
+        .game-btn {
+            padding: 25px 10px;
+            border: 2px solid rgba(248,6,204,0.5);
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(248,6,204,0.2), rgba(63,94,251,0.2));
+            color: white;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 900;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .game-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 20px rgba(248,6,204,0.5);
+            border-color: var(--primary);
+        }
+        .game-btn:active {
+            transform: scale(0.95);
+        }
+        .game-btn.wrong {
+            animation: shake 0.5s, glitch 0.3s;
+            background: linear-gradient(135deg, rgba(255,0,0,0.3), rgba(255,0,0,0.1));
+            border-color: #ff4444;
+        }
+        .game-btn.correct {
+            animation: pulse 0.5s;
+            background: linear-gradient(135deg, rgba(0,255,136,0.3), rgba(0,255,136,0.1));
+            border-color: #00ff88;
+            box-shadow: 0 0 30px rgba(0,255,136,0.6);
+        }
+        .game-btn .btn-number {
+            display: none;
+            font-size: 2rem;
+            font-weight: 900;
+            color: #00ff88;
+        }
+        .game-btn.revealed .btn-text { display: none; }
+        .game-btn.revealed .btn-number { display: block; }
+
+        .secret-reveal {
+            display: none;
+            background: rgba(0,255,136,0.1);
+            border: 2px solid #00ff88;
+            border-radius: 20px;
+            padding: 25px;
+            margin: 20px 0;
+            animation: glow 2s infinite;
+        }
+        .secret-reveal h2 { color: #00ff88; margin: 0 0 10px 0; }
+        .secret-reveal .secret-number {
+            font-size: 4rem;
+            font-weight: 900;
+            color: #00ff88;
+            text-shadow: 0 0 30px rgba(0,255,136,0.8);
+            margin: 15px 0;
+        }
+
+        .secret-input {
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid rgba(255,255,255,0.3);
+            color: white;
+            font-size: 2.5rem;
+            text-align: center;
+            letter-spacing: 15px;
+            width: 150px;
+            margin: 20px auto;
+            padding: 10px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 900;
+        }
+        .secret-input:focus {
+            border-bottom-color: var(--primary);
+            outline: none;
+        }
+
+        .glitch-text {
+            position: relative;
+            animation: glitch 3s infinite;
+        }
+
+        .hint-text {
+            color: #888;
+            font-size: 0.8rem;
+            margin-top: 10px;
+        }
+
+        #alert { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 15px 30px; border-radius: 12px; z-index: 1000; display: none; font-weight: bold; font-family: 'Cairo', sans-serif; }
+
+        .game-over-box {
+            display: none;
+            background: rgba(255,0,0,0.1);
+            border: 2px solid #ff4444;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+        .game-over-box h2 { color: #ff4444; }
+
+        .back-link { margin-top: 25px; display: inline-block; color: #888; text-decoration: none; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+
+<div id="alert"></div>
+
+<div class="container">
+    <div class="logo-icon">🍭</div>
+    <h1>لغز الزرار المجنون</h1>
+
+    <!-- صفحة الشرح -->
+    <div class="intro-box" id="introBox">
+        <h2>🎮 إزاي تلعب اللعبة؟</h2>
+
+        <div class="rules-box">
+            <h3><i class="fas fa-gamepad"></i> قوانين اللعبة</h3>
+            <ul>
+                <li><i class="fas fa-dot-circle"></i> قدامك <strong style="color: #f806cc;">9 زراير</strong>، كلهم شكلهم واحد</li>
+                <li><i class="fas fa-dot-circle"></i> فيه <strong style="color: #00ff88;">زرار واحد بس</strong> هو الصح</li>
+                <li><i class="fas fa-dot-circle"></i> الزرار الصح بيتحرك <strong style="color: #ccff00;">مكانه كل مرة</strong> تضغط غلط!</li>
+                <li><i class="fas fa-dot-circle"></i> عندك <strong style="color: #ff4444;">3 محاولات</strong> بس</li>
+                <li><i class="fas fa-dot-circle"></i> لو ضغطت الصح، هيطلع <strong style="color: #00ff88;">رقم سري</strong></li>
+                <li><i class="fas fa-dot-circle"></i> اكتب الرقم السري عشان تعدي المرحلة</li>
+                <li><i class="fas fa-dot-circle"></i> <strong style="color: #ff4444;">تحذير:</strong> الزرار الصح بيغير سرعته كل شوية!</li>
+            </ul>
+        </div>
+
+        <p class="hint-text">💡 تلميح: الزرار الصح هو اللي نبضته مختلفة شوية.. بس مش هتعرف تفرق بسهولة!</p>
+
+        <button class="btn-action btn-start" onclick="startGame()">
+            <i class="fas fa-fire"></i> ابدأ اللعبة يا بطل! 🔥
+        </button>
+    </div>
+
+    <!-- صفحة اللعبة -->
+    <div class="game-box" id="gameBox">
+        <h2 id="gameTitle">🎯 لاقي الزرار الصح!</h2>
+        <p id="gameHint">اضغط على الزرار الصح.. بس فين هو؟ 🤔</p>
+
+        <div class="timer-bar">
+            <div class="timer-fill" id="timerFill" style="width: 100%;"></div>
+        </div>
+
+        <div class="attempts-box" id="attemptsBox">
+            <span class="attempt-heart" id="heart1">❤️</span>
+            <span class="attempt-heart" id="heart2">❤️</span>
+            <span class="attempt-heart" id="heart3">❤️</span>
+        </div>
+
+        <div class="buttons-grid" id="buttonsGrid">
+            <button class="game-btn" data-index="0" onclick="checkButton(0)">
+                <span class="btn-text">اضغطني</span>
+                <span class="btn-number">7</span>
+            </button>
+            <button class="game-btn" data-index="1" onclick="checkButton(1)">
+                <span class="btn-text">اضغطني</span>
+                <span class="btn-number">7</span>
+            </button>
+            <button class="game-btn" data-index="2" onclick="checkButton(2)">
+                <span class="btn-text">اضغطني</span>
+                <span class="btn-number">7</span>
+            </button>
+            <button class="game-btn" data-index="3" onclick="checkButton(3)">
+                <span class="btn-text">اضغطني</span>
+                <span class="btn-number">7</span>
+            </button>
+            <button class="game-btn" data-index="4" onclick="checkButton(4)">
+                <span class="btn-text">اضغطني</span>
+                <span class="btn-number">7</span>
+            </button>
+            <button class="game-btn" data-index="5" onclick="checkButton(5)">
+                <span class="btn-text">اضغطني</span>
+                <span class="btn-number">7</span>
+            </button>
+            <button class="game-btn" data-index="6" onclick="checkButton(6)">
+                <span class="btn-text">اضغطني</span>
+                <span class="btn-number">7</span>
+            </button>
+            <button class="game-btn" data-index="7" onclick="checkButton(7)">
+                <span class="btn-text">اضغطني</span>
+                <span class="btn-number">7</span>
+            </button>
+            <button class="game-btn" data-index="8" onclick="checkButton(8)">
+                <span class="btn-text">اضغطني</span>
+                <span class="btn-number">7</span>
+            </button>
+        </div>
+
+        <p class="hint-text" id="gameHint2">💡 الوقت بيعد.. والزرار بيتحرك!</p>
+    </div>
+
+    <!-- صندوق النجاح -->
+    <div class="secret-reveal" id="secretReveal">
+        <h2><i class="fas fa-trophy"></i> مبروك يا بطل! 🎉</h2>
+        <p>لقيت الزرار الصح!</p>
+        <div class="secret-number" id="secretNumber">7</div>
+        <p>اكتب الرقم ده عشان تعدي المرحلة التالية</p>
+        <input type="text" id="finalCode" class="secret-input" placeholder="؟" maxlength="1" autocomplete="off">
+    </div>
+
+    <!-- صندوق Game Over -->
+    <div class="game-over-box" id="gameOverBox">
+        <h2><i class="fas fa-skull"></i> خلصت المحاولات! 💀</h2>
+        <p>الزرار الصح كان بيتحرك أسرع منك!</p>
+        <button class="btn-action btn-start" onclick="resetGame()">
+            <i class="fas fa-redo"></i> حاول تاني يا بطل
+        </button>
+    </div>
+
+    <a href="85.html" class="back-link"><i class="fas fa-arrow-right"></i> العودة للمرحلة السابقة</a>
+</div>
+
+<script>
+    let correctIndex = Math.floor(Math.random() * 9);
+    let attempts = 3;
+    let gameActive = false;
+    let timerInterval;
+    let moveInterval;
+    let timeLeft = 30;
+    let moveSpeed = 2000;
+    let moveCount = 0;
+
+    function showAlert(msg, success) {
+        const box = document.getElementById('alert');
+        box.innerText = msg;
+        box.style.background = success ? '#2ecc71' : '#e74c3c';
+        box.style.display = 'block';
+        setTimeout(() => box.style.display = 'none', 3000);
+    }
+
+    function startGame() {
+        document.getElementById('introBox').style.display = 'none';
+        document.getElementById('gameBox').style.display = 'block';
+        document.getElementById('secretReveal').style.display = 'none';
+        document.getElementById('gameOverBox').style.display = 'none';
+
+        gameActive = true;
+        attempts = 3;
+        timeLeft = 30;
+        moveSpeed = 2000;
+        moveCount = 0;
+        correctIndex = Math.floor(Math.random() * 9);
+
+        // إعادة القلوب
+        for(let i = 1; i <= 3; i++) {
+            document.getElementById('heart' + i).classList.remove('lost');
+        }
+
+        // إعادة الزراير
+        const buttons = document.querySelectorAll('.game-btn');
+        buttons.forEach(btn => {
+            btn.classList.remove('wrong', 'correct', 'revealed');
+            btn.disabled = false;
+        });
+
+        startTimer();
+        startMoving();
+    }
+
+    function startTimer() {
+        const timerFill = document.getElementById('timerFill');
+        timerInterval = setInterval(() => {
+            timeLeft -= 0.1;
+            const percent = (timeLeft / 30) * 100;
+            timerFill.style.width = percent + '%';
+
+            if(timeLeft <= 10) {
+                timerFill.style.background = 'linear-gradient(90deg, #ff0000, #ff4444)';
+            }
+
+            if(timeLeft <= 0) {
+                clearInterval(timerInterval);
+                clearInterval(moveInterval);
+                gameOver();
+            }
+        }, 100);
+    }
+
+    function startMoving() {
+        moveInterval = setInterval(() => {
+            if(!gameActive) return;
+
+            moveCount++;
+
+            // كل 3 حركات، السرعة تزيد
+            if(moveCount % 3 === 0 && moveSpeed > 500) {
+                moveSpeed -= 300;
+                clearInterval(moveInterval);
+                moveInterval = setInterval(moveCorrectButton, moveSpeed);
+            }
+
+            moveCorrectButton();
+        }, moveSpeed);
+    }
+
+    function moveCorrectButton() {
+        const buttons = document.querySelectorAll('.game-btn');
+        let newIndex;
+
+        do {
+            newIndex = Math.floor(Math.random() * 9);
+        } while(newIndex === correctIndex);
+
+        // تبديل الـ data-index
+        const oldBtn = buttons[correctIndex];
+        const newBtn = buttons[newIndex];
+
+        // تبديل الـ onclick
+        const oldOnclick = oldBtn.getAttribute('onclick');
+        const newOnclick = newBtn.getAttribute('onclick');
+
+        oldBtn.setAttribute('onclick', newOnclick);
+        newBtn.setAttribute('onclick', oldOnclick);
+
+        // تبديل الـ data-index
+        oldBtn.setAttribute('data-index', newIndex);
+        newBtn.setAttribute('data-index', correctIndex);
+
+        correctIndex = newIndex;
+
+        // تأثير بصري خفيف على الزرار
+        buttons.forEach(btn => {
+            btn.style.transform = 'scale(1)';
+        });
+
+        // تلميح خفي: الزرار الصح بينبض أسرع شوية
+        setTimeout(() => {
+            if(gameActive) {
+                buttons[correctIndex].style.animation = 'pulse 0.3s';
+                setTimeout(() => {
+                    buttons[correctIndex].style.animation = '';
+                }, 300);
+            }
+        }, 100);
+    }
+
+    function checkButton(index) {
+        if(!gameActive) return;
+
+        const buttons = document.querySelectorAll('.game-btn');
+
+        if(index === correctIndex) {
+            // فوز!
+            gameActive = false;
+            clearInterval(timerInterval);
+            clearInterval(moveInterval);
+
+            buttons[index].classList.add('correct', 'revealed');
+            showAlert('🎉 لقيته! الرقم السري ظهر!', true);
+
+            setTimeout(() => {
+                document.getElementById('gameBox').style.display = 'none';
+                document.getElementById('secretReveal').style.display = 'block';
+            }, 1000);
+        } else {
+            // خسارة محاولة
+            attempts--;
+            buttons[index].classList.add('wrong');
+
+            // تحريك الزرار الصح فوراً
+            moveCorrectButton();
+
+            if(attempts <= 0) {
+                gameOver();
+            } else {
+                showAlert('❌ غلط! الزرار تحرك! بقت ' + attempts + ' محاولات', false);
+                document.getElementById('heart' + (3 - attempts)).classList.add('lost');
+
+                setTimeout(() => {
+                    buttons[index].classList.remove('wrong');
+                }, 500);
+            }
+        }
+    }
+
+    function gameOver() {
+        gameActive = false;
+        clearInterval(timerInterval);
+        clearInterval(moveInterval);
+
+        document.getElementById('gameBox').style.display = 'none';
+        document.getElementById('gameOverBox').style.display = 'block';
+
+        showAlert('💀 خلصت المحاولات! حاول تاني', false);
+    }
+
+    function resetGame() {
+        document.getElementById('gameOverBox').style.display = 'none';
+        document.getElementById('introBox').style.display = 'block';
+    }
+
+    // التحقق من الرقم السري
+    const finalInput = document.getElementById('finalCode');
+    finalInput.addEventListener('input', function() {
+        this.value = this.value.replace(/\D/g, '');
+
+        if(this.value === '7') {
+            showAlert('🏆 مبروك! عديت المرحلة!', true);
+            setTimeout(() => {
+                window.location.href = 'oh.html';
+            }, 2000);
+        }
+    });
+</script>
+</body>
+</html>
