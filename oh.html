@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>اللغز النهائي - كرملات 👑</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght=400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -155,7 +155,6 @@
     <div class="logo-icon">👑</div>
     <h1>اللغز النهائي الكوني</h1>
 
-    <!-- صفحة التحذير -->
     <div class="warning-box" id="warningBox">
         <h2><i class="fas fa-exclamation-triangle"></i> تحذير!</h2>
         <p>ده <strong>أصعب لغز</strong> في المسابقة!</p>
@@ -164,7 +163,6 @@
         <p>لازم تفك <strong style="color: #ccff00;">3 طبقات تشفير</strong>!</p>
     </div>
 
-    <!-- عداد الوقت -->
     <div class="timer-container" id="timerContainer">
         <div class="timer-text" id="timerText">60</div>
         <div class="timer-bar">
@@ -172,15 +170,12 @@
         </div>
     </div>
 
-    <!-- زر البدء -->
-    <button class="btn-action btn-start" id="startBtn" onclick="startGame()">
+    <button class="btn-action btn-start" id="startBtn">
         <i class="fas fa-fire"></i> ابدأ التحدي النهائي! 🔥
     </button>
 
-    <!-- حاوية الألغاز -->
     <div class="puzzle-container" id="puzzleContainer">
 
-        <!-- الطبقة الأولى: معادلة رياضية -->
         <div class="layer-box active" id="layer1">
             <div class="layer-number">1</div>
             <h3>🔢 المعادلة المجنونة</h3>
@@ -192,10 +187,10 @@
             <div class="input-group">
                 <input type="text" id="layer1Input" class="puzzle-input" placeholder="اكتب الناتج" maxlength="10">
             </div>
-            <button class="btn-action btn-submit" onclick="checkLayer1()">
+            <button class="btn-action btn-submit" id="checkLayer1Btn">
                 <i class="fas fa-check"></i> تأكيد
             </button>
-            <button class="btn-action btn-hint" onclick="showHint(1)">
+            <button class="btn-action btn-hint" id="hint1Btn">
                 <i class="fas fa-lightbulb"></i> عايز تلميح؟
             </button>
             <div class="hint-box" id="hint1">
@@ -205,14 +200,13 @@
             </div>
         </div>
 
-        <!-- الطبقة التانية: اللون المخفي -->
         <div class="layer-box" id="layer2">
             <div class="layer-number">2</div>
             <h3>🎨 اللون المخفي</h3>
             <p>فيه <strong style="color: #00ff88;">لون واحد</strong> مختلف عن الباقي!</p>
             <p>اضغط عليه</p>
             <div class="color-grid" id="colorGrid"></div>
-            <button class="btn-action btn-hint" onclick="showHint(2)">
+            <button class="btn-action btn-hint" id="hint2Btn">
                 <i class="fas fa-lightbulb"></i> عايز تلميح؟
             </button>
             <div class="hint-box" id="hint2">
@@ -222,7 +216,6 @@
             </div>
         </div>
 
-        <!-- الطبقة التالتة: شفرة Caesar -->
         <div class="layer-box" id="layer3">
             <div class="layer-number">3</div>
             <h3>🔤 شفرة كرملات</h3>
@@ -232,10 +225,10 @@
             <div class="input-group">
                 <input type="text" id="layer3Input" class="puzzle-input" placeholder="اكتب الكلمة" maxlength="10">
             </div>
-            <button class="btn-action btn-submit" onclick="checkLayer3()">
+            <button class="btn-action btn-submit" id="checkLayer3Btn">
                 <i class="fas fa-check"></i> تأكيد
             </button>
-            <button class="btn-action btn-hint" onclick="showHint(3)">
+            <button class="btn-action btn-hint" id="hint3Btn">
                 <i class="fas fa-lightbulb"></i> عايز تلميح؟
             </button>
             <div class="hint-box" id="hint3">
@@ -249,19 +242,17 @@
         </div>
     </div>
 
-    <!-- صندوق النجاح -->
     <div class="success-box" id="successBox">
         <h2><i class="fas fa-crown"></i> مبروك يا بطل! 👑</h2>
         <p>أنت فكيت <strong style="color: #ccff00;">3 طبقات تشفير</strong>!</p>
         <p>ده كود جايزتك:</p>
         <div class="prize-code" id="prizeCode">KRAMLAT-VIP-2026</div>
         <p style="color: #888; font-size: 0.85rem;">📸 خد سكرين شوت وابعته على الواتساب!</p>
-        <button class="btn-action btn-submit" onclick="shareWin()">
+        <button class="btn-action btn-submit" id="shareWinBtn">
             <i class="fab fa-whatsapp"></i> شارك إنجازك
         </button>
     </div>
 
-    <!-- صندوق الفشل -->
     <div class="fail-box" id="failBox">
         <h2><i class="fas fa-skull"></i> انتهى الوقت! 💀</h2>
         <p>اللغز النهائي كان أقوى منك!</p>
@@ -275,7 +266,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-    import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyCZr_OpkCfEFxeTrOc5fp7F_uvyVGlT5Yc",
@@ -298,13 +289,11 @@
     let userName = '';
     let userPhone = '';
 
-    // جلب بيانات المستخدم من localStorage
     function getUserData() {
         userName = localStorage.getItem('kramlatUserName') || 'مجهول';
         userPhone = localStorage.getItem('kramlatUserPhone') || 'مجهول';
     }
 
-    // تسجيل الفائز في Firebase
     async function saveWinner() {
         try {
             const timestamp = new Date().toISOString();
@@ -317,10 +306,7 @@
                 completed: true
             };
 
-            // حفظ في winners/phone
             await set(ref(db, 'winners/' + userPhone.replace(/\D/g,'')), winnerData);
-
-            // حفظ في winners_list للسهولة
             const winnerKey = Date.now();
             await set(ref(db, 'winners_list/' + winnerKey), winnerData);
 
@@ -460,8 +446,6 @@
             input.classList.add('correct');
 
             clearInterval(timerInterval);
-
-            // تسجيل الفائز في Firebase
             saveWinner();
 
             setTimeout(() => {
@@ -485,7 +469,18 @@
         window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
     }
 
-    // Enter للإدخال
+    // ربط الأحداث بالأزرار عن طريق الـ ID داخل الـ Module
+    document.getElementById('startBtn').addEventListener('click', startGame);
+    document.getElementById('checkLayer1Btn').addEventListener('click', checkLayer1);
+    document.getElementById('checkLayer3Btn').addEventListener('click', checkLayer3);
+    
+    document.getElementById('hint1Btn').addEventListener('click', () => showHint(1));
+    document.getElementById('hint2Btn').addEventListener('click', () => showHint(2));
+    document.getElementById('hint3Btn').addEventListener('click', () => showHint(3));
+    
+    document.getElementById('shareWinBtn').addEventListener('click', shareWin);
+
+    // الـ Enter للإدخال السريع
     document.getElementById('layer1Input').addEventListener('keypress', function(e) {
         if(e.key === 'Enter') checkLayer1();
     });
