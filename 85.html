@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المرحلة التانية - كرملات 👑</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #f806cc; --secondary: #3f5efb;
+            --glass: rgba(255, 255, 255, 0.05);
+            --neon: 0 0 20px rgba(248, 6, 204, 0.5);
+        }
+
+        body {
+            margin: 0; font-family: 'Cairo', sans-serif;
+            background: #050508 url('https://www.transparenttextures.com/patterns/stardust.png');
+            color: white; min-height: 100vh;
+            display: flex; justify-content: center; align-items: center; overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%; max-width: 500px; padding: 40px 20px;
+            background: var(--glass); backdrop-filter: blur(20px);
+            border-radius: 30px; border: 1px solid rgba(255,255,255,0.1);
+            text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+            position: relative; animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+        @keyframes glow { 0%, 100% { box-shadow: 0 0 10px rgba(0,255,136,0.3); } 50% { box-shadow: 0 0 30px rgba(0,255,136,0.8); } }
+
+        .logo-icon { font-size: 3.5rem; margin-bottom: 10px; display: inline-block; animation: bounce 2s infinite; }
+        h1 { margin: 10px 0; font-weight: 900; background: linear-gradient(45deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.8rem; }
+        h2 { color: #ccff00; font-size: 1.3rem; margin: 15px 0; }
+        p { color: #bbb; font-size: 0.95rem; line-height: 1.8; }
+
+        .welcome-msg { 
+            background: linear-gradient(135deg, rgba(248,6,204,0.2), rgba(63,94,251,0.2));
+            border-radius: 20px; padding: 20px; margin: 20px 0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .welcome-msg h2 { color: #fff; margin: 0 0 10px 0; }
+        .welcome-msg .name { color: #00ff88; font-weight: 900; font-size: 1.5rem; }
+
+        .puzzle-box {
+            background: rgba(0,0,0,0.4);
+            border-radius: 20px; padding: 25px; margin: 20px 0;
+            border: 2px solid rgba(248,6,204,0.3);
+        }
+
+        .secret-input {
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid rgba(255,255,255,0.3);
+            color: white;
+            font-size: 2.5rem;
+            text-align: center;
+            letter-spacing: 15px;
+            width: 180px;
+            margin: 20px auto;
+            padding: 10px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 900;
+        }
+        .secret-input:focus {
+            border-bottom-color: var(--primary);
+            box-shadow: none;
+            outline: none;
+        }
+        .secret-input::placeholder {
+            color: rgba(255,255,255,0.2);
+            font-size: 1rem;
+            letter-spacing: normal;
+        }
+
+        .hint-box {
+            display: none;
+            background: rgba(255,193,7,0.1);
+            border: 1px solid rgba(255,193,7,0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            text-align: right;
+        }
+        .hint-box h4 { color: #ffc107; margin: 0 0 10px 0; }
+        .hint-box p { color: #fff; margin: 5px 0; }
+
+        .btn-action {
+            width: 100%; padding: 16px; border: none; border-radius: 15px;
+            color: white; font-weight: 900; font-size: 1.1rem; cursor: pointer;
+            transition: 0.4s; display: block; text-decoration: none;
+            margin: 10px 0; font-family: 'Cairo', sans-serif;
+        }
+        .btn-hint { background: linear-gradient(45deg, #ff9800, #ffc107); }
+        .btn-submit { background: linear-gradient(45deg, var(--primary), var(--secondary)); box-shadow: 0 5px 15px rgba(248, 6, 204, 0.3); }
+        .btn-action:hover { transform: scale(1.03); filter: brightness(1.2); }
+        .btn-action:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .question-box {
+            display: none;
+            background: rgba(33,150,243,0.1);
+            border: 1px solid rgba(33,150,243,0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .question-box h4 { color: #2196f3; margin: 0 0 15px 0; }
+        .answer-input {
+            width: 100%; padding: 12px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            color: white;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1.1rem;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .success-box {
+            display: none;
+            background: rgba(0,255,136,0.1);
+            border: 2px solid #00ff88;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            animation: glow 2s infinite;
+        }
+        .success-box h2 { color: #00ff88; font-size: 1.8rem; margin: 0 0 15px 0; }
+        .success-box p { color: #fff; font-size: 1.1rem; }
+
+        .back-link { margin-top: 25px; display: inline-block; color: #888; text-decoration: none; font-size: 0.85rem; }
+
+        #alert { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 15px 30px; border-radius: 12px; z-index: 1000; display: none; font-weight: bold; font-family: 'Cairo', sans-serif; }
+
+        .emoji-counter { 
+            background: rgba(0,0,0,0.5); 
+            border-radius: 10px; 
+            padding: 15px; 
+            margin: 10px 0;
+            font-size: 1.3rem;
+            line-height: 2;
+        }
+        .emoji-counter span { margin: 0 3px; }
+    </style>
+</head>
+<body>
+
+<div id="alert"></div>
+
+<div class="container">
+    <div class="logo-icon">🍭</div>
+    <h1>المرحلة التانية</h1>
+
+    <!-- رسالة الترحيب -->
+    <div class="welcome-msg">
+        <h2>👋 أهلاً بيك يا <span class="name" id="userName">البطل</span>!</h2>
+        <p>عشان تعدي المرحلة التانية، لازم تكتب <strong style="color: #f806cc;">الرقمان السريان</strong> 🔐</p>
+    </div>
+
+    <!-- صندوق اللغز -->
+    <div class="puzzle-box" id="puzzleBox">
+        <h2>🧩 لغز المرحلة التانية</h2>
+        <p>الرقم السري مكون من <strong style="color: #ccff00;">رقمين</strong></p>
+        <p style="font-size: 0.85rem; color: #888;">كرملات</p>
+
+        <input type="text" id="secretCode" class="secret-input" placeholder="اكتب الرقمين" maxlength="2" autocomplete="off">
+
+        <button class="btn-action btn-hint" id="hintBtn" onclick="showQuestion()">
+            <i class="fas fa-lightbulb"></i> عايز تلميح؟ 💡
+        </button>
+    </div>
+
+    <!-- صندوق السؤال -->
+    <div class="question-box" id="questionBox">
+        <h4><i class="fas fa-question-circle"></i> جاوب على السؤال الأول عشان تاخد تلميح:</h4>
+        <p style="color: #fff; font-weight: bold;">المسابقة دي المسابقة الكام لكرملات؟</p>
+        <input type="text" id="quizAnswer" class="answer-input" placeholder="اكتب الرقم (مثلاً: 3)" maxlength="1">
+        <button class="btn-action btn-submit" style="margin-top: 15px;" onclick="checkQuiz()">
+            <i class="fas fa-check"></i> تأكيد الإجابة
+        </button>
+    </div>
+
+    <!-- صندوق التلميحات -->
+    <div class="hint-box" id="hintBox1">
+        <h4><i class="fas fa-star"></i> تلميح رقم 1:</h4>
+        <p>🟥🟨 <strong>أول رقم هو عدد الكروت الحمراء والصفراء</strong> اللي طلعت في ماتش المكسيك وجنوب أفريقيا في كأس العالم 2026!</p>
+        <p style="color: #ffc107; font-size: 0.9rem;">يلا يابرونس</p>
+    </div>
+
+    <div class="hint-box" id="hintBox2">
+        <h4><i class="fas fa-star"></i> تلميح رقم 2:</h4>
+        <p>🎭 <strong>التلميح التاني:</strong> عدد الإيموجيز في وصف قناة كرملات على الواتساب!</p>
+        <div class="emoji-counter">
+            <span>روح عدهم</span>
+        </div>
+        <p style="color: #00ff88; font-weight: bold; margin-top: 10px;">عدهم كويس! الرقم التاني = (عدد الإيموجيز الكلي-1)/4</p>
+    </div>
+
+    <!-- صندوق النجاح -->
+    <div class="success-box" id="successBox">
+        <h2><i class="fas fa-trophy"></i> مبروك يا بطل! 🎉</h2>
+        <p>أنت كتبت <strong style="color: #00ff88; font-size: 1.5rem;">67</strong> صح!</p>
+        <p>كرملات! 🍭</p>
+        <p style="color: #ccff00; margin-top: 15px;">جاري تحويلك للمرحلة التالتة...</p>
+    </div>
+
+    <a href="index.html" class="back-link"><i class="fas fa-arrow-right"></i> العودة للمجرة الرئيسية</a>
+</div>
+
+<script>
+    // جلب اسم المستخدم من localStorage (اتخزن من الصفحة الأولى)
+    const userName = localStorage.getItem('kramlatUserName') || 'البطل';
+    document.getElementById('userName').innerText = userName;
+
+    function showAlert(msg, success) {
+        const box = document.getElementById('alert');
+        box.innerText = msg;
+        box.style.background = success ? '#2ecc71' : '#e74c3c';
+        box.style.display = 'block';
+        setTimeout(() => box.style.display = 'none', 3000);
+    }
+
+    // عرض صندوق السؤال
+    function showQuestion() {
+        document.getElementById('questionBox').style.display = 'block';
+        document.getElementById('hintBtn').style.display = 'none';
+        document.getElementById('questionBox').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // التحقق من إجابة السؤال
+    function checkQuiz() {
+        const answer = document.getElementById('quizAnswer').value.trim();
+
+        if(answer === '5' || answer === '٥') {
+            showAlert('🎉 إجابة صحيحة! هناك تلميحين جاهزين ليك!', true);
+            document.getElementById('questionBox').style.display = 'none';
+            document.getElementById('hintBox1').style.display = 'block';
+            document.getElementById('hintBox2').style.display = 'block';
+        } else {
+            showAlert('❌ إجابة غلط! المسابقة دي المسابقة الخامسة لكرملات!', false);
+            document.getElementById('quizAnswer').value = '';
+            document.getElementById('quizAnswer').style.animation = 'shake 0.5s';
+            setTimeout(() => document.getElementById('quizAnswer').style.animation = '', 500);
+        }
+    }
+
+    // التحقق من الرقم السري
+    const secretInput = document.getElementById('secretCode');
+    secretInput.addEventListener('input', function() {
+        // السماح بأرقام فقط
+        this.value = this.value.replace(/\D/g, '');
+
+        if(this.value === '67') {
+            showAlert('🏆 مبروك! الرقم صح!', true);
+            document.getElementById('puzzleBox').style.display = 'none';
+            document.getElementById('hintBox1').style.display = 'none';
+            document.getElementById('hintBox2').style.display = 'none';
+            document.getElementById('successBox').style.display = 'block';
+
+            setTimeout(() => {
+                window.location.href = '67.html';
+            }, 3000);
+        }
+    });
+
+    // Enter للسؤال
+    document.getElementById('quizAnswer').addEventListener('keypress', function(e) {
+        if(e.key === 'Enter') checkQuiz();
+    });
+</script>
+</body>
+</html>
