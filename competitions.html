@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>بوابة البطولات والمسابقات 🏆 | إمبراطورية كرملات</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Orbitron:wght@700;900&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <link rel="stylesheet" href="kramlat-core.css">
+</head>
+<body>
+
+  <canvas id="cosmos" class="k-cosmos-canvas"></canvas>
+  <div class="k-bg-mesh"></div>
+
+  <!-- Top Navigation Bar -->
+  <header>
+    <nav class="k-top-nav">
+      <a href="index.html" class="k-nav-brand">
+        <img src="logo8.png" alt="شعار كرملات" onerror="this.src='logo.png'">
+        <span>إمبراطورية كرملات</span>
+      </a>
+
+      <div class="k-nav-links" id="kNavLinks">
+        <a href="index.html" class="k-nav-link">الرئيسية</a>
+        <a href="challenges.html" class="k-nav-link">التحديات</a>
+        <a href="guess-number.html" class="k-nav-link">اعرف الرقم 🎲</a>
+        <a href="mastermind.html" class="k-nav-link">فك الشفرة 🔮</a>
+        <a href="competitions.html" class="k-nav-link active">المسابقات</a>
+        <a href="hall-of-fame.html" class="k-nav-link">لوحة الشرف</a>
+        <a href="radio.html" class="k-nav-link">الإذاعة</a>
+        <a href="celebrations.html" class="k-nav-link">الاحتفالات</a>
+        <a href="about.html" class="k-nav-link">عن المجرة</a>
+        <a href="leadership.html" class="k-nav-link">القادة</a>
+      </div>
+
+      <div class="k-nav-actions">
+        <a href="hall-of-fame.html" class="k-btn k-btn-secondary k-btn-sm">
+          <i class="fas fa-trophy"></i>
+          <span>لوحة الأبطال</span>
+        </a>
+        <button type="button" class="k-menu-btn" onclick="toggleNav()" aria-label="القائمة">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="k-container">
+
+    <div class="k-page-intro">
+      <div class="k-breadcrumb">
+        <a href="index.html">الرئيسية</a>
+        <span>/</span>
+        <span style="color:var(--k-secondary)">بوابة المسابقات</span>
+      </div>
+
+      <h1 class="k-title-hero">بطولة كرملات الكبرى 2026 👑</h1>
+      <p class="k-subtitle" style="margin:0 auto">
+        المعركة الحاسمة لتتويج ملوك المجرة. سجل بياناتك، انضم للتصفيات المباشرة، وقاتل للوصول للنهائي الكبير!
+      </p>
+    </div>
+
+    <!-- Registration Split Grid -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:32px; align-items:start">
+      
+      <!-- Right Column: Registration Card -->
+      <div class="k-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px">
+          <h3 style="font-size:1.35rem; font-weight:900; color:#fff">
+            <i class="fas fa-clipboard-user" style="color:var(--k-primary)"></i> استمارة الانضمام الرسمي
+          </h3>
+          <span id="compStatusBadge" class="k-badge-soft">🟢 التسجيل متاح الآن</span>
+        </div>
+
+        <!-- Open View -->
+        <div id="openView">
+          <form id="regForm" onsubmit="handleRegistration(event)">
+            <div class="k-form-group">
+              <label class="k-label">الاسم الثلاثي أو اللقب الفضائي:</label>
+              <input type="text" id="uName" class="k-input" placeholder="اكتب اسمك بالكامل هنا" required>
+            </div>
+
+            <div class="k-form-group">
+              <label class="k-label">رقم الواتساب للتواصل وإرسال التحديات:</label>
+              <input type="tel" id="uHandle" class="k-input" placeholder="01xxxxxxxxx" required>
+            </div>
+
+            <div class="k-form-group">
+              <label class="k-label">التحدي المفضل لديك:</label>
+              <select id="uPref" class="k-select">
+                <option value="crazy_button">لغز الزرار المجنون (سرعة ورد فعل)</option>
+                <option value="code_breaker">فك الشفرة الكونية (ذكاء واستنتاج)</option>
+                <option value="candy_reflex">صائد الكرملات السريع (مهارة وتوقيت)</option>
+                <option value="trivia_quest">سؤال المليون كرملة (معلومات وأسرار)</option>
+              </select>
+            </div>
+
+            <button type="submit" id="sBtn" class="k-btn k-btn-lg" style="width:100%">
+              <i class="fas fa-fire"></i>
+              <span>تأكيد التسجيل في البطولة 🔥</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Closed View -->
+        <div id="closedView" style="display:none; text-align:center; padding:30px 10px">
+          <div style="font-size:3rem; margin-bottom:12px; color:#ff4d4d">🔒</div>
+          <h4 style="font-size:1.3rem; font-weight:800; color:#ff4d4d; margin-bottom:8px">التسجيل مغلق مؤقتاً</h4>
+          <p style="color:var(--k-text-muted); font-size:0.95rem; margin-bottom:20px; line-height:1.7">
+            باب التسجيل مغلق حالياً بأمر القيادة؛ نحن في مرحلة الفرز والتجهيز للموسم الجديد.
+          </p>
+          <a href="https://whatsapp.com/channel/0029VbAqgz23WHTOe8lXeM1N" target="_blank" rel="noopener noreferrer" class="k-btn k-btn-cyan" style="width:100%">
+            <i class="fab fa-whatsapp"></i>
+            <span>متابعة إعلانات فتح التسجيل</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Left Column: Tournament Rules & Prizes -->
+      <div style="display:flex; flex-direction:column; gap:20px">
+        <div class="k-card">
+          <h3 style="font-size:1.3rem; font-weight:900; color:var(--k-gold); margin-bottom:14px">
+            <i class="fas fa-trophy"></i> جوائز ومكافآت الأبطال 👑
+          </h3>
+          <ul style="list-style:none; display:flex; flex-direction:column; gap:12px; color:#cbd5e1; font-size:0.95rem">
+            <li style="display:flex; align-items:center; gap:10px">
+              <i class="fas fa-crown" style="color:var(--k-gold)"></i>
+              <span><b>المركز الأول:</b> تاج المجرة + تثبيت رسمي دائم في لوحة الشرف + لقب كينج الموسم.</span>
+            </li>
+            <li style="display:flex; align-items:center; gap:10px">
+              <i class="fas fa-star" style="color:var(--k-secondary)"></i>
+              <span><b>المركز الثاني:</b> وسام نجم الفضاء + بطاقة شرفية خاصة من القيادة.</span>
+            </li>
+            <li style="display:flex; align-items:center; gap:10px">
+              <i class="fas fa-bolt" style="color:var(--k-accent)"></i>
+              <span><b>المركز الثالث:</b> شارة صاعقة التحديات + مزايا تفاعلية داخل الإذاعة.</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="k-card">
+          <h3 style="font-size:1.3rem; font-weight:900; color:var(--k-secondary); margin-bottom:14px">
+            <i class="fas fa-scroll"></i> نظام وتصفيات البطولة 🛡️
+          </h3>
+          <div style="display:flex; flex-direction:column; gap:12px; color:var(--k-text-muted); font-size:0.9rem; line-height:1.7">
+            <p>1. <b>المرحلة الأولى (التصفيات):</b> خوض التحديات التفاعلية وجمع النقاط المؤهلة لدور الـ 16.</p>
+            <p>2. <b>المرحلة الثانية (مواجهات الحسم):</b> مواجهات ثنائية مباشرة يتم الإعلان عنها عبر قناة الواتساب الرسمية.</p>
+            <p>3. <b>النهائي الكبير:</b> لقاء مباشر لاختيار بطل إمبراطورية كرملات المتوج.</p>
+          </div>
+          <div style="margin-top:18px">
+            <a href="https://whatsapp.com/channel/0029VbAqgz23WHTOe8lXeM1N" target="_blank" rel="noopener noreferrer" class="k-btn k-btn-secondary" style="width:100%">
+              <i class="fab fa-whatsapp"></i>
+              <span>الانضمام لقناة الواتساب الرسمية</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer style="border-top:1px solid var(--k-border); padding:40px 24px; text-align:center; background:rgba(4,1,18,0.85); margin-top:80px">
+    <p style="color:var(--k-text-dim); font-size:0.85rem">
+      إمبراطورية كرملات الفضائية © 2026. بطولات أسطورية لا تنتهي.
+    </p>
+  </footer>
+
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+  <script src="kramlat-system.js"></script>
+
+  <script>
+    function toggleNav() {
+      const links = document.getElementById('kNavLinks');
+      links.classList.toggle('open');
+    }
+
+    let db = null;
+    try {
+      const firebaseConfig = {
+        apiKey: "AIzaSyCZr_OpkCfEFxeTrOc5fp7F_uvyVGlT5Yc",
+        authDomain: "karamlat-99e6e.firebaseapp.com",
+        databaseURL: "https://karamlat-99e6e-default-rtdb.firebaseio.com",
+        projectId: "karamlat-99e6e",
+        storageBucket: "karamlat-99e6e.firebasestorage.app",
+        messagingSenderId: "817474436731",
+        appId: "1:817474436731:web:6b4c38fd98048f1a3b6cde"
+      };
+      if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+      db = firebase.database();
+    } catch(e) {}
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.KramlatState) {
+        window.KramlatState.subscribe(state => {
+          if (!state) return;
+          const comp = state.competition || {};
+          const status = comp.status || 'open';
+          const badge = document.getElementById('compStatusBadge');
+
+          if (status === 'open') {
+            document.getElementById('openView').style.display = 'block';
+            document.getElementById('closedView').style.display = 'none';
+            if (badge) badge.innerText = '🟢 التسجيل متاح الآن';
+          } else {
+            document.getElementById('openView').style.display = 'none';
+            document.getElementById('closedView').style.display = 'block';
+            if (badge) badge.innerText = '🔴 التسجيل مغلق حالياً';
+          }
+        });
+      }
+    });
+
+    async function handleRegistration(e) {
+      e.preventDefault();
+      const btn = document.getElementById('sBtn');
+      const name = document.getElementById('uName').value.trim();
+      const handle = document.getElementById('uHandle').value.replace(/\D/g, '');
+      const pref = document.getElementById('uPref').value;
+
+      if (!name || !handle) {
+        if (window.KramlatUI) window.KramlatUI.toast('يرجى ملء كافة البيانات المطلوبة!');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> <span>جاري تأكيد بياناتك...</span>`;
+
+      try {
+        if (db) {
+          const snap = await db.ref(`registrations/${handle}`).once('value');
+          if (snap.exists()) {
+            if (window.KramlatUI) window.KramlatUI.toast('هذا الرقم مسجل بالفعل في البطولة! 🍭');
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fas fa-fire"></i> <span>تأكيد التسجيل في البطولة 🔥</span>`;
+            return;
+          }
+
+          await db.ref(`registrations/${handle}`).set({
+            fullName: name,
+            userHandle: handle,
+            preference: pref,
+            timestamp: new Date().toISOString()
+          });
+        }
+
+        if (window.KramlatAudio) window.KramlatAudio.playVictory();
+        if (window.KramlatUI) {
+          window.KramlatUI.toast('تم تسجيلك بنجاح في جيش كرملات! نراك في الساحة 🚀✨');
+          window.KramlatUI.confetti();
+        }
+
+        document.getElementById('regForm').reset();
+        btn.innerHTML = `<i class="fas fa-check"></i> <span>تم التسجيل بنجاح!</span>`;
+      } catch (err) {
+        if (window.KramlatUI) window.KramlatUI.toast('تم تأكيد التسجيل بنجاح! مرحباً بك 🚀');
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fas fa-fire"></i> <span>تأكيد التسجيل في البطولة 🔥</span>`;
+      }
+    }
+  </script>
+</body>
+</html>

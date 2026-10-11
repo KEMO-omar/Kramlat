@@ -494,6 +494,7 @@
         this.value = this.value.replace(/\D/g, '');
 
         if(this.value === '7') {
+            if (window.KramlatAudio) window.KramlatAudio.playVictory();
             showAlert('🏆 مبروك! عديت المرحلة!', true);
             setTimeout(() => {
                 window.location.href = 'oh.html';
@@ -501,5 +502,6 @@
         }
     });
 </script>
+<script src="kramlat-system.js"></script>
 </body>
 </html>

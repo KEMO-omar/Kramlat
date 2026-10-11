@@ -1,0 +1,8 @@
+{
+  "name": "إمبراطورية كرملات الفضائية | Kramlat Ultimate 🍭",
+  "description": "المقر الرسمي لإمبراطورية كرملات - مجرة الفوضى الإبداعية، الميمز، التحديات الأسطورية والغموض الذي لا ينتهي. هنا حيث لا مكان للملل!",
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ],
+  "permissions": []
+}

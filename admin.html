@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>مركز القيادة والتحكم الإداري 👑 | لوحة تحكم كرملات</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Orbitron:wght@700;900&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <link rel="stylesheet" href="kramlat-core.css">
+
+  <style>
+    /* Security Gate (Lock Screen) */
+    .k-lock-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(23, 12, 53, 0.98), rgba(6, 3, 20, 1));
+      backdrop-filter: blur(16px);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      transition: all 0.4s ease;
+    }
+
+    .k-lock-box {
+      max-width: 480px;
+      width: 100%;
+      background: linear-gradient(135deg, rgba(24, 15, 60, 0.95), rgba(12, 7, 34, 0.98));
+      border: 2px solid rgba(0, 240, 255, 0.3);
+      border-radius: var(--k-radius-xl);
+      padding: 40px 32px;
+      text-align: center;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(0, 240, 255, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .k-lock-box::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--k-accent), var(--k-primary), var(--k-secondary));
+    }
+
+    .k-lock-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      background: rgba(0, 240, 255, 0.1);
+      border: 2px solid var(--k-secondary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      color: var(--k-secondary);
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.35);
+      animation: pulseGlow 2.5s infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(0, 240, 255, 0.3); }
+      50% { transform: scale(1.05); box-shadow: 0 0 35px rgba(0, 240, 255, 0.6); }
+    }
+
+    .k-lock-pass-wrapper {
+      position: relative;
+      margin: 22px 0 16px;
+    }
+
+    .k-lock-input {
+      width: 100%;
+      padding: 16px 50px 16px 20px;
+      background: rgba(0, 0, 0, 0.45);
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      border-radius: var(--k-radius-md);
+      color: #fff;
+      font-size: 1.15rem;
+      font-family: var(--k-font-tech);
+      letter-spacing: 2px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .k-lock-input:focus {
+      outline: none;
+      border-color: var(--k-secondary);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    .k-lock-toggle-vis {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--k-text-muted);
+      cursor: pointer;
+      font-size: 1.1rem;
+      padding: 4px;
+    }
+
+    .k-lock-toggle-vis:hover {
+      color: var(--k-secondary);
+    }
+
+    /* Admin Workspace */
+    .k-admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 35px;
+      padding-bottom: 25px;
+      border-bottom: 1px solid var(--k-border);
+    }
+
+    .k-admin-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 24px;
+    }
+
+    .k-switch-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--k-border);
+      border-radius: var(--k-radius-md);
+      margin-bottom: 12px;
+      transition: all 0.2s;
+    }
+
+    .k-switch-row:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .k-switch-info h5 {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .k-switch-info p {
+      font-size: 0.8rem;
+      color: var(--k-text-muted);
+      margin-top: 2px;
+    }
+
+    .k-toggle {
+      position: relative;
+      display: inline-block;
+      width: 52px;
+      height: 28px;
+      flex-shrink: 0;
+    }
+
+    .k-toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .k-toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: rgba(255, 255, 255, 0.15);
+      transition: 0.3s;
+      border-radius: 34px;
+      border: 1px solid var(--k-border);
+    }
+
+    .k-toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.3s;
+      border-radius: 50%;
+    }
+
+    .k-toggle input:checked + .k-toggle-slider {
+      background: linear-gradient(135deg, var(--k-primary), var(--k-secondary));
+      border-color: var(--k-secondary);
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
+    }
+
+    .k-toggle input:checked + .k-toggle-slider:before {
+      transform: translateX(24px);
+    }
+
+    .k-admin-item-tag {
+      font-size: 0.8rem;
+      color: var(--k-accent);
+      font-weight: 800;
+      font-family: var(--k-font-tech);
+    }
+
+    .k-hero-badge {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: var(--k-radius-sm);
+      margin-bottom: 8px;
+      border: 1px solid var(--k-border);
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="cosmos" class="k-cosmos-canvas"></canvas>
+  <div class="k-bg-mesh"></div>
+
+  <!-- SECURITY GATE / PASSWORD LOCK MODAL -->
+  <div class="k-lock-overlay" id="adminLockOverlay">
+    <div class="k-lock-box">
+      <div class="k-lock-icon">
+        <i class="fas fa-shield-halved"></i>
+      </div>
+
+      <div class="k-metadata" style="justify-content:center; margin-bottom:10px">
+        <span>منطقة إدارية سرية</span>
+        <span class="k-metadata-sep">·</span>
+        <span>ACCESS RESTRICTED</span>
+      </div>
+
+      <h2 style="font-size:1.9rem; font-weight:900; color:#fff; margin-bottom:8px">
+        بوابة القيادة والتحكم 👑
+      </h2>
+      <p style="color:var(--k-text-muted); font-size:0.9rem">
+        هذه الصفحة محمية ولا يمكن الوصول إليها إلا عبر الرابط المباشر بكلمة السر المخزنة في قاعدة البيانات.
+      </p>
+
+      <form onsubmit="handleAdminLogin(event)" style="margin-top:20px">
+        <div class="k-lock-pass-wrapper">
+          <input type="password" id="adminPasswordInput" class="k-lock-input" placeholder="أدخل كلمة السر..." autocomplete="current-password" autofocus required>
+          <button type="button" class="k-lock-toggle-vis" onclick="togglePassVis('adminPasswordInput')" title="إظهار/إخفاء">
+            <i class="fas fa-eye" id="adminPasswordInput_eye"></i>
+          </button>
+        </div>
+
+        <button type="submit" class="k-btn k-btn-accent" style="width:100%; padding:14px; font-size:1.1rem; justify-content:center">
+          <i class="fas fa-key"></i>
+          <span>دخول لوحة التحكم</span>
+        </button>
+      </form>
+
+      <div id="loginErrorMsg" style="margin-top:14px; font-size:0.9rem; color:#ff6b6b; display:none"></div>
+
+      <div style="margin-top:24px; padding-top:16px; border-top:1px dashed rgba(255,255,255,0.1); font-size:0.8rem; color:var(--k-text-muted)">
+        <i class="fas fa-circle-info" style="color:var(--k-secondary)"></i>
+        كلمة السر الافتراضية الأولى: <code style="color:var(--k-secondary); font-weight:bold">kramlat2026</code> (يمكنك تغييرها من الداخل)
+      </div>
+
+      <div style="margin-top:14px">
+        <a href="index.html" style="color:var(--k-text-muted); font-size:0.85rem; text-decoration:none">
+          <i class="fas fa-arrow-left"></i> العودة إلى الصفحة الرئيسية
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Bar -->
+  <header>
+    <nav class="k-top-nav">
+      <a href="index.html" class="k-nav-brand">
+        <img src="logo8.png" alt="شعار كرملات" onerror="this.src='logo.png'">
+        <span>مركز القيادة والتحكم</span>
+      </a>
+
+      <div class="k-nav-links" id="kNavLinks">
+        <a href="index.html" class="k-nav-link">الرئيسية</a>
+        <a href="challenges.html" class="k-nav-link">التحديات</a>
+        <a href="guess-number.html" class="k-nav-link">اعرف الرقم 🎲</a>
+        <a href="mastermind.html" class="k-nav-link">فك الشفرة 🔮</a>
+        <a href="competitions.html" class="k-nav-link">المسابقات</a>
+        <a href="hall-of-fame.html" class="k-nav-link">لوحة الشرف</a>
+        <a href="radio.html" class="k-nav-link">الإذاعة</a>
+        <a href="celebrations.html" class="k-nav-link">الاحتفالات</a>
+        <a href="about.html" class="k-nav-link">عن المجرة</a>
+        <a href="leadership.html" class="k-nav-link">القادة</a>
+      </div>
+
+      <div class="k-nav-actions">
+        <button type="button" class="k-btn k-btn-secondary k-btn-sm" onclick="logoutAdmin()">
+          <i class="fas fa-arrow-right-from-bracket"></i>
+          <span>قفل اللوحة والخروج</span>
+        </button>
+        <button type="button" class="k-menu-btn" onclick="toggleNav()" aria-label="القائمة">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="k-container">
+
+    <div class="k-admin-header">
+      <div>
+        <div class="k-metadata">
+          <span>غرفة العمليات المركزية</span>
+          <span class="k-metadata-sep">·</span>
+          <span>ADMIN COMMAND CENTER</span>
+          <span class="k-metadata-sep">·</span>
+          <span style="color:var(--k-secondary)">مستوى صلاحية الكينج 👑</span>
+        </div>
+        <h1 style="font-size:2.4rem; font-weight:900; color:#fff">لوحة تحكم إمبراطورية كرملات</h1>
+        <p style="color:var(--k-text-muted)">تحكم فوري بكافة التحديات، كلمات العداد، أمان كلمة السر في قاعدة البيانات، والإعلانات.</p>
+      </div>
+
+      <div style="display:flex; gap:12px; flex-wrap:wrap">
+        <button type="button" class="k-btn k-btn-accent" onclick="saveAllSettings()">
+          <i class="fas fa-floppy-disk"></i>
+          <span>حفظ وتطبيق التغييرات</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- SECURITY CARD: DATABASE MASTER PASSWORD MANAGER -->
+    <div class="k-card" style="border-color:var(--k-secondary); background:linear-gradient(135deg, rgba(0,240,255,0.06), rgba(18,10,48,0.95)); margin-bottom:24px">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px">
+        <div>
+          <h3 style="font-size:1.35rem; font-weight:900; color:var(--k-secondary); margin-bottom:4px">
+            <i class="fas fa-key"></i> إدارة أمان لوحة التحكم وتغيير كلمة السر (Database Master Password)
+          </h3>
+          <p style="color:var(--k-text-muted); font-size:0.9rem">
+            كلمة السر مخزنة في قاعدة البيانات على الخادم. يمكنك تغييرها في أي وقت ولن يتمكن أحد من دخول اللوحة إلا بها عبر الرابط المباشر.
+          </p>
+        </div>
+        <span class="k-badge" style="background:rgba(16,185,129,0.15); color:#10b981; border:1px solid #10b981">
+          <i class="fas fa-shield-check"></i> قاعدة البيانات نشطة ومحمية
+        </span>
+      </div>
+
+      <form onsubmit="handlePasswordChange(event)">
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:16px">
+          <div class="k-form-group" style="margin-bottom:0">
+            <label class="k-label">كلمة السر الحالية:</label>
+            <div style="position:relative">
+              <input type="password" id="currentPasswordInput" class="k-input" placeholder="أدخل كلمة السر الحالية..." required>
+              <button type="button" class="k-lock-toggle-vis" onclick="togglePassVis('currentPasswordInput')">
+                <i class="fas fa-eye" id="currentPasswordInput_eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="k-form-group" style="margin-bottom:0">
+            <label class="k-label">كلمة السر الجديدة:</label>
+            <div style="position:relative">
+              <input type="password" id="newPasswordInput" class="k-input" placeholder="كلمة سر جديدة (4 خانات+)..." required minlength="4">
+              <button type="button" class="k-lock-toggle-vis" onclick="togglePassVis('newPasswordInput')">
+                <i class="fas fa-eye" id="newPasswordInput_eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="k-form-group" style="margin-bottom:0">
+            <label class="k-label">تأكيد كلمة السر الجديدة:</label>
+            <div style="position:relative">
+              <input type="password" id="confirmPasswordInput" class="k-input" placeholder="أعد كتابة كلمة السر الجديدة..." required minlength="4">
+              <button type="button" class="k-lock-toggle-vis" onclick="togglePassVis('confirmPasswordInput')">
+                <i class="fas fa-eye" id="confirmPasswordInput_eye"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:16px; display:flex; justify-content:flex-end">
+          <button type="submit" class="k-btn k-btn-cyan">
+            <i class="fas fa-lock"></i>
+            <span>حفظ وتحديث كلمة السر في قاعدة البيانات</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="k-admin-grid">
+
+      <!-- Card 1: Challenge Matrix Controller -->
+      <div class="k-card" style="grid-column: 1 / -1">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px">
+          <div>
+            <h3 style="font-size:1.4rem; font-weight:900; color:var(--k-secondary)">
+              <i class="fas fa-gamepad"></i> منظومة إطلاق التحديات والألعاب الفضائية
+            </h3>
+            <p style="color:var(--k-text-muted); font-size:0.9rem">
+              حدد التحديات المفتوحة الآن للجمهور، عيّن التحدي الرئيسي لليوم، وعدّل الأرقام والرموز السرية.
+            </p>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px">
+            <span class="k-label" style="margin:0">تحدي اليوم الرئيسي:</span>
+            <select id="activeChallengeSelect" class="k-select" style="width:auto; padding:8px 14px">
+              <option value="code_breaker">فك الشفرة الكونية (Mastermind)</option>
+              <option value="crazy_button">لغز الزرار المجنون</option>
+              <option value="candy_reflex">صائد الكرملات السريع</option>
+              <option value="trivia_quest">سؤال المليون كرملة</option>
+              <option value="anagram_quest">لغز الكلمة الضائعة</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px">
+          <!-- Game 1 -->
+          <div class="k-switch-row">
+            <div class="k-switch-info">
+              <h5><i class="fas fa-terminal" style="color:var(--k-secondary)"></i> فك الشفرة الكونية (Mastermind)</h5>
+              <p>وضع اللعبة: <span class="k-admin-item-tag">توليد عشوائي حي 🎲</span></p>
+            </div>
+            <label class="k-toggle">
+              <input type="checkbox" id="toggle_code_breaker" checked>
+              <span class="k-toggle-slider"></span>
+            </label>
+          </div>
+
+          <!-- Game 2 -->
+          <div class="k-switch-row">
+            <div class="k-switch-info">
+              <h5><i class="fas fa-crosshairs" style="color:var(--k-primary)"></i> لغز الزرار المجنون</h5>
+              <p>الرقم السري الحالي: <span class="k-admin-item-tag" id="tag_code_crazy">7</span></p>
+            </div>
+            <label class="k-toggle">
+              <input type="checkbox" id="toggle_crazy_button" checked>
+              <span class="k-toggle-slider"></span>
+            </label>
+          </div>
+
+          <!-- Game 3 -->
+          <div class="k-switch-row">
+            <div class="k-switch-info">
+              <h5><i class="fas fa-bolt-lightning" style="color:var(--k-accent)"></i> صائد الكرملات السريع</h5>
+              <p>مؤقت التحدي: <span class="k-admin-item-tag">30 ثانية</span></p>
+            </div>
+            <label class="k-toggle">
+              <input type="checkbox" id="toggle_candy_reflex" checked>
+              <span class="k-toggle-slider"></span>
+            </label>
+          </div>
+
+          <!-- Game 4 -->
+          <div class="k-switch-row">
+            <div class="k-switch-info">
+              <h5><i class="fas fa-brain" style="color:var(--k-purple)"></i> سؤال المليون كرملة</h5>
+              <p>بنك الأسئلة: <span class="k-admin-item-tag">مباشر</span></p>
+            </div>
+            <label class="k-toggle">
+              <input type="checkbox" id="toggle_trivia_quest" checked>
+              <span class="k-toggle-slider"></span>
+            </label>
+          </div>
+
+          <!-- Game 5 -->
+          <div class="k-switch-row">
+            <div class="k-switch-info">
+              <h5><i class="fas fa-spell-check" style="color:var(--k-gold)"></i> لغز الكلمة الضائعة</h5>
+              <p>كلمة التحدي: <span class="k-admin-item-tag">كرملات</span></p>
+            </div>
+            <label class="k-toggle">
+              <input type="checkbox" id="toggle_anagram_quest" checked>
+              <span class="k-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div style="margin-top:20px; padding-top:20px; border-top:1px dashed var(--k-border); display:flex; gap:16px; flex-wrap:wrap">
+          <div class="k-form-group" style="flex:1; min-width:200px; margin-bottom:0">
+            <label class="k-label">رمز سر لغز الزرار المجنون:</label>
+            <input type="text" id="secretCodeCrazy" class="k-input" value="7">
+          </div>
+          <div class="k-form-group" style="flex:1; min-width:200px; margin-bottom:0">
+            <label class="k-label">رابط صفحة فك الشفرة المباشر:</label>
+            <input type="text" readonly class="k-input" value="mastermind.html" style="color:var(--k-secondary); cursor:pointer" onclick="window.open('mastermind.html','_blank')">
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: Main Counter & Hero Text -->
+      <div class="k-card">
+        <h3 style="font-size:1.3rem; font-weight:900; color:var(--k-primary); margin-bottom:18px">
+          <i class="fas fa-bolt"></i> إعدادات العداد والترحيب الفضائي
+        </h3>
+        <div class="k-form-group">
+          <label class="k-label">الكلمة أو الرقم المستهدف في نهاية العداد:</label>
+          <input type="text" id="counterTargetText" class="k-input" placeholder="مثال: عيد سعيد أو 1000 بطل" value="عيد سعيد">
+        </div>
+        <div class="k-form-group">
+          <label class="k-label">رابط شعار المجرة المخصص (اختياري):</label>
+          <input type="text" id="customLogoUrl" class="k-input" placeholder="logo8.png" value="logo8.png">
+        </div>
+        <button type="button" class="k-btn k-btn-sm k-btn-secondary" onclick="previewCounter()">
+          <i class="fas fa-play"></i> تجربة العداد الآن
+        </button>
+      </div>
+
+      <!-- Card 3: Announcement & Ad Banner -->
+      <div class="k-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px">
+          <h3 style="font-size:1.3rem; font-weight:900; color:var(--k-accent)">
+            <i class="fas fa-bullhorn"></i> إعلان وبانر الإمبراطورية المباشر
+          </h3>
+          <label class="k-toggle">
+            <input type="checkbox" id="adVisibleToggle" checked>
+            <span class="k-toggle-slider"></span>
+          </label>
+        </div>
+        <div class="k-form-group">
+          <label class="k-label">عنوان الإعلان:</label>
+          <input type="text" id="adTitleInput" class="k-input" value="🚀 إعلان الإمبراطورية الكبرى">
+        </div>
+        <div class="k-form-group">
+          <label class="k-label">نص الإعلان والشرح:</label>
+          <textarea id="adTextInput" class="k-textarea" rows="2">انطلق الموسم الجديد بتحديات مباشرة ومكافآت كبرى للأبطال.</textarea>
+        </div>
+        <div class="k-form-group">
+          <label class="k-label">رابط صورة البانر:</label>
+          <input type="text" id="adImageUrlInput" class="k-input" value="/src/assets/images/cosmic_space_banner_1791739327163.jpg">
+        </div>
+      </div>
+
+      <!-- Card 4: Competition & Registration Gateway -->
+      <div class="k-card">
+        <h3 style="font-size:1.3rem; font-weight:900; color:var(--k-gold); margin-bottom:18px">
+          <i class="fas fa-trophy"></i> بوابة المسابقات والتسجيل
+        </h3>
+        <div class="k-form-group">
+          <label class="k-label">حالة فتح التسجيل للجمهور:</label>
+          <select id="compStatusSelect" class="k-select">
+            <option value="open">🟢 التسجيل مفتوح للجميع (فورم التسجيل متاح)</option>
+            <option value="closed">🔴 التسجيل مغلق مؤقتاً (عرض شاشة الانتظار)</option>
+            <option value="review">🟡 مرحلة الفرز والتصفيات (شاشة الترقب)</option>
+          </select>
+        </div>
+        <div class="k-form-group">
+          <label class="k-label">عنوان البطولة الحالية:</label>
+          <input type="text" id="compTitleInput" class="k-input" value="بطولة كرملات الكبرى 2026 👑">
+        </div>
+        <div class="k-form-group">
+          <label class="k-label">رابط جروب واتساب الرسمي للبطولة:</label>
+          <input type="text" id="compWhatsappInput" class="k-input" value="https://chat.whatsapp.com/test-link">
+        </div>
+      </div>
+
+      <!-- Card 5: Hall of Fame Manager -->
+      <div class="k-card">
+        <h3 style="font-size:1.3rem; font-weight:900; color:var(--k-purple); margin-bottom:18px">
+          <i class="fas fa-crown"></i> إدارة أبطال لوحة الشرف
+        </h3>
+        
+        <div style="display:flex; gap:8px; margin-bottom:16px">
+          <input type="text" id="newHeroName" class="k-input" placeholder="اسم البطل..." style="flex:2">
+          <input type="text" id="newHeroTitle" class="k-input" placeholder="اللقب (مثال: بطل فك الشفرة)..." style="flex:2">
+          <button type="button" class="k-btn k-btn-secondary" onclick="addHero()">
+            <i class="fas fa-plus"></i> إضافة
+          </button>
+        </div>
+
+        <div id="hallOfFameList" style="max-height:220px; overflow-y:auto; padding-right:4px">
+          <!-- Dynamic hero badges -->
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer class="k-footer" style="margin-top:60px">
+    <div class="k-container">
+      <div class="k-footer-bottom" style="text-align:center">
+        <p>© 2026 مركز القيادة والتحكم الإداري · وصول مقيد بالرابط المباشر وكلمة السر.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="kramlat-system.js"></script>
+  <script>
+    let currentHeroes = {};
+    const TOKEN_KEY = 'kramlat_admin_token';
+
+    // -------------------------------------------------------------
+    // AUTHENTICATION & PASSWORD MANAGEMENT
+    // -------------------------------------------------------------
+    function togglePassVis(inputId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(inputId + '_eye');
+      if (input.type === 'password') {
+        input.type = 'text';
+        if (icon) icon.className = 'fas fa-eye-slash';
+      } else {
+        input.type = 'password';
+        if (icon) icon.className = 'fas fa-eye';
+      }
+    }
+
+    async function checkAuthOnLoad() {
+      const token = localStorage.getItem(TOKEN_KEY);
+      if (!token) {
+        showLockScreen();
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/admin/verify', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (data.authenticated) {
+          hideLockScreen();
+          loadAdminData();
+        } else {
+          showLockScreen();
+        }
+      } catch (err) {
+        // Fallback: if server unreachable, keep locked
+        showLockScreen();
+      }
+    }
+
+    function showLockScreen() {
+      const overlay = document.getElementById('adminLockOverlay');
+      overlay.style.display = 'flex';
+      overlay.style.opacity = '1';
+      document.body.style.overflow = 'hidden';
+      const input = document.getElementById('adminPasswordInput');
+      if (input) input.focus();
+    }
+
+    function hideLockScreen() {
+      const overlay = document.getElementById('adminLockOverlay');
+      overlay.style.opacity = '0';
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      }, 400);
+    }
+
+    async function handleAdminLogin(e) {
+      if (e) e.preventDefault();
+      const pass = document.getElementById('adminPasswordInput').value.trim();
+      const errEl = document.getElementById('loginErrorMsg');
+      errEl.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: pass })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          localStorage.setItem(TOKEN_KEY, data.token);
+          if (window.KramlatAudio) window.KramlatAudio.playSuccess();
+          if (window.KramlatUI) window.KramlatUI.toast('تم تسجيل الدخول بنجاح! مرحباً بك يا قائد المجرة 👑✨');
+          hideLockScreen();
+          loadAdminData();
+        } else {
+          if (window.KramlatAudio) window.KramlatAudio.playError();
+          errEl.innerText = data.error || 'كلمة السر غير صحيحة!';
+          errEl.style.display = 'block';
+        }
+      } catch (err) {
+        errEl.innerText = 'حدث خطأ في الاتصال بالخادم. يرجى المحاولة ثانية.';
+        errEl.style.display = 'block';
+      }
+    }
+
+    async function handlePasswordChange(e) {
+      if (e) e.preventDefault();
+      const currentPassword = document.getElementById('currentPasswordInput').value.trim();
+      const newPassword = document.getElementById('newPasswordInput').value.trim();
+      const confirmPassword = document.getElementById('confirmPasswordInput').value.trim();
+      const token = localStorage.getItem(TOKEN_KEY);
+
+      if (newPassword !== confirmPassword) {
+        if (window.KramlatUI) window.KramlatUI.toast('كلمتا السر الجديدتان غير متطابقتين! ⚠️');
+        return;
+      }
+
+      if (newPassword.length < 4) {
+        if (window.KramlatUI) window.KramlatUI.toast('يجب أن تتكون كلمة السر من 4 خانات على الأقل!');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/admin/change-password', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ currentPassword, newPassword })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          if (window.KramlatAudio) window.KramlatAudio.playSuccess();
+          if (window.KramlatUI) window.KramlatUI.toast(data.message || 'تم تحديث كلمة السر وحفظها في قاعدة البيانات بنجاح! 🔐✨');
+          document.getElementById('currentPasswordInput').value = '';
+          document.getElementById('newPasswordInput').value = '';
+          document.getElementById('confirmPasswordInput').value = '';
+        } else {
+          if (window.KramlatAudio) window.KramlatAudio.playError();
+          if (window.KramlatUI) window.KramlatUI.toast(data.error || 'فشل تحديث كلمة السر!');
+        }
+      } catch (err) {
+        if (window.KramlatUI) window.KramlatUI.toast('خطأ في الاتصال بقاعدة البيانات!');
+      }
+    }
+
+    async function logoutAdmin() {
+      const token = localStorage.getItem(TOKEN_KEY);
+      if (token) {
+        try {
+          await fetch('/api/admin/logout', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+        } catch(e) {}
+      }
+      localStorage.removeItem(TOKEN_KEY);
+      if (window.KramlatUI) window.KramlatUI.toast('تم قفل لوحة التحكم وتسجيل الخروج بنجاح 🚪');
+      showLockScreen();
+    }
+
+    // -------------------------------------------------------------
+    // LOAD & SAVE SETTINGS
+    // -------------------------------------------------------------
+    function loadAdminData() {
+      const state = window.KramlatState ? window.KramlatState.get() : {};
+
+      if (state.counterText) {
+        document.getElementById('counterTargetText').value = state.counterText;
+      }
+
+      if (state.activeChallenge) {
+        document.getElementById('activeChallengeSelect').value = state.activeChallenge;
+      }
+
+      if (state.challenges) {
+        if (state.challenges.crazy_button) {
+          document.getElementById('toggle_crazy_button').checked = state.challenges.crazy_button.enabled !== false;
+          if (state.challenges.crazy_button.secretCode) {
+            document.getElementById('secretCodeCrazy').value = state.challenges.crazy_button.secretCode;
+            document.getElementById('tag_code_crazy').innerText = state.challenges.crazy_button.secretCode;
+          }
+        }
+        if (state.challenges.code_breaker) {
+          document.getElementById('toggle_code_breaker').checked = state.challenges.code_breaker.enabled !== false;
+        }
+        if (state.challenges.candy_reflex) {
+          document.getElementById('toggle_candy_reflex').checked = state.challenges.candy_reflex.enabled !== false;
+        }
+        if (state.challenges.trivia_quest) {
+          document.getElementById('toggle_trivia_quest').checked = state.challenges.trivia_quest.enabled !== false;
+        }
+        if (state.challenges.anagram_quest) {
+          document.getElementById('toggle_anagram_quest').checked = state.challenges.anagram_quest.enabled !== false;
+        }
+      }
+
+      if (state.ad) {
+        document.getElementById('adVisibleToggle').checked = state.ad.visible !== false;
+        if (state.ad.title) document.getElementById('adTitleInput').value = state.ad.title;
+        if (state.ad.text) document.getElementById('adTextInput').value = state.ad.text;
+        if (state.ad.image) document.getElementById('adImageUrlInput').value = state.ad.image;
+      }
+
+      if (state.competition) {
+        if (state.competition.status) document.getElementById('compStatusSelect').value = state.competition.status;
+        if (state.competition.title) document.getElementById('compTitleInput').value = state.competition.title;
+        if (state.competition.whatsappGroup) document.getElementById('compWhatsappInput').value = state.competition.whatsappGroup;
+      }
+
+      if (state.hall_of_fame) {
+        currentHeroes = state.hall_of_fame;
+      }
+      renderHeroes();
+    }
+
+    function renderHeroes() {
+      const container = document.getElementById('hallOfFameList');
+      container.innerHTML = Object.keys(currentHeroes).map(key => {
+        const h = currentHeroes[key];
+        return `
+          <div class="k-hero-badge">
+            <div>
+              <b style="color:#fff">${h.name}</b>
+              <span style="color:var(--k-text-muted); font-size:0.85rem; margin-right:8px">(${h.title})</span>
+            </div>
+            <button type="button" class="k-btn k-btn-sm" style="padding:4px 10px; background:rgba(255,0,0,0.2); color:#ff6b6b; box-shadow:none" onclick="removeHero('${key}')">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function addHero() {
+      const name = document.getElementById('newHeroName').value.trim();
+      const title = document.getElementById('newHeroTitle').value.trim() || 'بطل أسطوري';
+      if (!name) {
+        if (window.KramlatUI) window.KramlatUI.toast('يرجى كتابة اسم البطل!');
+        return;
+      }
+      const newKey = 'hero_' + Date.now();
+      currentHeroes[newKey] = { name, title };
+      document.getElementById('newHeroName').value = '';
+      document.getElementById('newHeroTitle').value = '';
+      renderHeroes();
+      if (window.KramlatAudio) window.KramlatAudio.playSuccess();
+    }
+
+    function removeHero(key) {
+      delete currentHeroes[key];
+      renderHeroes();
+      if (window.KramlatAudio) window.KramlatAudio.playClick();
+    }
+
+    function saveAllSettings() {
+      if (window.KramlatAudio) window.KramlatAudio.playSuccess();
+
+      const existing = window.KramlatState ? window.KramlatState.get() : {};
+
+      const updated = Object.assign({}, existing, {
+        counterText: document.getElementById('counterTargetText').value.trim() || "عيد سعيد",
+        activeChallenge: document.getElementById('activeChallengeSelect').value,
+        challenges: {
+          code_breaker: Object.assign({}, existing.challenges?.code_breaker, {
+            enabled: document.getElementById('toggle_code_breaker').checked
+          }),
+          crazy_button: Object.assign({}, existing.challenges?.crazy_button, {
+            enabled: document.getElementById('toggle_crazy_button').checked,
+            secretCode: document.getElementById('secretCodeCrazy').value.trim() || "7"
+          }),
+          candy_reflex: Object.assign({}, existing.challenges?.candy_reflex, {
+            enabled: document.getElementById('toggle_candy_reflex').checked
+          }),
+          trivia_quest: Object.assign({}, existing.challenges?.trivia_quest, {
+            enabled: document.getElementById('toggle_trivia_quest').checked
+          }),
+          anagram_quest: Object.assign({}, existing.challenges?.anagram_quest, {
+            enabled: document.getElementById('toggle_anagram_quest').checked
+          })
+        },
+        ad: {
+          visible: document.getElementById('adVisibleToggle').checked,
+          image: document.getElementById('adImageUrlInput').value.trim(),
+          text: document.getElementById('adTextInput').value.trim(),
+          link: "competitions.html"
+        },
+        competition: {
+          status: document.getElementById('compStatusSelect').value,
+          title: document.getElementById('compTitleInput').value.trim(),
+          whatsappGroup: document.getElementById('compWhatsappInput').value.trim()
+        },
+        hall_of_fame: currentHeroes
+      });
+
+      if (window.KramlatState) {
+        window.KramlatState.save(updated);
+      }
+
+      if (window.KramlatUI) {
+        window.KramlatUI.toast('تم حفظ جميع التحديثات بنجاح وإطلاقها للمجرة! 🚀✨', 'fa-solid fa-check-double');
+        window.KramlatUI.confetti();
+      }
+    }
+
+    function previewCounter() {
+      const text = document.getElementById('counterTargetText').value.trim();
+      if (window.KramlatUI) {
+        window.KramlatUI.toast(`العداد سيظهر هكذا: "${text}" ✨`);
+      }
+    }
+
+    function toggleNav() {
+      const links = document.getElementById('kNavLinks');
+      if (links) links.classList.toggle('open');
+    }
+
+    // Initialize Auth Check
+    document.addEventListener('DOMContentLoaded', () => {
+      checkAuthOnLoad();
+    });
+  </script>
+</body>
+</html>

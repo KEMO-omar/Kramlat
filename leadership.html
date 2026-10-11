@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>مجلس إدارة الإمبراطورية الكوني 🛡️ | إمبراطورية كرملات</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Orbitron:wght@700;900&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <link rel="stylesheet" href="kramlat-core.css">
+
+  <style>
+    .k-leader-big-card {
+      background: var(--k-bg-card);
+      border: 1px solid var(--k-border);
+      border-radius: var(--k-radius-xl);
+      padding: 40px 32px;
+      margin-bottom: 30px;
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 32px;
+      align-items: center;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @media (max-width: 768px) {
+      .k-leader-big-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding: 30px 20px;
+      }
+    }
+
+    .k-leader-big-card:hover {
+      border-color: var(--k-secondary);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 45px rgba(0, 240, 255, 0.18);
+    }
+
+    .k-leader-portrait {
+      width: 180px;
+      height: 180px;
+      border-radius: 40px;
+      border: 3px solid var(--k-accent);
+      object-fit: cover;
+      margin: 0 auto;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      transition: all 0.3s;
+    }
+
+    .k-leader-big-card:hover .k-leader-portrait {
+      transform: scale(1.05) rotate(2deg);
+    }
+
+    .k-leader-badge {
+      display: inline-block;
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--k-accent);
+      margin-bottom: 6px;
+    }
+
+    .k-leader-fullname {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .k-leader-role {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--k-secondary);
+      margin-bottom: 14px;
+    }
+
+    .k-leader-desc {
+      color: var(--k-text-muted);
+      font-size: 1rem;
+      line-height: 1.8;
+      margin-bottom: 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="cosmos" class="k-cosmos-canvas"></canvas>
+  <div class="k-bg-mesh"></div>
+
+  <!-- Top Navigation Bar -->
+  <header>
+    <nav class="k-top-nav">
+      <a href="index.html" class="k-nav-brand">
+        <img src="logo8.png" alt="شعار كرملات" onerror="this.src='logo.png'">
+        <span>إمبراطورية كرملات</span>
+      </a>
+
+      <div class="k-nav-links" id="kNavLinks">
+        <a href="index.html" class="k-nav-link">الرئيسية</a>
+        <a href="challenges.html" class="k-nav-link">التحديات</a>
+        <a href="guess-number.html" class="k-nav-link">اعرف الرقم 🎲</a>
+        <a href="mastermind.html" class="k-nav-link">فك الشفرة 🔮</a>
+        <a href="competitions.html" class="k-nav-link">المسابقات</a>
+        <a href="hall-of-fame.html" class="k-nav-link">لوحة الشرف</a>
+        <a href="radio.html" class="k-nav-link">الإذاعة</a>
+        <a href="celebrations.html" class="k-nav-link">الاحتفالات</a>
+        <a href="about.html" class="k-nav-link">عن المجرة</a>
+        <a href="leadership.html" class="k-nav-link active">القادة</a>
+      </div>
+
+      <div class="k-nav-actions">
+        <a href="https://whatsapp.com/channel/0029VbAqgz23WHTOe8lXeM1N" target="_blank" rel="noopener noreferrer" class="k-btn k-btn-sm">
+          <span>القناة الرسمية</span>
+          <i class="fab fa-whatsapp"></i>
+        </a>
+        <button type="button" class="k-menu-btn" onclick="toggleNav()" aria-label="القائمة">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="k-container">
+
+    <div class="k-page-intro">
+      <div class="k-breadcrumb">
+        <a href="index.html">الرئيسية</a>
+        <span>/</span>
+        <span style="color:var(--k-secondary)">مجلس الإدارة</span>
+      </div>
+
+      <h1 class="k-title-hero">مجلس قيادة الإمبراطورية الكوني 🛡️</h1>
+      <p class="k-subtitle" style="margin:0 auto">
+        الملفات الرسمية لقادة مجرة كرملات؛ أصحاب الرؤية المعمارية، وإدارة العمليات الميدانية، وصناع الإبداع البصري.
+      </p>
+    </div>
+
+    <!-- Leader 1: Kareem Omar -->
+    <article class="k-leader-big-card" style="border-color:rgba(255, 215, 0, 0.35)">
+      <img src="Kareem.png" alt="كريم عمر" class="k-leader-portrait" style="border-color:var(--k-gold)">
+      <div>
+        <div class="k-leader-badge">👑 المؤسس والمعمار الأول</div>
+        <h2 class="k-leader-fullname">كريم عمر <span style="color:var(--k-gold)">(البلدوزر)</span></h2>
+        <div class="k-leader-role">مؤسس الإمبراطورية ومبرمج النظم الكونية الأول</div>
+        <p class="k-leader-desc">
+          صاحب الشرارة الأولى والمخطط الهيكلي لإمبراطورية كرملات الفضائية. قاد تحويل الفكرة من مجرد محتوى إلى منصة ترفيهية متكاملة تضم الألعاب، التحديات الحية، وقاعدة جماهيرية وفية تتحدى الملل في كل مناسبة.
+        </p>
+        <div style="display:flex; gap:12px; flex-wrap:wrap">
+          <a href="https://wa.me/201101258549" target="_blank" rel="noopener noreferrer" class="k-btn k-btn-gold">
+            <i class="fab fa-whatsapp"></i>
+            <span>تواصل مع الكينج كريم</span>
+          </a>
+          <a href="https://kemo-omar.github.io/Kareem/" target="_blank" rel="noopener noreferrer" class="k-btn k-btn-secondary">
+            <i class="fas fa-globe"></i>
+            <span>الموقع الشخصي للمؤسس 🚀</span>
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Leader 2: Shreef Sayed -->
+    <article class="k-leader-big-card" style="border-color:rgba(0, 240, 255, 0.35)">
+      <img src="shreef.png" alt="شريف سيد" class="k-leader-portrait" style="border-color:var(--k-secondary)">
+      <div>
+        <div class="k-leader-badge" style="color:var(--k-secondary)">⚡ العمليات والانتشار</div>
+        <h2 class="k-leader-fullname">شريف سيد <span style="color:var(--k-secondary)">(العميل)</span></h2>
+        <div class="k-leader-role" style="color:var(--k-secondary)">قائد العمليات الميدانية والمسؤول التنفيذي الأول</div>
+        <p class="k-leader-desc">
+          مهندس الضبط والتنظيم في المجرة، والمسؤول عن توجيه الأنشطة الميدانية وإدارة التوسع والنمو الخارجي. صاحب القرارات الصارمة في تنظيم التحديات واكتشاف المتسابقين الجدد.
+        </p>
+        <div style="display:flex; gap:12px; flex-wrap:wrap">
+          <a href="https://wa.me/201060843290" target="_blank" rel="noopener noreferrer" class="k-btn k-btn-cyan">
+            <i class="fab fa-whatsapp"></i>
+            <span>تواصل مع العميل شريف</span>
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Leader 3: Moustafa Mohamed (Abqarieno) -->
+    <article class="k-leader-big-card" style="border-color:rgba(255, 0, 127, 0.35)">
+      <img src="apqareno.png" alt="مصطفى محمد" class="k-leader-portrait" style="border-color:var(--k-primary)">
+      <div>
+        <div class="k-leader-badge" style="color:var(--k-primary)">🧪 الإبداع البصري</div>
+        <h2 class="k-leader-fullname">مصطفى محمد <span style="color:var(--k-primary)">(العبقري)</span></h2>
+        <div class="k-leader-role" style="color:var(--k-primary)">الممول الإبداعي ومدير الهندسة البصرية والفنية</div>
+        <p class="k-leader-desc">
+          صانع اللمسات الفنية السحرية والأفكار غير التقليدية. يقود إنتاج المؤثرات، الهوية الجرافيكية، والتصاميم البصرية النيونية التي تميز عالم كرملات عن أي محتوى تقليدي.
+        </p>
+        <div style="display:flex; gap:12px; flex-wrap:wrap">
+          <a href="https://wa.me/201158606601" target="_blank" rel="noopener noreferrer" class="k-btn">
+            <i class="fab fa-whatsapp"></i>
+            <span>تواصل مع العبقري مصطفى</span>
+          </a>
+          <a href="https://mostafa7html7-pixel.github.io/AbuTaleb/" target="_blank" rel="noopener noreferrer" class="k-btn k-btn-secondary">
+            <i class="fas fa-globe"></i>
+            <span>موقع العبقري الخاص 🚀</span>
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Imperial Directives -->
+    <section class="k-card" style="margin-top: 60px; text-align:center">
+      <div style="font-size:2.5rem; margin-bottom:12px">📜</div>
+      <h3 style="font-size:1.4rem; font-weight:900; color:#fff; margin-bottom:8px">ميثاق القيادة الكونية</h3>
+      <p style="color:var(--k-text-muted); max-width:680px; margin:0 auto 20px; line-height:1.8">
+        "نحن هنا لصناعة البهجة، نشر الإبداع، وبناء بيئة تنافسية خالية من الملل تليق بكل من وضع ثقته في إمبراطورية كرملات."
+      </p>
+      <div class="k-metadata" style="justify-content:center">
+        <span>حرر في مقر القيادة</span>
+        <span class="k-metadata-sep">·</span>
+        <span>2026</span>
+        <span class="k-metadata-sep">·</span>
+        <span>بأمر مجلس الإدارة</span>
+      </div>
+    </section>
+
+  </main>
+
+  <footer style="border-top:1px solid var(--k-border); padding:40px 24px; text-align:center; background:rgba(4,1,18,0.85); margin-top:80px">
+    <p style="color:var(--k-text-dim); font-size:0.85rem">
+      إمبراطورية كرملات الفضائية © 2026. القيادة في خدمة الشعب الكوني.
+    </p>
+  </footer>
+
+  <script src="kramlat-system.js"></script>
+  <script>
+    function toggleNav() {
+      const links = document.getElementById('kNavLinks');
+      links.classList.toggle('open');
+    }
+  </script>
+</body>
+</html>

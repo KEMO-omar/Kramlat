@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>لوحة شرف الأساطير وشجرة المتسابقين 👑 | إمبراطورية كرملات</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Orbitron:wght@700;900&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <link rel="stylesheet" href="kramlat-core.css">
+
+  <style>
+    .k-podium-showcase {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-bottom: 60px;
+    }
+
+    .k-podium-card {
+      background: rgba(255, 215, 0, 0.04);
+      border: 1px solid rgba(255, 215, 0, 0.25);
+      border-radius: var(--k-radius-lg);
+      padding: 35px 20px;
+      text-align: center;
+      transition: all 0.35s;
+      position: relative;
+    }
+
+    .k-podium-card:hover {
+      border-color: var(--k-gold);
+      transform: translateY(-8px);
+      box-shadow: 0 15px 40px rgba(255, 215, 0, 0.2);
+    }
+
+    .k-podium-card.crown {
+      background: linear-gradient(180deg, rgba(255, 215, 0, 0.15) 0%, rgba(15, 10, 42, 0.9) 100%);
+      border: 2px solid var(--k-gold);
+      box-shadow: 0 0 35px rgba(255, 215, 0, 0.25);
+      transform: scale(1.04);
+    }
+
+    .k-podium-icon {
+      font-size: 3rem;
+      margin-bottom: 12px;
+    }
+
+    .k-podium-name {
+      font-size: 1.45rem;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .k-podium-title {
+      font-size: 1rem;
+      color: var(--k-gold);
+      font-weight: 800;
+    }
+
+    /* Contestant Matrix */
+    .k-bracket-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 18px;
+    }
+
+    .k-name-card {
+      background: var(--k-bg-card);
+      backdrop-filter: blur(15px);
+      border: 1px solid var(--k-border);
+      border-radius: var(--k-radius-md);
+      padding: 24px 16px;
+      text-align: center;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      cursor: pointer;
+    }
+
+    .k-name-card:hover:not(.exploding) {
+      transform: translateY(-5px) scale(1.03);
+      border-color: var(--k-secondary);
+      box-shadow: 0 10px 25px rgba(0, 240, 255, 0.2);
+    }
+
+    .k-name-card.rank-final {
+      border: 2px solid var(--k-gold);
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 0, 127, 0.15));
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+    }
+
+    .k-name-card.rank-final::before {
+      content: "👑 النهائي الكبير";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--k-gold);
+      color: #030114;
+      font-size: 0.7rem;
+      font-weight: 900;
+      padding: 2px 10px;
+      border-radius: 0 0 8px 8px;
+    }
+
+    .k-name-card.rank-semi {
+      border-color: #00d4ff;
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+    }
+
+    .k-filter-strip {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+
+    .k-filter-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--k-border);
+      color: var(--k-text-muted);
+      padding: 8px 18px;
+      border-radius: var(--k-radius-sm);
+      font-family: var(--k-font-ar);
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .k-filter-btn.active, .k-filter-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--k-secondary);
+      color: #fff;
+    }
+
+    /* Physics explosion animation */
+    @keyframes explosionEffect {
+      0% { transform: scale(1); opacity: 1; }
+      30% { transform: scale(2.5) rotate(15deg); filter: contrast(200%) brightness(300%) blur(4px); opacity: 0.9; }
+      100% { transform: scale(1) translateY(100vh) rotate(540deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="cosmos" class="k-cosmos-canvas"></canvas>
+  <div class="k-bg-mesh"></div>
+
+  <!-- Top Navigation Bar -->
+  <header>
+    <nav class="k-top-nav">
+      <a href="index.html" class="k-nav-brand">
+        <img src="logo8.png" alt="شعار كرملات" onerror="this.src='logo.png'">
+        <span>إمبراطورية كرملات</span>
+      </a>
+
+      <div class="k-nav-links" id="kNavLinks">
+        <a href="index.html" class="k-nav-link">الرئيسية</a>
+        <a href="challenges.html" class="k-nav-link">التحديات</a>
+        <a href="guess-number.html" class="k-nav-link">اعرف الرقم 🎲</a>
+        <a href="mastermind.html" class="k-nav-link">فك الشفرة 🔮</a>
+        <a href="competitions.html" class="k-nav-link">المسابقات</a>
+        <a href="hall-of-fame.html" class="k-nav-link active">لوحة الشرف</a>
+        <a href="radio.html" class="k-nav-link">الإذاعة</a>
+        <a href="celebrations.html" class="k-nav-link">الاحتفالات</a>
+        <a href="about.html" class="k-nav-link">عن المجرة</a>
+        <a href="leadership.html" class="k-nav-link">القادة</a>
+      </div>
+
+      <div class="k-nav-actions">
+        <a href="challenges.html" class="k-btn k-btn-secondary k-btn-sm">
+          <i class="fas fa-gamepad"></i>
+          <span>العب الآن</span>
+        </a>
+        <button type="button" class="k-menu-btn" onclick="toggleNav()" aria-label="القائمة">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="k-container">
+
+    <div class="k-page-intro">
+      <div class="k-breadcrumb">
+        <a href="index.html">الرئيسية</a>
+        <span>/</span>
+        <span style="color:var(--k-secondary)">لوحة الشرف والأساطير</span>
+      </div>
+
+      <h1 class="k-title-hero">لوحة شرف الأساطير 🏆</h1>
+      <p class="k-subtitle" style="margin:0 auto">
+        الفرسان الذين خلدوا أسماءهم في تاريخ المجرة بانتصاراتهم الكبرى في بطولات موقعة الحسم والتحديات الفردية.
+      </p>
+    </div>
+
+    <!-- Live Podium Section -->
+    <div class="k-podium-showcase" id="hallOfFamePodium">
+      <div class="k-podium-card crown">
+        <div class="k-podium-icon">👑</div>
+        <div class="k-podium-name">جودة</div>
+        <div class="k-podium-title">تاج المجرة 2026</div>
+      </div>
+      <div class="k-podium-card">
+        <div class="k-podium-icon">⭐</div>
+        <div class="k-podium-name">سراچ</div>
+        <div class="k-podium-title">نجم الفضاء الأول</div>
+      </div>
+      <div class="k-podium-card">
+        <div class="k-podium-icon">⚡</div>
+        <div class="k-podium-name">حمزة</div>
+        <div class="k-podium-title">صاعقة التحديات</div>
+      </div>
+      <div class="k-podium-card">
+        <div class="k-podium-icon">🔥</div>
+        <div class="k-podium-name">عبدالله</div>
+        <div class="k-podium-title">شعلة الإمبراطورية</div>
+      </div>
+    </div>
+
+    <!-- Tournament Bracket / Contestants Tree Section -->
+    <section>
+      <div class="k-section-header">
+        <div class="k-metadata" style="justify-content:center">
+          <span>شجرة المتسابقين والتصفيات</span>
+          <span class="k-metadata-sep">·</span>
+          <span>موقعة الحسم الكبرى</span>
+        </div>
+        <h2>سجل المتسابقين والمواجهات 🛡️</h2>
+        <p>انقر على كارت النهائي لتفعيل تأثير انفجار موقعة الحسم الفيزيائي!</p>
+      </div>
+
+      <!-- Filter Buttons -->
+      <div class="k-filter-strip">
+        <button type="button" class="k-filter-btn active" onclick="filterTier('all', this)">الكل (24)</button>
+        <button type="button" class="k-filter-btn" onclick="filterTier('final', this)">👑 النهائي الكبير</button>
+        <button type="button" class="k-filter-btn" onclick="filterTier('semi', this)">🥈 نصف النهائي</button>
+        <button type="button" class="k-filter-btn" onclick="filterTier('round8', this)">⭐ دور الـ 8</button>
+      </div>
+
+      <div class="k-bracket-grid" id="bracketGrid">
+        <!-- Finalists -->
+        <div class="k-name-card rank-final" data-tier="final" onclick="triggerExplosion(this)">
+          <div style="font-size:2rem; margin-bottom:8px">👑</div>
+          <div style="font-size:1.15rem; font-weight:800; color:#fff">جودة</div>
+          <div style="font-size:0.8rem; color:var(--k-text-muted)">بطل الموسم 2026</div>
+        </div>
+        <div class="k-name-card rank-final" data-tier="final" onclick="triggerExplosion(this)">
+          <div style="font-size:2rem; margin-bottom:8px">👑</div>
+          <div style="font-size:1.15rem; font-weight:800; color:#fff">سراچ</div>
+          <div style="font-size:0.8rem; color:var(--k-text-muted)">وصيف النهائي</div>
+        </div>
+
+        <!-- Semi-finalists -->
+        <div class="k-name-card rank-semi" data-tier="semi">
+          <div style="font-size:2rem; margin-bottom:8px">⚡</div>
+          <div style="font-size:1.15rem; font-weight:800; color:#fff">حمزة</div>
+          <div style="font-size:0.8rem; color:var(--k-text-muted)">نصف النهائي</div>
+        </div>
+        <div class="k-name-card rank-semi" data-tier="semi">
+          <div style="font-size:2rem; margin-bottom:8px">🔥</div>
+          <div style="font-size:1.15rem; font-weight:800; color:#fff">عبدالله</div>
+          <div style="font-size:0.8rem; color:var(--k-text-muted)">نصف النهائي</div>
+        </div>
+
+        <!-- Round of 8 -->
+        <div class="k-name-card" data-tier="round8">
+          <div style="font-size:2rem; margin-bottom:8px">⭐</div>
+          <div style="font-size:1.15rem; font-weight:800; color:#fff">يوسف إبراهيم</div>
+          <div style="font-size:0.8rem; color:var(--k-text-muted)">دور الـ 8</div>
+        </div>
+        <div class="k-name-card" data-tier="round8">
+          <div style="font-size:2rem; margin-bottom:8px">⭐</div>
+          <div style="font-size:1.15rem; font-weight:800; color:#fff">أحمد خالد</div>
+          <div style="font-size:0.8rem; color:var(--k-text-muted)">دور الـ 8</div>
+        </div>
+        <div class="k-name-card" data-tier="round8">
+          <div style="font-size:2rem; margin-bottom:8px">⭐</div>
+          <div style="font-size:1.15rem; font-weight:800; color:#fff">عمر الشريف</div>
+          <div style="font-size:0.8rem; color:var(--k-text-muted)">دور الـ 8</div>
+        </div>
+        <div class="k-name-card" data-tier="round8">
+          <div style="font-size:2rem; margin-bottom:8px">⭐</div>
+          <div style="font-size:1.15rem; font-weight:800; color:#fff">محمد طارق</div>
+          <div style="font-size:0.8rem; color:var(--k-text-muted)">دور الـ 8</div>
+        </div>
+
+        <!-- Round of 16 -->
+        <div class="k-name-card" data-tier="round16">
+          <div style="font-size:2rem; margin-bottom:8px">🪐</div>
+          <div style="font-size:1.15rem; font-weight:800; color:#fff">محمود حسن</div>
+          <div style="font-size:0.8rem; color:var(--k-text-muted)">دور الـ 16</div>
+        </div>
+        <div class="k-name-card" data-tier="round16">
+          <div style="font-size:2rem; margin-bottom:8px">🪐</div>
+          <div style="font-size:1.15rem; font-weight:800; color:#fff">زياد عادل</div>
+          <div style="font-size:0.8rem; color:var(--k-text-muted)">دور الـ 16</div>
+        </div>
+        <div class="k-name-card" data-tier="round16">
+          <div style="font-size:2rem; margin-bottom:8px">🪐</div>
+          <div style="font-size:1.15rem; font-weight:800; color:#fff">فارس سامح</div>
+          <div style="font-size:0.8rem; color:var(--k-text-muted)">دور الـ 16</div>
+        </div>
+        <div class="k-name-card" data-tier="round16">
+          <div style="font-size:2rem; margin-bottom:8px">🪐</div>
+          <div style="font-size:1.15rem; font-weight:800; color:#fff">بلال مصطفى</div>
+          <div style="font-size:0.8rem; color:var(--k-text-muted)">دور الـ 16</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer style="border-top:1px solid var(--k-border); padding:40px 24px; text-align:center; background:rgba(4,1,18,0.85); margin-top:80px">
+    <p style="color:var(--k-text-dim); font-size:0.85rem">
+      إمبراطورية كرملات الفضائية © 2026. المجد والخلود لأساطير المجرة.
+    </p>
+  </footer>
+
+  <script src="kramlat-system.js"></script>
+
+  <script>
+    function toggleNav() {
+      const links = document.getElementById('kNavLinks');
+      links.classList.toggle('open');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.KramlatState) {
+        window.KramlatState.subscribe(state => {
+          if (!state || !state.hall_of_fame) return;
+          const heroes = Object.values(state.hall_of_fame);
+          if (heroes.length > 0) {
+            const podium = document.getElementById('hallOfFamePodium');
+            podium.innerHTML = heroes.map((h, i) => `
+              <div class="k-podium-card ${i === 0 ? 'crown' : ''}">
+                <div class="k-podium-icon">${['👑', '⭐', '⚡', '🔥', '💎'][i % 5]}</div>
+                <div class="k-podium-name">${h.name}</div>
+                <div class="k-podium-title">${h.title || 'بطل أسطوري'}</div>
+              </div>
+            `).join('');
+          }
+        });
+      }
+    });
+
+    function filterTier(tier, btn) {
+      if (window.KramlatAudio) window.KramlatAudio.playClick();
+      document.querySelectorAll('.k-filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const cards = document.querySelectorAll('.k-name-card');
+      cards.forEach(c => {
+        if (tier === 'all' || c.getAttribute('data-tier') === tier) {
+          c.style.display = 'block';
+        } else {
+          c.style.display = 'none';
+        }
+      });
+    }
+
+    let isExploded = false;
+    function triggerExplosion(clickedCard) {
+      if (isExploded) return;
+      isExploded = true;
+
+      if (window.KramlatAudio) window.KramlatAudio.playVictory();
+      if (window.KramlatUI) window.KramlatUI.confetti();
+
+      clickedCard.classList.add('exploding');
+      clickedCard.style.animation = 'explosionEffect 1s forwards';
+
+      const allCards = Array.from(document.querySelectorAll('.k-name-card:not(.exploding)'));
+      const groundY = window.innerHeight * 0.85;
+      let currentX = 20;
+      let currentY = groundY;
+      let maxRowHeight = 0;
+
+      allCards.forEach((card, index) => {
+        card.style.animation = 'none';
+        card.style.transition = 'none';
+        card.style.position = 'fixed';
+        card.style.zIndex = '50';
+
+        const rect = card.getBoundingClientRect();
+        card.style.top = rect.top + 'px';
+        card.style.left = rect.left + 'px';
+        card.style.width = rect.width + 'px';
+
+        maxRowHeight = Math.max(maxRowHeight, rect.height);
+        if (currentX + rect.width + 20 > window.innerWidth) {
+          currentX = 20;
+          currentY -= maxRowHeight + 10;
+          maxRowHeight = rect.height;
+        }
+
+        const targetX = currentX;
+        const targetY = currentY - rect.height;
+        currentX += rect.width + 10;
+
+        setTimeout(() => {
+          card.style.transition = `all 1.2s cubic-bezier(0.5, 0.1, 0.7, 1.2)`;
+          card.style.top = targetY + 'px';
+          card.style.left = targetX + 'px';
+          const randomRotation = (Math.random() - 0.5) * 15;
+          card.style.transform = `translateY(0) rotate(${randomRotation}deg)`;
+        }, index * 20);
+      });
+
+      setTimeout(() => {
+        if (window.KramlatUI) window.KramlatUI.toast('انفجار موقعة الحسم! نعود للمجرة 🚀');
+      }, 1500);
+
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 7000);
+    }
+  </script>
+</body>
+</html>

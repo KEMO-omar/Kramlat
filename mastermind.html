@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>فك الشفرة الكونية (Mastermind) 🔮 | إمبراطورية كرملات</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Orbitron:wght@700;900&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <link rel="stylesheet" href="kramlat-core.css">
+
+  <style>
+    .mm-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .mm-hero {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .mm-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      background: rgba(0, 240, 255, 0.08);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      color: var(--k-secondary);
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+
+    .mm-game-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    @media (max-width: 860px) {
+      .mm-game-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Board & Terminal */
+    .mm-terminal {
+      background: linear-gradient(180deg, rgba(17, 10, 48, 0.95), rgba(9, 5, 26, 0.98));
+      border: 1px solid rgba(0, 240, 255, 0.25);
+      border-radius: var(--k-radius-lg);
+      padding: 24px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(0, 240, 255, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mm-terminal::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--k-primary), var(--k-secondary), var(--k-accent));
+    }
+
+    /* Slots Display */
+    .mm-slots-box {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--k-border);
+      border-radius: var(--k-radius-md);
+      padding: 18px 20px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .mm-slots-label {
+      font-size: 0.85rem;
+      color: var(--k-text-muted);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mm-slots-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      direction: ltr;
+    }
+
+    .mm-slot {
+      width: 58px;
+      height: 68px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: var(--k-radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      font-family: var(--k-font-tech);
+      font-weight: 900;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      user-select: none;
+    }
+
+    .mm-slot.active {
+      border-color: var(--k-secondary);
+      background: rgba(0, 240, 255, 0.12);
+      box-shadow: 0 0 16px rgba(0, 240, 255, 0.45);
+      transform: translateY(-2px);
+    }
+
+    .mm-slot.filled {
+      color: var(--k-accent);
+      border-color: var(--k-accent);
+      text-shadow: 0 0 10px rgba(255, 0, 128, 0.6);
+    }
+
+    /* Virtual Keypad */
+    .mm-keypad {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+      direction: ltr;
+    }
+
+    .mm-key {
+      padding: 12px 0;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--k-radius-sm);
+      color: #fff;
+      font-family: var(--k-font-tech);
+      font-size: 1.35rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mm-key:hover {
+      background: rgba(0, 240, 255, 0.15);
+      border-color: var(--k-secondary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 240, 255, 0.25);
+    }
+
+    .mm-key:active {
+      transform: translateY(0);
+    }
+
+    .mm-key.key-action {
+      background: rgba(255, 0, 128, 0.12);
+      border-color: rgba(255, 0, 128, 0.3);
+      color: var(--k-accent);
+      font-size: 1rem;
+    }
+
+    .mm-key.key-action:hover {
+      background: rgba(255, 0, 128, 0.25);
+      border-color: var(--k-accent);
+      box-shadow: 0 4px 12px rgba(255, 0, 128, 0.3);
+    }
+
+    .mm-actions-bar {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    /* History & Attempts Table */
+    .mm-history-card {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--k-border);
+      border-radius: var(--k-radius-md);
+      padding: 16px;
+      margin-top: 20px;
+      max-height: 380px;
+      overflow-y: auto;
+    }
+
+    .mm-history-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      margin-bottom: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--k-radius-sm);
+      animation: fadeInRow 0.3s ease;
+    }
+
+    @keyframes fadeInRow {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .mm-row-attempt {
+      font-family: var(--k-font-tech);
+      font-weight: 800;
+      color: var(--k-text-muted);
+      font-size: 0.85rem;
+      min-width: 60px;
+    }
+
+    .mm-row-digits {
+      display: flex;
+      gap: 6px;
+      direction: ltr;
+    }
+
+    .mm-digit-badge {
+      width: 32px;
+      height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      font-family: var(--k-font-tech);
+      font-weight: 900;
+      font-size: 1.15rem;
+      color: #fff;
+    }
+
+    .mm-digit-badge.green {
+      background: rgba(16, 185, 129, 0.25);
+      border: 1px solid #10b981;
+      color: #34d399;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+    }
+
+    .mm-digit-badge.yellow {
+      background: rgba(245, 158, 11, 0.25);
+      border: 1px solid #f59e0b;
+      color: #fbbf24;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
+    }
+
+    .mm-digit-badge.red {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #94a3b8;
+    }
+
+    .mm-feedback-dots {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      direction: ltr;
+    }
+
+    .mm-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .mm-dot.dot-green {
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+      border-color: #34d399;
+    }
+
+    .mm-dot.dot-yellow {
+      background: #f59e0b;
+      box-shadow: 0 0 8px #f59e0b;
+      border-color: #fbbf24;
+    }
+
+    .mm-dot.dot-gray {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Radar / Side Panel */
+    .mm-side-card {
+      background: rgba(15, 10, 42, 0.9);
+      border: 1px solid var(--k-border);
+      border-radius: var(--k-radius-lg);
+      padding: 22px;
+      margin-bottom: 20px;
+    }
+
+    .mm-radar-meter {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 12px 0 6px;
+    }
+
+    .mm-radar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--k-primary), var(--k-secondary));
+      transition: width 0.4s ease;
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+    }
+
+    .mm-legend-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--k-radius-md);
+      padding: 14px;
+      margin-top: 14px;
+      font-size: 0.85rem;
+    }
+
+    .mm-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .mm-legend-item:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Secret Reveal / Victory Overlay */
+    .mm-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 3, 15, 0.88);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .mm-modal.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .mm-modal-card {
+      background: linear-gradient(135deg, rgba(23, 14, 58, 0.98), rgba(12, 7, 34, 0.98));
+      border: 2px solid var(--k-secondary);
+      border-radius: var(--k-radius-xl);
+      padding: 36px 30px;
+      text-align: center;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 240, 255, 0.25);
+      position: relative;
+    }
+
+    .mm-code-reveal {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      direction: ltr;
+      margin: 20px 0;
+    }
+
+    .mm-code-digit-big {
+      width: 55px;
+      height: 65px;
+      border-radius: var(--k-radius-md);
+      background: rgba(0, 240, 255, 0.15);
+      border: 2px solid var(--k-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--k-font-tech);
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 0 12px rgba(0, 240, 255, 0.8);
+      box-shadow: 0 0 16px rgba(0, 240, 255, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="cosmos" class="k-cosmos-canvas"></canvas>
+  <div class="k-bg-mesh"></div>
+
+  <!-- Top Navigation Bar -->
+  <header>
+    <nav class="k-top-nav">
+      <a href="index.html" class="k-nav-brand">
+        <img src="logo8.png" alt="شعار كرملات" onerror="this.src='logo.png'">
+        <span>إمبراطورية كرملات</span>
+      </a>
+
+      <div class="k-nav-links" id="kNavLinks">
+        <a href="index.html" class="k-nav-link">الرئيسية</a>
+        <a href="challenges.html" class="k-nav-link">التحديات</a>
+        <a href="guess-number.html" class="k-nav-link">اعرف الرقم 🎲</a>
+        <a href="mastermind.html" class="k-nav-link active">فك الشفرة 🔮</a>
+        <a href="competitions.html" class="k-nav-link">المسابقات</a>
+        <a href="hall-of-fame.html" class="k-nav-link">لوحة الشرف</a>
+        <a href="radio.html" class="k-nav-link">الإذاعة</a>
+        <a href="celebrations.html" class="k-nav-link">الاحتفالات</a>
+        <a href="about.html" class="k-nav-link">عن المجرة</a>
+        <a href="leadership.html" class="k-nav-link">القادة</a>
+      </div>
+
+      <div class="k-nav-actions">
+        <a href="challenges.html" class="k-btn k-btn-secondary k-btn-sm">
+          <i class="fas fa-arrow-left"></i>
+          <span>جميع التحديات</span>
+        </a>
+        <button type="button" class="k-menu-btn" onclick="toggleNav()" aria-label="القائمة">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="k-container mm-container">
+
+    <!-- Breadcrumb & Header -->
+    <div class="mm-hero">
+      <div class="mm-badge">
+        <i class="fas fa-fingerprint"></i>
+        <span>منظومة التشفير الكمي المباشرة · QUANTUM CIPHER ENGINE</span>
+      </div>
+      <h1 style="font-size: 2.5rem; font-weight: 900; color: #fff; margin-bottom: 10px">
+        فك الشفرة الكونية (Mastermind) 🔮
+      </h1>
+      <p style="color: var(--k-text-muted); max-width: 650px; margin: 0 auto; font-size: 1.05rem">
+        شفرة سرية يتم توليدها <b style="color:var(--k-secondary)">عشوائياً في كل مرة تدخل فيها</b>! 
+        حلل الإشارات الضوئية واكشف الأرقام المخفية قبل استنزاف محاولاتك الفضائية.
+      </p>
+    </div>
+
+    <!-- Main Game Workspace -->
+    <div class="mm-game-grid">
+
+      <!-- Left Column: Terminal & Interaction -->
+      <div class="mm-terminal">
+
+        <!-- Stage Header & HUD -->
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:18px">
+          <div>
+            <span style="font-size:0.8rem; color:var(--k-secondary); font-family:var(--k-font-tech); font-weight:800">
+              <i class="fas fa-satellite"></i> LIVE RANDOM CIPHER
+            </span>
+            <h3 style="font-size:1.35rem; font-weight:900; color:#fff; margin-top:2px">
+              مصفوفة فك الرموز الفضائية
+            </h3>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:14px">
+            <div style="background:rgba(255,255,255,0.06); padding:6px 14px; border-radius:var(--k-radius-md); border:1px solid var(--k-border)">
+              <span style="color:var(--k-text-muted); font-size:0.8rem">المحاولات المتبقية:</span>
+              <span id="mmAttemptsLeft" class="k-num" style="color:var(--k-accent); font-weight:900; font-size:1.15rem; margin-right:6px">6 / 6</span>
+            </div>
+            <button type="button" class="k-btn k-btn-secondary k-btn-sm" onclick="restartRandomGame()" title="توليد شفرة عشوائية جديدة الآن">
+              <i class="fas fa-rotate"></i>
+              <span>شفرة جديدة</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mode Selectors & Clue Bar -->
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px; background:rgba(0,0,0,0.2); padding:10px 14px; border-radius:var(--k-radius-md); border:1px solid rgba(255,255,255,0.06)">
+          <div style="display:flex; align-items:center; gap:8px">
+            <span style="font-size:0.85rem; color:var(--k-text-muted)">صعوبة الشفرة:</span>
+            <select id="mmDifficulty" class="k-select" style="padding:4px 10px; font-size:0.85rem; width:auto" onchange="changeDifficulty()">
+              <option value="3">3 أرقام (سريع)</option>
+              <option value="4" selected>4 أرقام (كلاسيكي كوني)</option>
+              <option value="5">5 أرقام (تحدي النخبة)</option>
+            </select>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:8px">
+            <label style="display:flex; align-items:center; gap:6px; font-size:0.85rem; color:var(--k-text-muted); cursor:pointer">
+              <input type="checkbox" id="mmDuplicates" checked onchange="restartRandomGame()">
+              <span>تكرار الأرقام مسموح</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Digit Input Slots -->
+        <div class="mm-slots-box">
+          <div class="mm-slots-label">
+            <span><i class="fas fa-arrow-down" style="color:var(--k-secondary)"></i> أدخل تخمينك في الخانات:</span>
+            <span id="slotFocusHint" style="color:var(--k-secondary); font-size:0.8rem">الخانة 1 جاهزة</span>
+          </div>
+
+          <div class="mm-slots-row" id="slotsContainer">
+            <!-- Dynamically populated based on difficulty digits -->
+          </div>
+        </div>
+
+        <!-- Virtual Keypad (Touch & Mobile friendly!) -->
+        <div class="mm-keypad" id="virtualKeypad">
+          <button type="button" class="mm-key" onclick="enterDigit('1')">1</button>
+          <button type="button" class="mm-key" onclick="enterDigit('2')">2</button>
+          <button type="button" class="mm-key" onclick="enterDigit('3')">3</button>
+          <button type="button" class="mm-key" onclick="enterDigit('4')">4</button>
+          <button type="button" class="mm-key" onclick="enterDigit('5')">5</button>
+          <button type="button" class="mm-key" onclick="enterDigit('6')">6</button>
+          <button type="button" class="mm-key" onclick="enterDigit('7')">7</button>
+          <button type="button" class="mm-key" onclick="enterDigit('8')">8</button>
+          <button type="button" class="mm-key" onclick="enterDigit('9')">9</button>
+          <button type="button" class="mm-key" onclick="enterDigit('0')">0</button>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="mm-actions-bar">
+          <button type="button" class="k-btn k-btn-accent" style="flex:2; font-size:1.1rem" onclick="submitGuess()">
+            <i class="fas fa-fingerprint"></i>
+            <span>اختبار الشفرة الآن</span>
+          </button>
+          <button type="button" class="k-btn k-btn-secondary" style="flex:1" onclick="backspaceDigit()">
+            <i class="fas fa-delete-left"></i>
+            <span>مسح</span>
+          </button>
+          <button type="button" class="k-btn k-btn-secondary" style="flex:1" onclick="clearSlots()">
+            <i class="fas fa-trash-can"></i>
+            <span>إفراغ</span>
+          </button>
+        </div>
+
+        <!-- Status Message -->
+        <div id="mmStatusMsg" style="margin-top:14px; text-align:center; font-size:0.95rem; min-height:24px; color:var(--k-text-muted)">
+          جاهز! استخدم الأرقام لتخمين الشفرة الفضائية السرية.
+        </div>
+
+        <!-- Attempts History Table -->
+        <div class="mm-history-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.08)">
+            <span style="font-size:0.85rem; font-weight:800; color:var(--k-secondary)">
+              <i class="fas fa-list-check"></i> سجل التخمينات والإشارات
+            </span>
+            <span id="historyCountTag" style="font-size:0.8rem; color:var(--k-text-muted)">0 محاولات</span>
+          </div>
+
+          <div id="mmHistoryList">
+            <div style="text-align:center; padding:20px; color:var(--k-text-muted); font-size:0.85rem">
+              لم تبدأ أي محاولة بعد. أدخل أرقامك واضغط "اختبار الشفرة" لكشف الإشارات الضوئية.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Radar, Clues & Instructions -->
+      <div>
+
+        <!-- Radar Card -->
+        <div class="mm-side-card">
+          <div style="display:flex; justify-content:space-between; align-items:center">
+            <h4 style="font-size:1.1rem; font-weight:800; color:#fff">
+              <i class="fas fa-satellite-dish" style="color:var(--k-secondary)"></i> رادار كشف الشفرة
+            </h4>
+            <span id="radarPercent" class="k-num" style="color:var(--k-secondary); font-weight:900">0%</span>
+          </div>
+
+          <div class="mm-radar-meter">
+            <div class="mm-radar-fill" id="radarFill"></div>
+          </div>
+          <p style="font-size:0.8rem; color:var(--k-text-muted); margin-top:6px">
+            يتصاعد الرادار كلما اقتربت من مطابقة جميع أرقام الشفرة في أماكنها الصحيحة!
+          </p>
+
+          <!-- Legend -->
+          <div class="mm-legend-box">
+            <div style="font-weight:800; margin-bottom:8px; color:#fff">دليل الإشارات الضوئية:</div>
+            <div class="mm-legend-item">
+              <span class="mm-dot dot-green"></span>
+              <span><b>نقطة خضراء:</b> رقم ومكان صحيح 100% (Exact Match)</span>
+            </div>
+            <div class="mm-legend-item">
+              <span class="mm-dot dot-yellow"></span>
+              <span><b>نقطة صفراء:</b> الرقم موجود في الشفرة ولكن بمكان آخر</span>
+            </div>
+            <div class="mm-legend-item">
+              <span class="mm-dot dot-gray"></span>
+              <span><b>نقطة رمادية:</b> الرقم غير موجود في الشفرة تماماً</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Clues & Beacon Card -->
+        <div class="mm-side-card">
+          <h4 style="font-size:1.1rem; font-weight:800; color:#fff; margin-bottom:12px">
+            <i class="fas fa-lightbulb" style="color:var(--k-gold)"></i> منارة المساعدة الفضائية
+          </h4>
+          <p style="font-size:0.85rem; color:var(--k-text-muted); margin-bottom:14px">
+            هل استعصت عليك الشفرة؟ يمكنك طلب تلميح رياضي ذكي لكشف بعض ملامح الشفرة السرية.
+          </p>
+          <button type="button" class="k-btn k-btn-secondary k-btn-sm" style="width:100%" onclick="revealClue()">
+            <i class="fas fa-wand-magic-sparkles"></i>
+            <span>طلب تلميح رياضي</span>
+          </button>
+          <div id="clueOutput" style="margin-top:10px; font-size:0.85rem; color:var(--k-gold); display:none; background:rgba(255,215,0,0.08); padding:10px; border-radius:var(--k-radius-sm); border:1px solid rgba(255,215,0,0.2)"></div>
+        </div>
+
+        <!-- Stats Card -->
+        <div class="mm-side-card">
+          <h4 style="font-size:1.1rem; font-weight:800; color:#fff; margin-bottom:12px">
+            <i class="fas fa-chart-simple" style="color:var(--k-accent)"></i> إحصائيات اللاعب
+          </h4>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; text-align:center">
+            <div style="background:rgba(255,255,255,0.03); padding:10px; border-radius:var(--k-radius-sm)">
+              <div style="font-size:0.75rem; color:var(--k-text-muted)">الجولات الملعوبة</div>
+              <div id="statPlayed" class="k-num" style="font-size:1.3rem; font-weight:900; color:#fff">0</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.03); padding:10px; border-radius:var(--k-radius-sm)">
+              <div style="font-size:0.75rem; color:var(--k-text-muted)">مرات الفوز</div>
+              <div id="statWon" class="k-num" style="font-size:1.3rem; font-weight:900; color:var(--k-secondary)">0</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.03); padding:10px; border-radius:var(--k-radius-sm)">
+              <div style="font-size:0.75rem; color:var(--k-text-muted)">أفضل رقم محاولات</div>
+              <div id="statBest" class="k-num" style="font-size:1.3rem; font-weight:900; color:var(--k-accent)">-</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.03); padding:10px; border-radius:var(--k-radius-sm)">
+              <div style="font-size:0.75rem; color:var(--k-text-muted)">نسبة الفوز</div>
+              <div id="statWinRate" class="k-num" style="font-size:1.3rem; font-weight:900; color:var(--k-gold)">0%</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Victory / Game Over Modal -->
+  <div class="mm-modal" id="resultModal">
+    <div class="mm-modal-card">
+      <div id="modalIcon" style="font-size:3.5rem; margin-bottom:12px">🎉</div>
+      <h2 id="modalTitle" style="font-size:1.8rem; font-weight:900; color:#fff; margin-bottom:8px">مبروك يا عبقري!</h2>
+      <p id="modalDesc" style="color:var(--k-text-muted); font-size:0.95rem">
+        تمكنت من فك الشفرة الكونية بنجاح باهر!
+      </p>
+
+      <div style="margin-top:16px">
+        <span style="font-size:0.85rem; color:var(--k-secondary); font-weight:800">الشفرة السرية كانت:</span>
+        <div class="mm-code-reveal" id="modalCodeReveal">
+          <!-- Digits filled dynamically -->
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:24px; flex-wrap:wrap">
+        <button type="button" class="k-btn k-btn-accent" onclick="closeModalAndPlayAgain()">
+          <i class="fas fa-play"></i>
+          <span>العب شفرة جديدة 🎲</span>
+        </button>
+        <button type="button" class="k-btn k-btn-secondary" onclick="shareVictory()">
+          <i class="fas fa-share-nodes"></i>
+          <span>مشاركة الإنجاز</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="k-footer" style="margin-top:60px">
+    <div class="k-container">
+      <div class="k-footer-bottom" style="text-align:center">
+        <p>© 2026 إمبراطورية كرملات الفضائية · جميع الحقوق محفوظة للقائد والأبطال.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="kramlat-system.js"></script>
+  <script>
+    // -----------------------------------------------------------
+    // SOUND EFFECTS ENGINE (Synthesizer via Web Audio API)
+    // -----------------------------------------------------------
+    const MMSound = {
+      ctx: null,
+      init: function() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) this.ctx = new AudioContext();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      },
+      beep: function(freq = 440, type = 'sine', duration = 0.08) {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+          gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + duration);
+        } catch(e) {}
+      },
+      click: function() { this.beep(600, 'triangle', 0.04); },
+      backspace: function() { this.beep(300, 'square', 0.05); },
+      submit: function() { this.beep(750, 'sine', 0.1); },
+      win: function() {
+        const notes = [440, 554, 659, 880];
+        notes.forEach((f, i) => setTimeout(() => this.beep(f, 'sine', 0.2), i * 110));
+      },
+      lose: function() {
+        const notes = [400, 320, 250, 180];
+        notes.forEach((f, i) => setTimeout(() => this.beep(f, 'sawtooth', 0.18), i * 130));
+      }
+    };
+
+    // -----------------------------------------------------------
+    // MASTERMIND GAME STATE
+    // -----------------------------------------------------------
+    let secretCode = [];
+    let digitsCount = 4;
+    let maxAttempts = 6;
+    let attemptsLeft = 6;
+    let currentGuess = [];
+    let activeSlotIndex = 0;
+    let isGameOver = false;
+    let history = [];
+
+    // LocalStorage Stats
+    const STATS_KEY = 'kramlat_mastermind_stats';
+    let stats = {
+      played: 0,
+      won: 0,
+      best: null
+    };
+
+    function loadStats() {
+      try {
+        const raw = localStorage.getItem(STATS_KEY);
+        if (raw) stats = JSON.parse(raw);
+      } catch(e) {}
+      updateStatsUI();
+    }
+
+    function saveStats() {
+      try {
+        localStorage.setItem(STATS_KEY, JSON.stringify(stats));
+      } catch(e) {}
+      updateStatsUI();
+    }
+
+    function updateStatsUI() {
+      document.getElementById('statPlayed').innerText = stats.played;
+      document.getElementById('statWon').innerText = stats.won;
+      document.getElementById('statBest').innerText = stats.best !== null ? stats.best : '-';
+      const rate = stats.played > 0 ? Math.round((stats.won / stats.played) * 100) : 0;
+      document.getElementById('statWinRate').innerText = `${rate}%`;
+    }
+
+    // -----------------------------------------------------------
+    // RANDOM CODE GENERATION (Core User Requirement)
+    // -----------------------------------------------------------
+    function generateRandomSecretCode() {
+      const allowDuplicates = document.getElementById('mmDuplicates').checked;
+      const code = [];
+      const pool = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+      if (allowDuplicates) {
+        for (let i = 0; i < digitsCount; i++) {
+          const rand = pool[Math.floor(Math.random() * pool.length)];
+          code.push(rand);
+        }
+      } else {
+        const shuffled = [...pool].sort(() => 0.5 - Math.random());
+        for (let i = 0; i < digitsCount; i++) {
+          code.push(shuffled[i]);
+        }
+      }
+
+      console.log('Galactic Secret Cipher Initialized (Random)');
+      return code;
+    }
+
+    function initGame() {
+      digitsCount = parseInt(document.getElementById('mmDifficulty').value, 10) || 4;
+      maxAttempts = digitsCount === 3 ? 8 : (digitsCount === 5 ? 7 : 6);
+      attemptsLeft = maxAttempts;
+      isGameOver = false;
+      currentGuess = new Array(digitsCount).fill('');
+      activeSlotIndex = 0;
+      history = [];
+
+      // Generate FRESH Random Code every time!
+      secretCode = generateRandomSecretCode();
+
+      // UI Reset
+      document.getElementById('mmAttemptsLeft').innerText = `${attemptsLeft} / ${maxAttempts}`;
+      document.getElementById('historyCountTag').innerText = `0 محاولات`;
+      document.getElementById('mmStatusMsg').innerText = `تم توليد شفرة عشوائية جديدة من ${digitsCount} أرقام! ابدأ الآن.`;
+      document.getElementById('mmStatusMsg').style.color = 'var(--k-text-muted)';
+      document.getElementById('clueOutput').style.display = 'none';
+      document.getElementById('radarFill').style.width = '0%';
+      document.getElementById('radarPercent').innerText = '0%';
+      document.getElementById('mmHistoryList').innerHTML = `
+        <div style="text-align:center; padding:20px; color:var(--k-text-muted); font-size:0.85rem">
+          لم تبدأ أي محاولة بعد. أدخل أرقامك واضغط "اختبار الشفرة" لكشف الإشارات الضوئية.
+        </div>
+      `;
+
+      renderSlots();
+    }
+
+    function renderSlots() {
+      const container = document.getElementById('slotsContainer');
+      container.innerHTML = '';
+
+      for (let i = 0; i < digitsCount; i++) {
+        const slot = document.createElement('div');
+        slot.className = `mm-slot ${i === activeSlotIndex ? 'active' : ''} ${currentGuess[i] ? 'filled' : ''}`;
+        slot.innerText = currentGuess[i] || '';
+        slot.onclick = () => selectSlot(i);
+        container.appendChild(slot);
+      }
+
+      document.getElementById('slotFocusHint').innerText = `الخانة ${activeSlotIndex + 1} جاهزة`;
+    }
+
+    function selectSlot(idx) {
+      if (isGameOver) return;
+      activeSlotIndex = idx;
+      MMSound.click();
+      renderSlots();
+    }
+
+    function enterDigit(digit) {
+      if (isGameOver) return;
+      MMSound.click();
+
+      currentGuess[activeSlotIndex] = digit;
+
+      // Advance to next slot if available
+      if (activeSlotIndex < digitsCount - 1) {
+        activeSlotIndex++;
+      }
+
+      renderSlots();
+    }
+
+    function backspaceDigit() {
+      if (isGameOver) return;
+      MMSound.backspace();
+
+      if (currentGuess[activeSlotIndex] !== '') {
+        currentGuess[activeSlotIndex] = '';
+      } else if (activeSlotIndex > 0) {
+        activeSlotIndex--;
+        currentGuess[activeSlotIndex] = '';
+      }
+
+      renderSlots();
+    }
+
+    function clearSlots() {
+      if (isGameOver) return;
+      MMSound.backspace();
+      currentGuess = new Array(digitsCount).fill('');
+      activeSlotIndex = 0;
+      renderSlots();
+    }
+
+    // -----------------------------------------------------------
+    // EVALUATE GUESS (Exact Mastermind Logic)
+    // -----------------------------------------------------------
+    function submitGuess() {
+      if (isGameOver) return;
+
+      // Validate all slots filled
+      for (let i = 0; i < digitsCount; i++) {
+        if (!currentGuess[i] || currentGuess[i] === '') {
+          MMSound.backspace();
+          if (window.KramlatUI) window.KramlatUI.toast(`يرجى ملء جميع الخانات (${digitsCount} أرقام)! ⚠️`);
+          document.getElementById('mmStatusMsg').innerText = `⚠️ يرجى ملء الخانة ${i + 1} قبل الاختبار.`;
+          document.getElementById('mmStatusMsg').style.color = '#ff6b6b';
+          activeSlotIndex = i;
+          renderSlots();
+          return;
+        }
+      }
+
+      MMSound.submit();
+
+      // Mastermind Feedback Calculation (Bulls and Cows with duplicate handling)
+      const secretCopy = [...secretCode];
+      const guessCopy = [...currentGuess];
+      const clues = new Array(digitsCount).fill('red');
+
+      let greens = 0; // Exact match (digit & position)
+      let yellows = 0; // Partial match (digit exists, wrong position)
+
+      // Pass 1: find greens
+      for (let i = 0; i < digitsCount; i++) {
+        if (guessCopy[i] === secretCopy[i]) {
+          clues[i] = 'green';
+          greens++;
+          secretCopy[i] = null;
+          guessCopy[i] = null;
+        }
+      }
+
+      // Pass 2: find yellows
+      for (let i = 0; i < digitsCount; i++) {
+        if (guessCopy[i] !== null) {
+          const matchIdx = secretCopy.indexOf(guessCopy[i]);
+          if (matchIdx !== -1) {
+            clues[i] = 'yellow';
+            yellows++;
+            secretCopy[matchIdx] = null;
+          }
+        }
+      }
+
+      attemptsLeft--;
+      document.getElementById('mmAttemptsLeft').innerText = `${attemptsLeft} / ${maxAttempts}`;
+
+      // Calculate Radar Progress
+      const radarScore = Math.round(((greens * 1.0 + yellows * 0.4) / digitsCount) * 100);
+      document.getElementById('radarFill').style.width = `${radarScore}%`;
+      document.getElementById('radarPercent').innerText = `${radarScore}%`;
+
+      // Save to history
+      history.unshift({
+        attemptNumber: maxAttempts - attemptsLeft,
+        guess: [...currentGuess],
+        clues: clues,
+        greens: greens,
+        yellows: yellows
+      });
+
+      renderHistory();
+
+      // Status message
+      document.getElementById('mmStatusMsg').innerHTML = `
+        الإشارة: <b style="color:#10b981">${greens} مكان صحيح</b> · <b style="color:#f59e0b">${yellows} رقم بمكان آخر</b>
+      `;
+      document.getElementById('mmStatusMsg').style.color = '#fff';
+
+      // Check WIN condition
+      if (greens === digitsCount) {
+        handleWin();
+        return;
+      }
+
+      // Check LOSE condition
+      if (attemptsLeft <= 0) {
+        handleLose();
+        return;
+      }
+
+      // Clear slots for next attempt
+      currentGuess = new Array(digitsCount).fill('');
+      activeSlotIndex = 0;
+      renderSlots();
+    }
+
+    function renderHistory() {
+      const listEl = document.getElementById('mmHistoryList');
+      document.getElementById('historyCountTag').innerText = `${history.length} محاولات`;
+
+      listEl.innerHTML = history.map(item => `
+        <div class="mm-history-row">
+          <div class="mm-row-attempt">#${item.attemptNumber}</div>
+          <div class="mm-row-digits">
+            ${item.guess.map((d, i) => `
+              <span class="mm-digit-badge ${item.clues[i]}">${d}</span>
+            `).join('')}
+          </div>
+          <div class="mm-feedback-dots">
+            ${Array.from({length: item.greens}).map(() => `<span class="mm-dot dot-green" title="رقم ومكان صحيح"></span>`).join('')}
+            ${Array.from({length: item.yellows}).map(() => `<span class="mm-dot dot-yellow" title="مكان خاطئ"></span>`).join('')}
+            ${Array.from({length: digitsCount - item.greens - item.yellows}).map(() => `<span class="mm-dot dot-gray" title="غير موجود"></span>`).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function handleWin() {
+      isGameOver = true;
+      MMSound.win();
+      if (window.KramlatUI) window.KramlatUI.confetti();
+
+      stats.played++;
+      stats.won++;
+      const usedAttempts = maxAttempts - attemptsLeft;
+      if (stats.best === null || usedAttempts < stats.best) {
+        stats.best = usedAttempts;
+      }
+      saveStats();
+
+      // Show Modal
+      document.getElementById('modalIcon').innerText = '👑';
+      document.getElementById('modalTitle').innerText = 'تم فك الشفرة بنجاح!';
+      document.getElementById('modalDesc').innerHTML = `
+        أنت أسطورة! فككت الشفرة الكونية في <b>${usedAttempts} محاولات</b> فقط!<br>
+        تم ترقيتك إلى رتبة: <b style="color:var(--k-gold)">مفكك شفرات المجرة الأسطوري 🌟</b>
+      `;
+
+      renderModalCode(secretCode);
+      openModal();
+    }
+
+    function handleLose() {
+      isGameOver = true;
+      MMSound.lose();
+
+      stats.played++;
+      saveStats();
+
+      document.getElementById('modalIcon').innerText = '💀';
+      document.getElementById('modalTitle').innerText = 'نفدت المحاولات الفضائية!';
+      document.getElementById('modalDesc').innerText = 'لقد استنفدت جميع محاولاتك الفضائية. لا تقلق، يمكنك المحاولة مرة أخرى بشفرة عشوائية جديدة!';
+
+      renderModalCode(secretCode);
+      openModal();
+    }
+
+    function renderModalCode(code) {
+      const container = document.getElementById('modalCodeReveal');
+      container.innerHTML = code.map(d => `<div class="mm-code-digit-big">${d}</div>`).join('');
+    }
+
+    function openModal() {
+      document.getElementById('resultModal').classList.add('open');
+    }
+
+    function closeModalAndPlayAgain() {
+      document.getElementById('resultModal').classList.remove('open');
+      restartRandomGame();
+    }
+
+    function restartRandomGame() {
+      initGame();
+      if (window.KramlatUI) window.KramlatUI.toast('تم توليد شفرة عشوائية جديدة! 🎲✨', 'fa-solid fa-rotate');
+    }
+
+    function changeDifficulty() {
+      initGame();
+    }
+
+    // Mathematical Clue Assistant
+    function revealClue() {
+      if (isGameOver) return;
+      MMSound.click();
+      const sum = secretCode.reduce((acc, cur) => acc + parseInt(cur, 10), 0);
+      const evens = secretCode.filter(n => parseInt(n, 10) % 2 === 0).length;
+      const odds = digitsCount - evens;
+
+      const hints = [
+        `مجموع كل أرقام الشفرة يساوي <b>${sum}</b>.`,
+        `تحتوي الشفرة على <b>${evens} أرقام زوجية</b> و <b>${odds} أرقام فردية</b>.`,
+        `الرقم الأول في الشفرة ${parseInt(secretCode[0], 10) > 4 ? 'أكبر من 4' : 'أقل من أو يساوي 4'}.`
+      ];
+
+      const hintText = hints[Math.floor(Math.random() * hints.length)];
+      const out = document.getElementById('clueOutput');
+      out.innerHTML = `<i class="fas fa-lightbulb"></i> تلميح فضائي: ${hintText}`;
+      out.style.display = 'block';
+    }
+
+    function shareVictory() {
+      const used = maxAttempts - attemptsLeft;
+      const text = `🔮 فككت الشفرة الكونية في موقع كرملات بـ ${used} محاولات فقط! هل تقدر تتحداني؟\n${window.location.href}`;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text);
+        if (window.KramlatUI) window.KramlatUI.toast('تم نسخ رسالة التحدي بنجاح! شاركها مع أصدقائك 🚀');
+      }
+    }
+
+    // Keyboard Listeners
+    window.addEventListener('keydown', (e) => {
+      if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
+
+      if (e.key >= '0' && e.key <= '9') {
+        enterDigit(e.key);
+      } else if (e.key === 'Backspace') {
+        backspaceDigit();
+      } else if (e.key === 'Enter') {
+        submitGuess();
+      } else if (e.key === 'ArrowLeft' && activeSlotIndex > 0) {
+        selectSlot(activeSlotIndex - 1);
+      } else if (e.key === 'ArrowRight' && activeSlotIndex < digitsCount - 1) {
+        selectSlot(activeSlotIndex + 1);
+      }
+    });
+
+    // Mobile nav toggle
+    function toggleNav() {
+      const links = document.getElementById('kNavLinks');
+      if (links) links.classList.toggle('open');
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', () => {
+      loadStats();
+      initGame();
+    });
+  </script>
+</body>
+</html>

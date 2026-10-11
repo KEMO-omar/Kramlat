@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>إذاعة صدى الإمبراطورية 📻 | إمبراطورية كرملات</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Orbitron:wght@700;900&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <link rel="stylesheet" href="kramlat-core.css">
+
+  <style>
+    .k-feed-wrapper {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .k-post-card {
+      background: var(--k-bg-card);
+      border: 1px solid var(--k-border);
+      border-radius: var(--k-radius-lg);
+      padding: 24px;
+      margin-bottom: 20px;
+      position: relative;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .k-post-card:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .k-post-card.pinned {
+      border: 1.5px solid var(--k-gold);
+      background: linear-gradient(145deg, rgba(25, 18, 55, 0.8), rgba(15, 10, 42, 0.8));
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.15);
+    }
+
+    .k-pinned-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--k-gold);
+      font-size: 0.8rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .k-post-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .k-post-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: rgba(255, 0, 127, 0.15);
+      border: 1px solid var(--k-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--k-primary);
+      font-size: 1.1rem;
+    }
+
+    .k-post-name {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .k-post-time {
+      font-size: 0.8rem;
+      color: var(--k-text-dim);
+    }
+
+    .k-post-body {
+      font-size: 1.15rem;
+      line-height: 1.7;
+      color: #f1f5f9;
+      margin-bottom: 18px;
+      word-break: break-word;
+    }
+
+    .k-post-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .k-like-button {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--k-border);
+      border-radius: var(--k-radius-sm);
+      padding: 8px 16px;
+      color: #cbd5e1;
+      font-family: var(--k-font-ar);
+      font-size: 0.9rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .k-like-button:hover {
+      background: rgba(255, 0, 127, 0.15);
+      border-color: var(--k-primary);
+      color: #fff;
+    }
+
+    .k-like-button.liked {
+      background: rgba(255, 0, 127, 0.25);
+      border-color: var(--k-primary);
+      color: #ff3399;
+    }
+
+    /* Floating Compose Button */
+    .k-fab-compose {
+      position: fixed;
+      bottom: 28px;
+      left: 30px;
+      z-index: 1000;
+      background: linear-gradient(135deg, var(--k-primary), var(--k-secondary));
+      color: #fff;
+      width: 62px;
+      height: 62px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(255, 0, 127, 0.5);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .k-fab-compose:hover {
+      transform: translateY(-4px) scale(1.08);
+      box-shadow: 0 15px 40px rgba(0, 240, 255, 0.6);
+    }
+
+    .k-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 1, 16, 0.85);
+      backdrop-filter: blur(16px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .k-modal-card {
+      background: rgba(18, 12, 46, 0.98);
+      border: 1px solid var(--k-border);
+      border-radius: var(--k-radius-xl);
+      padding: 36px 30px;
+      width: 100%;
+      max-width: 480px;
+      position: relative;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="cosmos" class="k-cosmos-canvas"></canvas>
+  <div class="k-bg-mesh"></div>
+
+  <!-- Top Navigation Bar -->
+  <header>
+    <nav class="k-top-nav">
+      <a href="index.html" class="k-nav-brand">
+        <img src="logo8.png" alt="كرملات" onerror="this.src='logo.png'">
+        <span>إذاعة صدى المجرة</span>
+      </a>
+
+      <div class="k-nav-links" id="kNavLinks">
+        <a href="index.html" class="k-nav-link">الرئيسية</a>
+        <a href="challenges.html" class="k-nav-link">التحديات</a>
+        <a href="guess-number.html" class="k-nav-link">اعرف الرقم 🎲</a>
+        <a href="mastermind.html" class="k-nav-link">فك الشفرة 🔮</a>
+        <a href="competitions.html" class="k-nav-link">المسابقات</a>
+        <a href="hall-of-fame.html" class="k-nav-link">لوحة الشرف</a>
+        <a href="radio.html" class="k-nav-link active">الإذاعة</a>
+        <a href="celebrations.html" class="k-nav-link">الاحتفالات</a>
+        <a href="about.html" class="k-nav-link">عن المجرة</a>
+        <a href="leadership.html" class="k-nav-link">القادة</a>
+      </div>
+
+      <div class="k-nav-actions">
+        <button type="button" class="k-btn k-btn-sm" onclick="openComposeModal()">
+          <i class="fas fa-paper-plane"></i>
+          <span>اكتب رسالة</span>
+        </button>
+        <button type="button" class="k-menu-btn" onclick="toggleNav()" aria-label="القائمة">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="k-container">
+
+    <div class="k-page-intro">
+      <div class="k-breadcrumb">
+        <a href="index.html">الرئيسية</a>
+        <span>/</span>
+        <span style="color:var(--k-secondary)">إذاعة صدى المجرة</span>
+      </div>
+
+      <h1 class="k-title-hero">إذاعة صدى الإمبراطورية 📻</h1>
+      <p class="k-subtitle" style="margin:0 auto">
+        المنبر الصوتي والنبض الحي لشعب كرملات. اكتب رسالتك، واجمع الإعجابات وتصدر الرسائل المثبتة!
+      </p>
+    </div>
+
+    <!-- Message Feed -->
+    <div class="k-feed-wrapper" id="feedList">
+      <div style="text-align:center; padding:40px; color:var(--k-text-muted)">
+        <i class="fas fa-spinner fa-spin" style="font-size:2rem; color:var(--k-secondary)"></i>
+        <p style="margin-top:12px">جاري الاتصال بالإذاعة الكونية...</p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Compose FAB -->
+  <button type="button" class="k-fab-compose" onclick="openComposeModal()" title="إرسال رسالة جديدة">
+    <i class="fas fa-pen-nib"></i>
+  </button>
+
+  <!-- Compose Modal -->
+  <div class="k-modal-backdrop" id="composeModal">
+    <div class="k-modal-card">
+      <button type="button" onclick="closeComposeModal()" style="position:absolute; top:20px; left:20px; background:none; border:none; color:var(--k-text-dim); font-size:1.4rem; cursor:pointer">
+        <i class="fas fa-xmark"></i>
+      </button>
+
+      <h3 style="font-size:1.4rem; font-weight:900; color:#fff; margin-bottom:6px">
+        ✍️ اترك بصمتك في الإذاعة
+      </h3>
+      <p style="color:var(--k-text-muted); font-size:0.9rem; margin-bottom:22px">
+        رسالتك ستظهر لجميع أعضاء ومتابعي المجرة فوراً.
+      </p>
+
+      <div class="k-form-group">
+        <label class="k-label">اسمك أو لقبك الفضائي:</label>
+        <input type="text" id="authorName" class="k-input" placeholder="مثال: الفارس الأسطوري أو جندي مجهول">
+      </div>
+
+      <div class="k-form-group">
+        <label class="k-label">رسالتك للإمبراطورية:</label>
+        <textarea id="authorMsg" class="k-textarea" placeholder="اكتب حاجة عظمة لكرملات والأبطال..." rows="4"></textarea>
+      </div>
+
+      <button type="button" class="k-btn k-btn-lg" style="width:100%" onclick="submitRadioMessage()">
+        <i class="fas fa-paper-plane"></i>
+        <span>بث الرسالة الآن 🚀</span>
+      </button>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+  <script src="kramlat-system.js"></script>
+
+  <script>
+    function toggleNav() {
+      const links = document.getElementById('kNavLinks');
+      links.classList.toggle('open');
+    }
+
+    let db = null;
+    try {
+      const firebaseConfig = {
+        apiKey: "AIzaSyCZr_OpkCfEFxeTrOc5fp7F_uvyVGlT5Yc",
+        authDomain: "karamlat-99e6e.firebaseapp.com",
+        databaseURL: "https://karamlat-99e6e-default-rtdb.firebaseio.com",
+        projectId: "karamlat-99e6e",
+        storageBucket: "karamlat-99e6e.firebasestorage.app",
+        messagingSenderId: "817474436731",
+        appId: "1:817474436731:web:6b4c38fd98048f1a3b6cde"
+      };
+      if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+      db = firebase.database();
+    } catch(e) {}
+
+    let localPosts = [
+      {
+        id: "post_1",
+        name: "كريم عمر 👑 (المؤسس)",
+        message: "أهلاً بكل أبطال إمبراطورية كرملات في موسم 2026! استعدوا للمفاجآت والتحديات الكبرى!",
+        likes: 189,
+        pinned: true,
+        time: "مثبتة رسمياً"
+      },
+      {
+        id: "post_2",
+        name: "شريف سيد ⚡ (العميل)",
+        message: "الجميع تحت المراقبة والتصفيات ستكون أسطورية ولا مجال للتراجع! كل الدعم للأبطال.",
+        likes: 112,
+        pinned: true,
+        time: "مثبتة رسمياً"
+      },
+      {
+        id: "post_3",
+        name: "سراچ ⭐",
+        message: "التحديات الجديدة نارية جداً خصوصاً فك الشفرة والزرار المجنون! عاش يا رجالة!",
+        likes: 64,
+        pinned: false,
+        time: "اليوم"
+      }
+    ];
+
+    function openComposeModal() {
+      if (window.KramlatAudio) window.KramlatAudio.playClick();
+      document.getElementById('composeModal').style.display = 'flex';
+      document.getElementById('authorName').focus();
+    }
+
+    function closeComposeModal() {
+      document.getElementById('composeModal').style.display = 'none';
+    }
+
+    function submitRadioMessage() {
+      const name = document.getElementById('authorName').value.trim() || "جندي مجهول";
+      const message = document.getElementById('authorMsg').value.trim();
+
+      if (!message) {
+        if (window.KramlatUI) window.KramlatUI.toast('يرجى كتابة نص الرسالة أولاً! ⚠️');
+        return;
+      }
+
+      const newPost = {
+        name: name,
+        message: message,
+        likes: 0,
+        pinned: false,
+        time: new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })
+      };
+
+      if (db) {
+        db.ref('kramlat_radio').push(newPost);
+      } else {
+        localPosts.unshift(Object.assign({ id: 'p_' + Date.now() }, newPost));
+        renderFeed(localPosts);
+      }
+
+      closeComposeModal();
+      document.getElementById('authorMsg').value = '';
+
+      if (window.KramlatAudio) window.KramlatAudio.playSuccess();
+      if (window.KramlatUI) {
+        window.KramlatUI.toast('تم بث رسالتك بنجاح في فضاء المجرة! 🚀');
+        window.KramlatUI.confetti();
+      }
+    }
+
+    function renderFeed(posts) {
+      const container = document.getElementById('feedList');
+      if (!posts || posts.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center; padding:40px; color:var(--k-text-muted)">
+            <p>لا توجد رسائل بعد.. كن أول من يبث بصمته! ✍️</p>
+          </div>
+        `;
+        return;
+      }
+
+      const likedMap = JSON.parse(localStorage.getItem('kramlat_liked') || "[]");
+
+      const sorted = [...posts].sort((a, b) => {
+        if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
+        return (b.likes || 0) - (a.likes || 0);
+      });
+
+      container.innerHTML = sorted.map(post => {
+        const isLiked = likedMap.includes(post.id);
+        return `
+          <article class="k-post-card ${post.pinned ? 'pinned' : ''}">
+            ${post.pinned ? `
+              <div class="k-pinned-badge">
+                <i class="fas fa-thumbtack"></i>
+                <span>رسالة مثبتة من القيادة</span>
+              </div>
+            ` : ''}
+
+            <div class="k-post-header">
+              <div class="k-post-avatar">
+                <i class="fas fa-user-astronaut"></i>
+              </div>
+              <div>
+                <div class="k-post-name">${post.name}</div>
+                <div class="k-post-time">${post.time || 'الآن'}</div>
+              </div>
+            </div>
+
+            <div class="k-post-body">${post.message}</div>
+
+            <div class="k-post-actions">
+              <button type="button" class="k-like-button ${isLiked ? 'liked' : ''}" onclick="toggleLike('${post.id}', ${post.likes || 0})">
+                <i class="${isLiked ? 'fas' : 'far'} fa-heart"></i>
+                <span class="k-num">${post.likes || 0}</span>
+                <span>إعجاب</span>
+              </button>
+              <div class="k-metadata" style="margin:0">
+                <span>كرملات 2026</span>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function toggleLike(id, current) {
+      let liked = JSON.parse(localStorage.getItem('kramlat_liked') || "[]");
+      if (liked.includes(id)) {
+        if (window.KramlatUI) window.KramlatUI.toast('لقد أرسلت إعجابك بالفعل لهذه الرسالة! ❤️');
+        return;
+      }
+
+      liked.push(id);
+      localStorage.setItem('kramlat_liked', JSON.stringify(liked));
+
+      if (db) {
+        db.ref('kramlat_radio/' + id).update({ likes: current + 1 });
+      } else {
+        const found = localPosts.find(p => p.id === id);
+        if (found) found.likes = current + 1;
+        renderFeed(localPosts);
+      }
+
+      if (window.KramlatAudio) window.KramlatAudio.playPop();
+      if (window.KramlatUI) window.KramlatUI.toast('وصل إعجابك القلبي! ❤️✨');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (db) {
+        db.ref('kramlat_radio').on('value', snap => {
+          const val = snap.val();
+          if (val) {
+            const arr = Object.keys(val).map(k => Object.assign({ id: k }, val[k]));
+            renderFeed(arr);
+          } else {
+            renderFeed(localPosts);
+          }
+        });
+      } else {
+        renderFeed(localPosts);
+      }
+    });
+  </script>
+</body>
+</html>
