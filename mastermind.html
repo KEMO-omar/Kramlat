@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>فك الشفرة الكونية (Mastermind) 🔮 | إمبراطورية كرملات</title>
+  <title>فك الشفرة الكونية (Mastermind أونلاين) 🔮 | إمبراطورية كرملات</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,13 +14,13 @@
 
   <style>
     .mm-container {
-      max-width: 960px;
+      max-width: 1040px;
       margin: 0 auto;
     }
 
     .mm-hero {
       text-align: center;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
 
     .mm-badge {
@@ -34,8 +34,43 @@
       color: var(--k-secondary);
       font-size: 0.85rem;
       font-weight: 800;
-      letter-spacing: 0.5px;
       margin-bottom: 14px;
+    }
+
+    /* Main Mode Switcher */
+    .mm-mode-switcher {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .mm-mode-tab {
+      padding: 12px 24px;
+      border-radius: var(--k-radius-md);
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.25s ease;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--k-border);
+      color: var(--k-text-muted);
+    }
+
+    .mm-mode-tab:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+
+    .mm-mode-tab.active {
+      background: linear-gradient(135deg, rgba(255, 0, 128, 0.25), rgba(0, 240, 255, 0.2));
+      border-color: var(--k-secondary);
+      color: #fff;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
     }
 
     .mm-game-grid {
@@ -45,13 +80,13 @@
       align-items: start;
     }
 
-    @media (max-width: 860px) {
+    @media (max-width: 880px) {
       .mm-game-grid {
         grid-template-columns: 1fr;
       }
     }
 
-    /* Board & Terminal */
+    /* Terminal */
     .mm-terminal {
       background: linear-gradient(180deg, rgba(17, 10, 48, 0.95), rgba(9, 5, 26, 0.98));
       border: 1px solid rgba(0, 240, 255, 0.25);
@@ -113,7 +148,6 @@
       color: #fff;
       cursor: pointer;
       transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      position: relative;
       user-select: none;
     }
 
@@ -130,7 +164,7 @@
       text-shadow: 0 0 10px rgba(255, 0, 128, 0.6);
     }
 
-    /* Virtual Keypad */
+    /* Keypad */
     .mm-keypad {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -162,22 +196,7 @@
       box-shadow: 0 4px 12px rgba(0, 240, 255, 0.25);
     }
 
-    .mm-key:active {
-      transform: translateY(0);
-    }
-
-    .mm-key.key-action {
-      background: rgba(255, 0, 128, 0.12);
-      border-color: rgba(255, 0, 128, 0.3);
-      color: var(--k-accent);
-      font-size: 1rem;
-    }
-
-    .mm-key.key-action:hover {
-      background: rgba(255, 0, 128, 0.25);
-      border-color: var(--k-accent);
-      box-shadow: 0 4px 12px rgba(255, 0, 128, 0.3);
-    }
+    .mm-key:active { transform: translateY(0); }
 
     .mm-actions-bar {
       display: flex;
@@ -185,7 +204,7 @@
       margin-top: 10px;
     }
 
-    /* History & Attempts Table */
+    /* History */
     .mm-history-card {
       background: rgba(0, 0, 0, 0.25);
       border: 1px solid var(--k-border);
@@ -291,7 +310,7 @@
       border-color: rgba(255, 255, 255, 0.2);
     }
 
-    /* Radar / Side Panel */
+    /* Side Panel */
     .mm-side-card {
       background: rgba(15, 10, 42, 0.9);
       border: 1px solid var(--k-border);
@@ -331,12 +350,103 @@
       gap: 10px;
       margin-bottom: 8px;
     }
+    .mm-legend-item:last-child { margin-bottom: 0; }
 
-    .mm-legend-item:last-child {
-      margin-bottom: 0;
+    /* Multiplayer Lobby & Setup Cards */
+    .mm-multi-card {
+      background: linear-gradient(135deg, rgba(23, 14, 58, 0.95), rgba(12, 7, 34, 0.98));
+      border: 2px solid rgba(0, 240, 255, 0.3);
+      border-radius: var(--k-radius-xl);
+      padding: 32px 28px;
+      text-align: center;
+      margin-bottom: 24px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.5);
     }
 
-    /* Secret Reveal / Victory Overlay */
+    .mm-room-code-badge {
+      display: inline-block;
+      font-family: var(--k-font-tech);
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: var(--k-secondary);
+      letter-spacing: 6px;
+      padding: 8px 24px;
+      background: rgba(0, 240, 255, 0.1);
+      border: 2px dashed var(--k-secondary);
+      border-radius: var(--k-radius-md);
+      text-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
+      margin: 14px 0;
+    }
+
+    /* Opponent Live HUD in Duel */
+    .mm-opponent-hud {
+      background: linear-gradient(135deg, rgba(255, 0, 128, 0.08), rgba(20, 10, 45, 0.9));
+      border: 1px solid rgba(255, 0, 128, 0.3);
+      border-radius: var(--k-radius-lg);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .mm-duel-versus {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px dashed var(--k-border);
+    }
+
+    .mm-player-tag {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .mm-player-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(0, 240, 255, 0.15);
+      border: 2px solid var(--k-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: #fff;
+    }
+
+    .mm-player-avatar.opponent {
+      background: rgba(255, 0, 128, 0.15);
+      border-color: var(--k-accent);
+    }
+
+    /* Quick Chat & Emote bar */
+    .mm-taunt-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 14px;
+    }
+
+    .mm-taunt-btn {
+      padding: 6px 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--k-radius-sm);
+      color: #fff;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .mm-taunt-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--k-secondary);
+      transform: scale(1.05);
+    }
+
+    /* Modal */
     .mm-modal {
       position: fixed;
       inset: 0;
@@ -363,10 +473,9 @@
       border-radius: var(--k-radius-xl);
       padding: 36px 30px;
       text-align: center;
-      max-width: 480px;
+      max-width: 520px;
       width: 100%;
       box-shadow: 0 20px 60px rgba(0, 240, 255, 0.25);
-      position: relative;
     }
 
     .mm-code-reveal {
@@ -374,12 +483,12 @@
       justify-content: center;
       gap: 10px;
       direction: ltr;
-      margin: 20px 0;
+      margin: 16px 0;
     }
 
     .mm-code-digit-big {
-      width: 55px;
-      height: 65px;
+      width: 50px;
+      height: 60px;
       border-radius: var(--k-radius-md);
       background: rgba(0, 240, 255, 0.15);
       border: 2px solid var(--k-secondary);
@@ -387,11 +496,11 @@
       align-items: center;
       justify-content: center;
       font-family: var(--k-font-tech);
-      font-size: 2.2rem;
+      font-size: 2rem;
       font-weight: 900;
       color: #fff;
       text-shadow: 0 0 12px rgba(0, 240, 255, 0.8);
-      box-shadow: 0 0 16px rgba(0, 240, 255, 0.3);
+      box-shadow: 0 0 14px rgba(0, 240, 255, 0.3);
     }
   </style>
 </head>
@@ -435,211 +544,478 @@
 
   <main class="k-container mm-container">
 
-    <!-- Breadcrumb & Header -->
+    <!-- Hero -->
     <div class="mm-hero">
       <div class="mm-badge">
-        <i class="fas fa-fingerprint"></i>
-        <span>منظومة التشفير الكمي المباشرة · QUANTUM CIPHER ENGINE</span>
+        <i class="fas fa-satellite"></i>
+        <span>منظومة المواجهة المباشرة الأونلاين · ONLINE 1V1 MULTIPLAYER</span>
       </div>
-      <h1 style="font-size: 2.5rem; font-weight: 900; color: #fff; margin-bottom: 10px">
-        فك الشفرة الكونية (Mastermind) 🔮
+      <h1 style="font-size: 2.6rem; font-weight: 900; color: #fff; margin-bottom: 8px">
+        فك الشفرة الكونية (Mastermind أونلاين) 🔮
       </h1>
-      <p style="color: var(--k-text-muted); max-width: 650px; margin: 0 auto; font-size: 1.05rem">
-        شفرة سرية يتم توليدها <b style="color:var(--k-secondary)">عشوائياً في كل مرة تدخل فيها</b>! 
-        حلل الإشارات الضوئية واكشف الأرقام المخفية قبل استنزاف محاولاتك الفضائية.
+      <p style="color: var(--k-text-muted); max-width: 680px; margin: 0 auto; font-size: 1.05rem">
+        العب أونلاين مباشرة ضد صاحبك! <b style="color:var(--k-secondary)">كل واحد يختار رقمه السري لمنافسه</b> ويتحديان بعضهما في سباق فك الشفرة بالرابط المباشر.
       </p>
     </div>
 
-    <!-- Main Game Workspace -->
-    <div class="mm-game-grid">
+    <!-- Mode Switcher Tabs -->
+    <div class="mm-mode-switcher">
+      <button type="button" class="mm-mode-tab active" id="tabMultiplayer" onclick="switchMainMode('multiplayer')">
+        <i class="fas fa-swords" style="color:var(--k-accent)"></i>
+        <span>تحدي أونلاين 1 ضد 1 (مع صاحبك) ⚔️</span>
+      </button>
+      <button type="button" class="mm-mode-tab" id="tabSolo" onclick="switchMainMode('solo')">
+        <i class="fas fa-robot" style="color:var(--k-secondary)"></i>
+        <span>تدريب فردي: ضد الشفرة الكونية 🎲</span>
+      </button>
+    </div>
 
-      <!-- Left Column: Terminal & Interaction -->
-      <div class="mm-terminal">
+    <!-- ================================================================= -->
+    <!-- SECTION 1: ONLINE MULTIPLAYER 1V1 -->
+    <!-- ================================================================= -->
+    <div id="sectionMultiplayer">
 
-        <!-- Stage Header & HUD -->
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:18px">
-          <div>
-            <span style="font-size:0.8rem; color:var(--k-secondary); font-family:var(--k-font-tech); font-weight:800">
-              <i class="fas fa-satellite"></i> LIVE RANDOM CIPHER
-            </span>
-            <h3 style="font-size:1.35rem; font-weight:900; color:#fff; margin-top:2px">
-              مصفوفة فك الرموز الفضائية
-            </h3>
-          </div>
+      <!-- Step 1: Lobby & Setup (Create / Join Room) -->
+      <div id="multiLobbyView" class="mm-multi-card">
+        <div style="font-size:2.8rem; margin-bottom:12px; color:var(--k-secondary)">
+          <i class="fas fa-gamepad"></i>
+        </div>
+        <h2 style="font-size:1.8rem; font-weight:900; color:#fff; margin-bottom:8px">
+          غرفة التحدي المباشر 1v1
+        </h2>
+        <p style="color:var(--k-text-muted); max-width:540px; margin:0 auto 24px">
+          اختر اسمك، ثم أنشئ غرفة وشارك الرابط مع صاحبك لتبدآ فوراً، أو أدخل كود غرفة شاركها معك صديقك!
+        </p>
 
-          <div style="display:flex; align-items:center; gap:14px">
-            <div style="background:rgba(255,255,255,0.06); padding:6px 14px; border-radius:var(--k-radius-md); border:1px solid var(--k-border)">
-              <span style="color:var(--k-text-muted); font-size:0.8rem">المحاولات المتبقية:</span>
-              <span id="mmAttemptsLeft" class="k-num" style="color:var(--k-accent); font-weight:900; font-size:1.15rem; margin-right:6px">6 / 6</span>
+        <!-- Player Name -->
+        <div class="k-form-group" style="max-width:380px; margin:0 auto 24px">
+          <label class="k-label" style="text-align:right">اسمك في المعركة:</label>
+          <input type="text" id="multiPlayerName" class="k-input" placeholder="اكتب اسمك..." value="كريم عمر" style="text-align:center; font-size:1.1rem; font-weight:800">
+        </div>
+
+        <!-- 2 Big Action Columns -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:20px; max-width:720px; margin:0 auto">
+          <!-- Create Room -->
+          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(0,240,255,0.3); border-radius:var(--k-radius-lg); padding:24px">
+            <div style="font-size:1.8rem; color:var(--k-secondary); margin-bottom:10px">
+              <i class="fas fa-plus-circle"></i>
             </div>
-            <button type="button" class="k-btn k-btn-secondary k-btn-sm" onclick="restartRandomGame()" title="توليد شفرة عشوائية جديدة الآن">
-              <i class="fas fa-rotate"></i>
-              <span>شفرة جديدة</span>
+            <h3 style="color:#fff; font-size:1.2rem; font-weight:800; margin-bottom:6px">إنشاء غرفة جديدة</h3>
+            <p style="color:var(--k-text-muted); font-size:0.85rem; margin-bottom:16px">
+              أنشئ غرفة خاصة واحصل على رابط مباشر ترسله لصاحبك عبر واتساب أو تليجرام.
+            </p>
+            <button type="button" class="k-btn k-btn-accent" style="width:100%" onclick="multiCreateRoom()">
+              <i class="fas fa-sparkles"></i>
+              <span>إنشاء الغرفة الآن 🚀</span>
             </button>
           </div>
-        </div>
 
-        <!-- Mode Selectors & Clue Bar -->
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px; background:rgba(0,0,0,0.2); padding:10px 14px; border-radius:var(--k-radius-md); border:1px solid rgba(255,255,255,0.06)">
-          <div style="display:flex; align-items:center; gap:8px">
-            <span style="font-size:0.85rem; color:var(--k-text-muted)">صعوبة الشفرة:</span>
-            <select id="mmDifficulty" class="k-select" style="padding:4px 10px; font-size:0.85rem; width:auto" onchange="changeDifficulty()">
-              <option value="3">3 أرقام (سريع)</option>
-              <option value="4" selected>4 أرقام (كلاسيكي كوني)</option>
-              <option value="5">5 أرقام (تحدي النخبة)</option>
-            </select>
-          </div>
-
-          <div style="display:flex; align-items:center; gap:8px">
-            <label style="display:flex; align-items:center; gap:6px; font-size:0.85rem; color:var(--k-text-muted); cursor:pointer">
-              <input type="checkbox" id="mmDuplicates" checked onchange="restartRandomGame()">
-              <span>تكرار الأرقام مسموح</span>
-            </label>
+          <!-- Join Room -->
+          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,0,128,0.3); border-radius:var(--k-radius-lg); padding:24px">
+            <div style="font-size:1.8rem; color:var(--k-accent); margin-bottom:10px">
+              <i class="fas fa-door-open"></i>
+            </div>
+            <h3 style="color:#fff; font-size:1.2rem; font-weight:800; margin-bottom:6px">الانضمام لغرفة صديق</h3>
+            <p style="color:var(--k-text-muted); font-size:0.85rem; margin-bottom:12px">
+              صاحبك بعتلك كود الغرفة؟ اكتبه هنا للدخول معه مباشرة.
+            </p>
+            <div style="display:flex; gap:8px">
+              <input type="text" id="multiJoinCode" class="k-input" placeholder="كود الغرفة (4 أرقام)" maxlength="4" style="text-align:center; font-family:var(--k-font-tech); font-size:1.2rem; font-weight:900">
+              <button type="button" class="k-btn k-btn-cyan" onclick="multiJoinRoom()">
+                <span>دخول</span>
+              </button>
+            </div>
           </div>
         </div>
 
-        <!-- Digit Input Slots -->
-        <div class="mm-slots-box">
-          <div class="mm-slots-label">
-            <span><i class="fas fa-arrow-down" style="color:var(--k-secondary)"></i> أدخل تخمينك في الخانات:</span>
-            <span id="slotFocusHint" style="color:var(--k-secondary); font-size:0.8rem">الخانة 1 جاهزة</span>
-          </div>
+        <div id="multiLobbyError" style="margin-top:16px; color:#ff6b6b; font-size:0.9rem; display:none"></div>
+      </div>
 
-          <div class="mm-slots-row" id="slotsContainer">
-            <!-- Dynamically populated based on difficulty digits -->
-          </div>
+      <!-- Step 2: Waiting for Opponent View -->
+      <div id="multiWaitingView" class="mm-multi-card" style="display:none">
+        <div style="font-size:2.4rem; color:var(--k-secondary); margin-bottom:10px; animation:pulseGlow 2s infinite">
+          <i class="fas fa-tower-broadcast"></i>
+        </div>
+        <h2 style="color:#fff; font-size:1.6rem; font-weight:900; margin-bottom:6px">
+          تم إنشاء الغرفة بنجاح! 🎉
+        </h2>
+        <p style="color:var(--k-text-muted); font-size:0.95rem">
+          شارك هذا الكود أو انسخ الرابط المباشر وأرسله لصاحبك للبدء:
+        </p>
+
+        <div>
+          <span class="mm-room-code-badge" id="waitingRoomCode">----</span>
         </div>
 
-        <!-- Virtual Keypad (Touch & Mobile friendly!) -->
-        <div class="mm-keypad" id="virtualKeypad">
-          <button type="button" class="mm-key" onclick="enterDigit('1')">1</button>
-          <button type="button" class="mm-key" onclick="enterDigit('2')">2</button>
-          <button type="button" class="mm-key" onclick="enterDigit('3')">3</button>
-          <button type="button" class="mm-key" onclick="enterDigit('4')">4</button>
-          <button type="button" class="mm-key" onclick="enterDigit('5')">5</button>
-          <button type="button" class="mm-key" onclick="enterDigit('6')">6</button>
-          <button type="button" class="mm-key" onclick="enterDigit('7')">7</button>
-          <button type="button" class="mm-key" onclick="enterDigit('8')">8</button>
-          <button type="button" class="mm-key" onclick="enterDigit('9')">9</button>
-          <button type="button" class="mm-key" onclick="enterDigit('0')">0</button>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="mm-actions-bar">
-          <button type="button" class="k-btn k-btn-accent" style="flex:2; font-size:1.1rem" onclick="submitGuess()">
-            <i class="fas fa-fingerprint"></i>
-            <span>اختبار الشفرة الآن</span>
+        <!-- Share Actions -->
+        <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin:20px 0">
+          <button type="button" class="k-btn k-btn-accent" onclick="multiCopyInviteLink()">
+            <i class="fas fa-copy"></i>
+            <span>نسخ رابط الدعوة المباشر 🔗</span>
           </button>
-          <button type="button" class="k-btn k-btn-secondary" style="flex:1" onclick="backspaceDigit()">
+          <button type="button" class="k-btn k-btn-secondary" onclick="multiShareWhatsapp()">
+            <i class="fab fa-whatsapp" style="color:#25D366"></i>
+            <span>مشاركة عبر واتساب</span>
+          </button>
+          <button type="button" class="k-btn k-btn-secondary" onclick="multiLeaveRoom()">
+            <i class="fas fa-xmark"></i>
+            <span>إلغاء الغرفة</span>
+          </button>
+        </div>
+
+        <div style="background:rgba(255,255,255,0.03); border:1px solid var(--k-border); border-radius:var(--k-radius-md); padding:12px; max-width:480px; margin:0 auto; font-size:0.85rem; color:var(--k-secondary)">
+          <i class="fas fa-radar"></i> الرادار متصل... بمجرد فتح صاحبك للرابط ستبدأ المعركة تلقائياً!
+        </div>
+      </div>
+
+      <!-- Step 3: Choose Secret Code Phase (كل واحد يختار رقمه لمنافسه) -->
+      <div id="multiSetupView" class="mm-multi-card" style="display:none">
+        <div style="font-size:2.6rem; color:var(--k-gold); margin-bottom:10px">
+          <i class="fas fa-lock"></i>
+        </div>
+        <h2 style="color:#fff; font-size:1.7rem; font-weight:900; margin-bottom:6px">
+          اختر شفرتك السرية لمنافسك! 🔐
+        </h2>
+        <p style="color:var(--k-text-muted); font-size:0.95rem; max-width:540px; margin:0 auto 20px">
+          حدد 4 أرقام سرية سيحاول منافسك <b style="color:var(--k-secondary)" id="setupOpponentName">المتحدي</b> فكها. اجعلها صعبة وذكية!
+        </p>
+
+        <!-- Slots for custom secret -->
+        <div class="mm-slots-box" style="max-width:360px; margin:0 auto 16px">
+          <div class="mm-slots-label">
+            <span>شفرتك السرية للمنافس:</span>
+            <span id="setupSlotHint" style="color:var(--k-secondary)">الخانة 1</span>
+          </div>
+          <div class="mm-slots-row" id="setupSlotsRow">
+            <div class="mm-slot active" id="sSlot0" onclick="selectSetupSlot(0)"></div>
+            <div class="mm-slot" id="sSlot1" onclick="selectSetupSlot(1)"></div>
+            <div class="mm-slot" id="sSlot2" onclick="selectSetupSlot(2)"></div>
+            <div class="mm-slot" id="sSlot3" onclick="selectSetupSlot(3)"></div>
+          </div>
+        </div>
+
+        <!-- Keypad for setup -->
+        <div class="mm-keypad" style="max-width:360px; margin:0 auto 16px">
+          <button type="button" class="mm-key" onclick="enterSetupDigit('1')">1</button>
+          <button type="button" class="mm-key" onclick="enterSetupDigit('2')">2</button>
+          <button type="button" class="mm-key" onclick="enterSetupDigit('3')">3</button>
+          <button type="button" class="mm-key" onclick="enterSetupDigit('4')">4</button>
+          <button type="button" class="mm-key" onclick="enterSetupDigit('5')">5</button>
+          <button type="button" class="mm-key" onclick="enterSetupDigit('6')">6</button>
+          <button type="button" class="mm-key" onclick="enterSetupDigit('7')">7</button>
+          <button type="button" class="mm-key" onclick="enterSetupDigit('8')">8</button>
+          <button type="button" class="mm-key" onclick="enterSetupDigit('9')">9</button>
+          <button type="button" class="mm-key" onclick="enterSetupDigit('0')">0</button>
+        </div>
+
+        <div style="display:flex; justify-content:center; gap:12px; max-width:360px; margin:0 auto">
+          <button type="button" class="k-btn k-btn-accent" style="flex:2" onclick="multiConfirmSecret()">
+            <i class="fas fa-shield-halved"></i>
+            <span>قفل الشفرة وتأكيد التحدي 🔒</span>
+          </button>
+          <button type="button" class="k-btn k-btn-secondary" style="flex:1" onclick="backspaceSetupDigit()">
             <i class="fas fa-delete-left"></i>
             <span>مسح</span>
           </button>
-          <button type="button" class="k-btn k-btn-secondary" style="flex:1" onclick="clearSlots()">
-            <i class="fas fa-trash-can"></i>
-            <span>إفراغ</span>
-          </button>
         </div>
 
-        <!-- Status Message -->
-        <div id="mmStatusMsg" style="margin-top:14px; text-align:center; font-size:0.95rem; min-height:24px; color:var(--k-text-muted)">
-          جاهز! استخدم الأرقام لتخمين الشفرة الفضائية السرية.
+        <div id="setupStatusBadge" style="margin-top:16px; font-size:0.9rem; color:var(--k-text-muted)">
+          جاهز لاختيار شفرتك!
         </div>
+      </div>
 
-        <!-- Attempts History Table -->
-        <div class="mm-history-card">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.08)">
-            <span style="font-size:0.85rem; font-weight:800; color:var(--k-secondary)">
-              <i class="fas fa-list-check"></i> سجل التخمينات والإشارات
-            </span>
-            <span id="historyCountTag" style="font-size:0.8rem; color:var(--k-text-muted)">0 محاولات</span>
+      <!-- Step 4: The Live Duel Battle Arena -->
+      <div id="multiBattleView" style="display:none">
+        
+        <!-- Opponent Live Tracker Banner -->
+        <div class="mm-opponent-hud">
+          <div class="mm-duel-versus">
+            <div class="mm-player-tag">
+              <div class="mm-player-avatar">👑</div>
+              <div>
+                <b style="color:#fff" id="duelMyName">أنت</b>
+                <div style="font-size:0.8rem; color:var(--k-secondary)" id="duelMyStatus">محاولاتك: 0</div>
+              </div>
+            </div>
+
+            <div style="font-size:1.3rem; font-weight:900; color:var(--k-gold); font-family:var(--k-font-tech)">
+              ⚔️ VS ⚔️
+            </div>
+
+            <div class="mm-player-tag">
+              <div>
+                <b style="color:#fff" id="duelOpponentName">المنافس</b>
+                <div style="font-size:0.8rem; color:var(--k-accent)" id="duelOpponentStatus">محاولاته: 0</div>
+              </div>
+              <div class="mm-player-avatar opponent">🎯</div>
+            </div>
           </div>
 
-          <div id="mmHistoryList">
-            <div style="text-align:center; padding:20px; color:var(--k-text-muted); font-size:0.85rem">
-              لم تبدأ أي محاولة بعد. أدخل أرقامك واضغط "اختبار الشفرة" لكشف الإشارات الضوئية.
+          <!-- Opponent live radar progress -->
+          <div>
+            <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:var(--k-text-muted); margin-bottom:4px">
+              <span>رادار تقدم منافسك نحو شفرتك:</span>
+              <span id="opponentRadarTag" style="color:var(--k-accent); font-weight:bold">0%</span>
+            </div>
+            <div class="mm-radar-meter" style="margin:0">
+              <div class="mm-radar-fill" id="opponentRadarFill" style="background:linear-gradient(90deg, var(--k-accent), #ff0055); width:0%"></div>
+            </div>
+            <div id="opponentLiveFeedbackText" style="font-size:0.8rem; color:var(--k-accent); margin-top:6px; text-align:center">
+              المنافس يحلل شفرتك الآن...
+            </div>
+          </div>
+
+          <!-- Quick Reaction Chat -->
+          <div class="mm-taunt-bar">
+            <button type="button" class="mm-taunt-btn" onclick="sendTaunt('🔥', 'شفرتك نار!')">🔥 شفرتك نار!</button>
+            <button type="button" class="mm-taunt-btn" onclick="sendTaunt('😎', 'قربت أفوز عليك!')">😎 قربت أفوز!</button>
+            <button type="button" class="mm-taunt-btn" onclick="sendTaunt('🤯', 'لغزك محير جداً!')">🤯 لغز محير!</button>
+            <button type="button" class="mm-taunt-btn" onclick="sendTaunt('🚀', 'أنا الأسرع في المجرة!')">🚀 أنا الأسرع!</button>
+          </div>
+          <div id="tauntDisplayMsg" style="text-align:center; margin-top:8px; font-size:0.85rem; color:var(--k-gold); min-height:18px"></div>
+        </div>
+
+        <!-- Duel Terminal (You guessing opponent's code) -->
+        <div class="mm-game-grid">
+          <div class="mm-terminal">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px">
+              <div>
+                <span style="font-size:0.8rem; color:var(--k-secondary); font-weight:800">
+                  <i class="fas fa-bullseye"></i> GUESS OPPONENT'S CIPHER
+                </span>
+                <h3 style="color:#fff; font-size:1.25rem; font-weight:900; margin-top:2px">
+                  خمن الشفرة التي اختارها <span id="duelOpponentNameTitle" style="color:var(--k-secondary)">المنافس</span>
+                </h3>
+              </div>
+              <div style="background:rgba(255,255,255,0.06); padding:6px 14px; border-radius:var(--k-radius-md)">
+                <span style="color:var(--k-text-muted); font-size:0.8rem">محاولاتك:</span>
+                <span id="duelMyTriesCount" class="k-num" style="color:var(--k-secondary); font-weight:900; margin-right:4px">0</span>
+              </div>
+            </div>
+
+            <!-- Slots for Guess -->
+            <div class="mm-slots-box">
+              <div class="mm-slots-label">
+                <span>أدخل أرقام تخمينك:</span>
+                <span id="duelFocusHint" style="color:var(--k-secondary)">الخانة 1</span>
+              </div>
+              <div class="mm-slots-row" id="duelSlotsContainer">
+                <div class="mm-slot active" id="dSlot0" onclick="selectDuelSlot(0)"></div>
+                <div class="mm-slot" id="dSlot1" onclick="selectDuelSlot(1)"></div>
+                <div class="mm-slot" id="dSlot2" onclick="selectDuelSlot(2)"></div>
+                <div class="mm-slot" id="dSlot3" onclick="selectDuelSlot(3)"></div>
+              </div>
+            </div>
+
+            <!-- Keypad -->
+            <div class="mm-keypad">
+              <button type="button" class="mm-key" onclick="enterDuelDigit('1')">1</button>
+              <button type="button" class="mm-key" onclick="enterDuelDigit('2')">2</button>
+              <button type="button" class="mm-key" onclick="enterDuelDigit('3')">3</button>
+              <button type="button" class="mm-key" onclick="enterDuelDigit('4')">4</button>
+              <button type="button" class="mm-key" onclick="enterDuelDigit('5')">5</button>
+              <button type="button" class="mm-key" onclick="enterDuelDigit('6')">6</button>
+              <button type="button" class="mm-key" onclick="enterDuelDigit('7')">7</button>
+              <button type="button" class="mm-key" onclick="enterDuelDigit('8')">8</button>
+              <button type="button" class="mm-key" onclick="enterDuelDigit('9')">9</button>
+              <button type="button" class="mm-key" onclick="enterDuelDigit('0')">0</button>
+            </div>
+
+            <div class="mm-actions-bar">
+              <button type="button" class="k-btn k-btn-accent" style="flex:2" onclick="submitDuelGuess()">
+                <i class="fas fa-fingerprint"></i>
+                <span>اختبار الشفرة الآن</span>
+              </button>
+              <button type="button" class="k-btn k-btn-secondary" style="flex:1" onclick="backspaceDuelDigit()">
+                <i class="fas fa-delete-left"></i>
+                <span>مسح</span>
+              </button>
+            </div>
+
+            <!-- History of your guesses -->
+            <div class="mm-history-card">
+              <div style="font-weight:800; font-size:0.85rem; color:var(--k-secondary); margin-bottom:8px">
+                سجل إشاراتك الضوئية ضد منافسك:
+              </div>
+              <div id="duelHistoryList">
+                <div style="text-align:center; padding:16px; color:var(--k-text-muted); font-size:0.85rem">
+                  ابدأ بإدخال 4 أرقام واضغط "اختبار الشفرة" لكشف الإشارات.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Side radar -->
+          <div>
+            <div class="mm-side-card">
+              <div style="display:flex; justify-content:space-between; align-items:center">
+                <h4 style="font-size:1.05rem; font-weight:800; color:#fff">
+                  <i class="fas fa-satellite-dish" style="color:var(--k-secondary)"></i> رادارك أنت
+                </h4>
+                <span id="duelRadarPercent" class="k-num" style="color:var(--k-secondary); font-weight:900">0%</span>
+              </div>
+              <div class="mm-radar-meter">
+                <div class="mm-radar-fill" id="duelRadarFill"></div>
+              </div>
+
+              <!-- Legend -->
+              <div class="mm-legend-box">
+                <div style="font-weight:800; margin-bottom:8px; color:#fff">دليل الإشارات:</div>
+                <div class="mm-legend-item">
+                  <span class="mm-dot dot-green"></span>
+                  <span><b>أخضر:</b> رقم ومكان صحيح 100%</span>
+                </div>
+                <div class="mm-legend-item">
+                  <span class="mm-dot dot-yellow"></span>
+                  <span><b>أصفر:</b> الرقم موجود بمكان آخر</span>
+                </div>
+                <div class="mm-legend-item">
+                  <span class="mm-dot dot-gray"></span>
+                  <span><b>رمادي:</b> الرقم غير موجود إطلاقاً</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mm-side-card">
+              <h4 style="font-size:1rem; font-weight:800; color:#fff; margin-bottom:8px">
+                <i class="fas fa-key" style="color:var(--k-gold)"></i> شفرتك السرية لمنافسك
+              </h4>
+              <p style="font-size:0.8rem; color:var(--k-text-muted); margin-bottom:10px">
+                هذه هي الأرقام التي يحاول منافسك فكها الآن:
+              </p>
+              <div style="display:flex; justify-content:center; gap:8px" id="mySecretBadgeDisplay">
+                <!-- My locked secret digits -->
+              </div>
             </div>
           </div>
         </div>
 
       </div>
 
-      <!-- Right Column: Radar, Clues & Instructions -->
-      <div>
+    </div>
 
-        <!-- Radar Card -->
-        <div class="mm-side-card">
-          <div style="display:flex; justify-content:space-between; align-items:center">
-            <h4 style="font-size:1.1rem; font-weight:800; color:#fff">
-              <i class="fas fa-satellite-dish" style="color:var(--k-secondary)"></i> رادار كشف الشفرة
+    <!-- ================================================================= -->
+    <!-- SECTION 2: SOLO TRAINING MODE (ضد الشفرة العشوائية الفضائية) -->
+    <!-- ================================================================= -->
+    <div id="sectionSolo" style="display:none">
+      
+      <div class="mm-game-grid">
+        <!-- Left: Solo Terminal -->
+        <div class="mm-terminal">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:18px">
+            <div>
+              <span style="font-size:0.8rem; color:var(--k-secondary); font-family:var(--k-font-tech); font-weight:800">
+                <i class="fas fa-dice"></i> SOLO RANDOM TRAINING
+              </span>
+              <h3 style="font-size:1.35rem; font-weight:900; color:#fff; margin-top:2px">
+                تدريب فك الشفرة العشوائية
+              </h3>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:12px">
+              <div style="background:rgba(255,255,255,0.06); padding:6px 14px; border-radius:var(--k-radius-md)">
+                <span style="color:var(--k-text-muted); font-size:0.8rem">المحاولات:</span>
+                <span id="soloAttemptsLeft" class="k-num" style="color:var(--k-accent); font-weight:900; font-size:1.15rem; margin-right:6px">6 / 6</span>
+              </div>
+              <button type="button" class="k-btn k-btn-secondary k-btn-sm" onclick="restartSoloGame()">
+                <i class="fas fa-rotate"></i>
+                <span>شفرة جديدة</span>
+              </button>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px; background:rgba(0,0,0,0.2); padding:10px 14px; border-radius:var(--k-radius-md); border:1px solid rgba(255,255,255,0.06)">
+            <div style="display:flex; align-items:center; gap:8px">
+              <span style="font-size:0.85rem; color:var(--k-text-muted)">عدد الأرقام:</span>
+              <select id="soloDifficulty" class="k-select" style="padding:4px 10px; font-size:0.85rem; width:auto" onchange="changeSoloDifficulty()">
+                <option value="3">3 أرقام (سريع)</option>
+                <option value="4" selected>4 أرقام (كلاسيكي)</option>
+                <option value="5">5 أرقام (تحدي النخبة)</option>
+              </select>
+            </div>
+            <label style="display:flex; align-items:center; gap:6px; font-size:0.85rem; color:var(--k-text-muted); cursor:pointer">
+              <input type="checkbox" id="soloDuplicates" checked onchange="restartSoloGame()">
+              <span>تكرار الأرقام مسموح</span>
+            </label>
+          </div>
+
+          <!-- Solo Slots -->
+          <div class="mm-slots-box">
+            <div class="mm-slots-label">
+              <span>أدخل تخمينك:</span>
+              <span id="soloSlotFocusHint" style="color:var(--k-secondary); font-size:0.8rem">الخانة 1 جاهزة</span>
+            </div>
+            <div class="mm-slots-row" id="soloSlotsContainer"></div>
+          </div>
+
+          <!-- Solo Keypad -->
+          <div class="mm-keypad">
+            <button type="button" class="mm-key" onclick="enterSoloDigit('1')">1</button>
+            <button type="button" class="mm-key" onclick="enterSoloDigit('2')">2</button>
+            <button type="button" class="mm-key" onclick="enterSoloDigit('3')">3</button>
+            <button type="button" class="mm-key" onclick="enterSoloDigit('4')">4</button>
+            <button type="button" class="mm-key" onclick="enterSoloDigit('5')">5</button>
+            <button type="button" class="mm-key" onclick="enterSoloDigit('6')">6</button>
+            <button type="button" class="mm-key" onclick="enterSoloDigit('7')">7</button>
+            <button type="button" class="mm-key" onclick="enterSoloDigit('8')">8</button>
+            <button type="button" class="mm-key" onclick="enterSoloDigit('9')">9</button>
+            <button type="button" class="mm-key" onclick="enterSoloDigit('0')">0</button>
+          </div>
+
+          <div class="mm-actions-bar">
+            <button type="button" class="k-btn k-btn-accent" style="flex:2; font-size:1.1rem" onclick="submitSoloGuess()">
+              <i class="fas fa-fingerprint"></i>
+              <span>اختبار الشفرة الآن</span>
+            </button>
+            <button type="button" class="k-btn k-btn-secondary" style="flex:1" onclick="backspaceSoloDigit()">
+              <i class="fas fa-delete-left"></i>
+              <span>مسح</span>
+            </button>
+          </div>
+
+          <div id="soloStatusMsg" style="margin-top:14px; text-align:center; font-size:0.95rem; min-height:24px; color:var(--k-text-muted)">
+            جاهز! خمن الشفرة الفضائية السرية المولدة عشوائياً.
+          </div>
+
+          <div class="mm-history-card">
+            <div style="font-weight:800; font-size:0.85rem; color:var(--k-secondary); margin-bottom:8px">سجل المحاولات:</div>
+            <div id="soloHistoryList"></div>
+          </div>
+        </div>
+
+        <!-- Right: Solo Side Panel -->
+        <div>
+          <div class="mm-side-card">
+            <div style="display:flex; justify-content:space-between; align-items:center">
+              <h4 style="font-size:1.1rem; font-weight:800; color:#fff">
+                <i class="fas fa-satellite-dish" style="color:var(--k-secondary)"></i> رادار الاستشعار
+              </h4>
+              <span id="soloRadarPercent" class="k-num" style="color:var(--k-secondary); font-weight:900">0%</span>
+            </div>
+            <div class="mm-radar-meter">
+              <div class="mm-radar-fill" id="soloRadarFill"></div>
+            </div>
+
+            <div class="mm-legend-box">
+              <div style="font-weight:800; margin-bottom:8px; color:#fff">دليل الإشارات:</div>
+              <div class="mm-legend-item"><span class="mm-dot dot-green"></span><span><b>أخضر:</b> رقم ومكان صحيح 100%</span></div>
+              <div class="mm-legend-item"><span class="mm-dot dot-yellow"></span><span><b>أصفر:</b> الرقم موجود بمكان آخر</span></div>
+              <div class="mm-legend-item"><span class="mm-dot dot-gray"></span><span><b>رمادي:</b> الرقم غير موجود إطلاقاً</span></div>
+            </div>
+          </div>
+
+          <!-- Solo Clues -->
+          <div class="mm-side-card">
+            <h4 style="font-size:1.1rem; font-weight:800; color:#fff; margin-bottom:10px">
+              <i class="fas fa-lightbulb" style="color:var(--k-gold)"></i> تلميح رياضي
             </h4>
-            <span id="radarPercent" class="k-num" style="color:var(--k-secondary); font-weight:900">0%</span>
-          </div>
-
-          <div class="mm-radar-meter">
-            <div class="mm-radar-fill" id="radarFill"></div>
-          </div>
-          <p style="font-size:0.8rem; color:var(--k-text-muted); margin-top:6px">
-            يتصاعد الرادار كلما اقتربت من مطابقة جميع أرقام الشفرة في أماكنها الصحيحة!
-          </p>
-
-          <!-- Legend -->
-          <div class="mm-legend-box">
-            <div style="font-weight:800; margin-bottom:8px; color:#fff">دليل الإشارات الضوئية:</div>
-            <div class="mm-legend-item">
-              <span class="mm-dot dot-green"></span>
-              <span><b>نقطة خضراء:</b> رقم ومكان صحيح 100% (Exact Match)</span>
-            </div>
-            <div class="mm-legend-item">
-              <span class="mm-dot dot-yellow"></span>
-              <span><b>نقطة صفراء:</b> الرقم موجود في الشفرة ولكن بمكان آخر</span>
-            </div>
-            <div class="mm-legend-item">
-              <span class="mm-dot dot-gray"></span>
-              <span><b>نقطة رمادية:</b> الرقم غير موجود في الشفرة تماماً</span>
-            </div>
+            <button type="button" class="k-btn k-btn-secondary k-btn-sm" style="width:100%" onclick="revealSoloClue()">
+              <i class="fas fa-wand-magic-sparkles"></i>
+              <span>طلب تلميح رياضي</span>
+            </button>
+            <div id="soloClueOutput" style="margin-top:10px; font-size:0.85rem; color:var(--k-gold); display:none; background:rgba(255,215,0,0.08); padding:10px; border-radius:var(--k-radius-sm); border:1px solid rgba(255,215,0,0.2)"></div>
           </div>
         </div>
-
-        <!-- Clues & Beacon Card -->
-        <div class="mm-side-card">
-          <h4 style="font-size:1.1rem; font-weight:800; color:#fff; margin-bottom:12px">
-            <i class="fas fa-lightbulb" style="color:var(--k-gold)"></i> منارة المساعدة الفضائية
-          </h4>
-          <p style="font-size:0.85rem; color:var(--k-text-muted); margin-bottom:14px">
-            هل استعصت عليك الشفرة؟ يمكنك طلب تلميح رياضي ذكي لكشف بعض ملامح الشفرة السرية.
-          </p>
-          <button type="button" class="k-btn k-btn-secondary k-btn-sm" style="width:100%" onclick="revealClue()">
-            <i class="fas fa-wand-magic-sparkles"></i>
-            <span>طلب تلميح رياضي</span>
-          </button>
-          <div id="clueOutput" style="margin-top:10px; font-size:0.85rem; color:var(--k-gold); display:none; background:rgba(255,215,0,0.08); padding:10px; border-radius:var(--k-radius-sm); border:1px solid rgba(255,215,0,0.2)"></div>
-        </div>
-
-        <!-- Stats Card -->
-        <div class="mm-side-card">
-          <h4 style="font-size:1.1rem; font-weight:800; color:#fff; margin-bottom:12px">
-            <i class="fas fa-chart-simple" style="color:var(--k-accent)"></i> إحصائيات اللاعب
-          </h4>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; text-align:center">
-            <div style="background:rgba(255,255,255,0.03); padding:10px; border-radius:var(--k-radius-sm)">
-              <div style="font-size:0.75rem; color:var(--k-text-muted)">الجولات الملعوبة</div>
-              <div id="statPlayed" class="k-num" style="font-size:1.3rem; font-weight:900; color:#fff">0</div>
-            </div>
-            <div style="background:rgba(255,255,255,0.03); padding:10px; border-radius:var(--k-radius-sm)">
-              <div style="font-size:0.75rem; color:var(--k-text-muted)">مرات الفوز</div>
-              <div id="statWon" class="k-num" style="font-size:1.3rem; font-weight:900; color:var(--k-secondary)">0</div>
-            </div>
-            <div style="background:rgba(255,255,255,0.03); padding:10px; border-radius:var(--k-radius-sm)">
-              <div style="font-size:0.75rem; color:var(--k-text-muted)">أفضل رقم محاولات</div>
-              <div id="statBest" class="k-num" style="font-size:1.3rem; font-weight:900; color:var(--k-accent)">-</div>
-            </div>
-            <div style="background:rgba(255,255,255,0.03); padding:10px; border-radius:var(--k-radius-sm)">
-              <div style="font-size:0.75rem; color:var(--k-text-muted)">نسبة الفوز</div>
-              <div id="statWinRate" class="k-num" style="font-size:1.3rem; font-weight:900; color:var(--k-gold)">0%</div>
-            </div>
-          </div>
-        </div>
-
       </div>
 
     </div>
@@ -652,24 +1028,21 @@
       <div id="modalIcon" style="font-size:3.5rem; margin-bottom:12px">🎉</div>
       <h2 id="modalTitle" style="font-size:1.8rem; font-weight:900; color:#fff; margin-bottom:8px">مبروك يا عبقري!</h2>
       <p id="modalDesc" style="color:var(--k-text-muted); font-size:0.95rem">
-        تمكنت من فك الشفرة الكونية بنجاح باهر!
+        تمكنت من فك الشفرة بنجاح!
       </p>
 
-      <div style="margin-top:16px">
-        <span style="font-size:0.85rem; color:var(--k-secondary); font-weight:800">الشفرة السرية كانت:</span>
-        <div class="mm-code-reveal" id="modalCodeReveal">
-          <!-- Digits filled dynamically -->
-        </div>
+      <div style="margin-top:16px" id="modalCodesSection">
+        <span style="font-size:0.85rem; color:var(--k-secondary); font-weight:800">الشفرة السرية:</span>
+        <div class="mm-code-reveal" id="modalCodeReveal"></div>
       </div>
 
       <div style="display:flex; justify-content:center; gap:12px; margin-top:24px; flex-wrap:wrap">
-        <button type="button" class="k-btn k-btn-accent" onclick="closeModalAndPlayAgain()">
+        <button type="button" class="k-btn k-btn-accent" id="modalPlayAgainBtn" onclick="modalPlayAgain()">
           <i class="fas fa-play"></i>
-          <span>العب شفرة جديدة 🎲</span>
+          <span>جولة جديدة 🔄</span>
         </button>
-        <button type="button" class="k-btn k-btn-secondary" onclick="shareVictory()">
-          <i class="fas fa-share-nodes"></i>
-          <span>مشاركة الإنجاز</span>
+        <button type="button" class="k-btn k-btn-secondary" onclick="closeResultModal()">
+          <span>إغلاق</span>
         </button>
       </div>
     </div>
@@ -678,16 +1051,16 @@
   <footer class="k-footer" style="margin-top:60px">
     <div class="k-container">
       <div class="k-footer-bottom" style="text-align:center">
-        <p>© 2026 إمبراطورية كرملات الفضائية · جميع الحقوق محفوظة للقائد والأبطال.</p>
+        <p>© 2026 إمبراطورية كرملات الفضائية · ساحة المواجهات المباشرة وفك الشفرات الأونلاين.</p>
       </div>
     </div>
   </footer>
 
   <script src="kramlat-system.js"></script>
   <script>
-    // -----------------------------------------------------------
-    // SOUND EFFECTS ENGINE (Synthesizer via Web Audio API)
-    // -----------------------------------------------------------
+    // -------------------------------------------------------------
+    // AUDIO ENGINE
+    // -------------------------------------------------------------
     const MMSound = {
       ctx: null,
       init: function() {
@@ -695,9 +1068,7 @@
           const AudioContext = window.AudioContext || window.webkitAudioContext;
           if (AudioContext) this.ctx = new AudioContext();
         }
-        if (this.ctx && this.ctx.state === 'suspended') {
-          this.ctx.resume();
-        }
+        if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
       },
       beep: function(freq = 440, type = 'sine', duration = 0.08) {
         try {
@@ -719,200 +1090,573 @@
       backspace: function() { this.beep(300, 'square', 0.05); },
       submit: function() { this.beep(750, 'sine', 0.1); },
       win: function() {
-        const notes = [440, 554, 659, 880];
-        notes.forEach((f, i) => setTimeout(() => this.beep(f, 'sine', 0.2), i * 110));
+        [440, 554, 659, 880].forEach((f, i) => setTimeout(() => this.beep(f, 'sine', 0.2), i * 110));
       },
       lose: function() {
-        const notes = [400, 320, 250, 180];
-        notes.forEach((f, i) => setTimeout(() => this.beep(f, 'sawtooth', 0.18), i * 130));
+        [400, 320, 250, 180].forEach((f, i) => setTimeout(() => this.beep(f, 'sawtooth', 0.18), i * 130));
       }
     };
 
-    // -----------------------------------------------------------
-    // MASTERMIND GAME STATE
-    // -----------------------------------------------------------
-    let secretCode = [];
-    let digitsCount = 4;
-    let maxAttempts = 6;
-    let attemptsLeft = 6;
-    let currentGuess = [];
-    let activeSlotIndex = 0;
-    let isGameOver = false;
-    let history = [];
+    // -------------------------------------------------------------
+    // WEBSOCKET & MULTIPLAYER REAL-TIME STATE
+    // -------------------------------------------------------------
+    let ws = null;
+    let myRole = null; // 'player1' or 'player2'
+    let currentRoomId = null;
+    let roomState = null;
 
-    // LocalStorage Stats
-    const STATS_KEY = 'kramlat_mastermind_stats';
-    let stats = {
-      played: 0,
-      won: 0,
-      best: null
-    };
+    // Setup Phase State (Choosing secret for opponent)
+    let setupSecret = ['', '', '', ''];
+    let setupSlotIdx = 0;
 
-    function loadStats() {
-      try {
-        const raw = localStorage.getItem(STATS_KEY);
-        if (raw) stats = JSON.parse(raw);
-      } catch(e) {}
-      updateStatsUI();
+    // Battle Phase State (Guessing opponent's secret)
+    let duelGuess = ['', '', '', ''];
+    let duelSlotIdx = 0;
+
+    function initWebSocket() {
+      if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) {
+        return;
+      }
+
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const wsUrl = `${protocol}//${window.location.host}`;
+
+      ws = new WebSocket(wsUrl);
+
+      ws.onopen = () => {
+        console.log('Connected to Kramlat Multiplayer WebSocket');
+        // Check URL for ?room=... auto join
+        const params = new URLSearchParams(window.location.search);
+        const autoRoom = params.get('room');
+        if (autoRoom && !currentRoomId) {
+          document.getElementById('multiJoinCode').value = autoRoom;
+          if (window.KramlatUI) window.KramlatUI.toast(`تم العثور على رابط دعوة للغرفة #${autoRoom}! اضغط دخول أو أدخل اسمك.`);
+        }
+      };
+
+      ws.onmessage = (event) => {
+        try {
+          const msg = JSON.parse(event.data);
+          handleServerMessage(msg);
+        } catch(e) {
+          console.error('Error parsing WS message:', e);
+        }
+      };
+
+      ws.onclose = () => {
+        console.log('WS disconnected, reconnecting in 2s...');
+        setTimeout(initWebSocket, 2000);
+      };
+
+      ws.onerror = (err) => {
+        console.error('WS Error:', err);
+      };
     }
 
-    function saveStats() {
-      try {
-        localStorage.setItem(STATS_KEY, JSON.stringify(stats));
-      } catch(e) {}
-      updateStatsUI();
+    function handleServerMessage(msg) {
+      console.log('Server message:', msg);
+
+      if (msg.type === 'error') {
+        if (window.KramlatUI) window.KramlatUI.toast(msg.message);
+        const errEl = document.getElementById('multiLobbyError');
+        if (errEl) {
+          errEl.innerText = msg.message;
+          errEl.style.display = 'block';
+        }
+        return;
+      }
+
+      if (msg.room) {
+        roomState = msg.room;
+      }
+
+      switch (msg.type) {
+        case 'room_created':
+          myRole = msg.role;
+          currentRoomId = msg.roomId;
+          showWaitingScreen(msg.roomId);
+          if (window.KramlatUI) window.KramlatUI.toast(`تم إنشاء الغرفة #${msg.roomId}! شارك الرابط مع منافسك.`);
+          break;
+
+        case 'room_ready_for_setup':
+          if (!myRole) myRole = msg.role || (roomState?.me?.role);
+          currentRoomId = roomState.id;
+          showSetupScreen();
+          if (window.KramlatUI) window.KramlatUI.toast(msg.message || 'انضم منافسك! اختاروا أرقامكم السرية الآن 🔐');
+          MMSound.click();
+          break;
+
+        case 'secret_locked':
+          updateSetupReadiness();
+          if (window.KramlatUI) window.KramlatUI.toast(msg.message);
+          break;
+
+        case 'game_started':
+          showBattleScreen();
+          if (window.KramlatUI) {
+            window.KramlatUI.toast('بدأت المعركة المباشرة! خمن شفرة منافسك الآن ⚔️🔥', 'fa-solid fa-swords');
+          }
+          MMSound.click();
+          break;
+
+        case 'guess_recorded':
+          renderDuelState();
+          break;
+
+        case 'chat_reaction':
+          showTauntReaction(msg.sender, msg.emoji, msg.text);
+          break;
+
+        case 'game_over':
+          handleMultiGameOver(msg);
+          break;
+
+        case 'rematch_accepted':
+          showSetupScreen();
+          if (window.KramlatUI) window.KramlatUI.toast(msg.message);
+          break;
+
+        case 'opponent_disconnected':
+          if (window.KramlatUI) window.KramlatUI.toast(msg.message, 'fa-solid fa-triangle-exclamation');
+          break;
+      }
     }
 
-    function updateStatsUI() {
-      document.getElementById('statPlayed').innerText = stats.played;
-      document.getElementById('statWon').innerText = stats.won;
-      document.getElementById('statBest').innerText = stats.best !== null ? stats.best : '-';
-      const rate = stats.played > 0 ? Math.round((stats.won / stats.played) * 100) : 0;
-      document.getElementById('statWinRate').innerText = `${rate}%`;
+    // -------------------------------------------------------------
+    // MULTIPLAYER LOBBY ACTIONS
+    // -------------------------------------------------------------
+    function multiCreateRoom() {
+      const name = document.getElementById('multiPlayerName').value.trim() || 'كريم';
+      localStorage.setItem('kramlat_player_name', name);
+      MMSound.click();
+
+      if (!ws || ws.readyState !== WebSocket.OPEN) {
+        initWebSocket();
+        setTimeout(multiCreateRoom, 400);
+        return;
+      }
+
+      ws.send(JSON.stringify({
+        type: 'create_room',
+        playerName: name,
+        digits: 4
+      }));
     }
 
-    // -----------------------------------------------------------
-    // RANDOM CODE GENERATION (Core User Requirement)
-    // -----------------------------------------------------------
-    function generateRandomSecretCode() {
-      const allowDuplicates = document.getElementById('mmDuplicates').checked;
-      const code = [];
-      const pool = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    function multiJoinRoom() {
+      const code = document.getElementById('multiJoinCode').value.trim();
+      const name = document.getElementById('multiPlayerName').value.trim() || 'المتحدي';
+      localStorage.setItem('kramlat_player_name', name);
 
-      if (allowDuplicates) {
-        for (let i = 0; i < digitsCount; i++) {
-          const rand = pool[Math.floor(Math.random() * pool.length)];
-          code.push(rand);
+      if (!code || code.length < 4) {
+        if (window.KramlatUI) window.KramlatUI.toast('يرجى إدخال كود الغرفة المكون من 4 أرقام! ⚠️');
+        return;
+      }
+
+      MMSound.click();
+
+      if (!ws || ws.readyState !== WebSocket.OPEN) {
+        initWebSocket();
+        setTimeout(multiJoinRoom, 400);
+        return;
+      }
+
+      ws.send(JSON.stringify({
+        type: 'join_room',
+        roomId: code,
+        playerName: name
+      }));
+    }
+
+    function showWaitingScreen(roomId) {
+      document.getElementById('multiLobbyView').style.display = 'none';
+      document.getElementById('multiWaitingView').style.display = 'block';
+      document.getElementById('waitingRoomCode').innerText = roomId;
+    }
+
+    function multiCopyInviteLink() {
+      const url = `${window.location.origin}/mastermind.html?room=${currentRoomId}`;
+      const text = `🔮 تعال اتحداني في لعبة فك الشفرة الكونية (Mastermind 1v1)! ادخل من الرابط ده والعب معايا أونلاين:\n${url}`;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text);
+        if (window.KramlatUI) window.KramlatUI.toast('تم نسخ رابط التحدي بنجاح! أرسله لصاحبك الآن 🚀📋');
+      }
+    }
+
+    function multiShareWhatsapp() {
+      const url = `${window.location.origin}/mastermind.html?room=${currentRoomId}`;
+      const text = `🔮 تعال اتحداني في لعبة فك الشفرة الكونية (Mastermind 1v1)! ادخل من الرابط ده والعب معايا أونلاين:\n${url}`;
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    function multiLeaveRoom() {
+      window.location.href = 'mastermind.html';
+    }
+
+    // -------------------------------------------------------------
+    // MULTIPLAYER SETUP PHASE (Choosing secret code for opponent)
+    // -------------------------------------------------------------
+    function showSetupScreen() {
+      document.getElementById('multiLobbyView').style.display = 'none';
+      document.getElementById('multiWaitingView').style.display = 'none';
+      document.getElementById('multiBattleView').style.display = 'none';
+      document.getElementById('multiSetupView').style.display = 'block';
+
+      setupSecret = ['', '', '', ''];
+      setupSlotIdx = 0;
+      renderSetupSlots();
+
+      const opponentName = roomState?.opponent?.name || 'المنافس';
+      document.getElementById('setupOpponentName').innerText = opponentName;
+      document.getElementById('setupStatusBadge').innerText = `اختر 4 أرقام سيحاول ${opponentName} فكها.`;
+      document.getElementById('setupStatusBadge').style.color = 'var(--k-text-muted)';
+    }
+
+    function renderSetupSlots() {
+      for (let i = 0; i < 4; i++) {
+        const el = document.getElementById(`sSlot${i}`);
+        if (!el) continue;
+        el.className = `mm-slot ${i === setupSlotIdx ? 'active' : ''} ${setupSecret[i] ? 'filled' : ''}`;
+        el.innerText = setupSecret[i] || '';
+      }
+      document.getElementById('setupSlotHint').innerText = `الخانة ${setupSlotIdx + 1}`;
+    }
+
+    function selectSetupSlot(idx) {
+      setupSlotIdx = idx;
+      MMSound.click();
+      renderSetupSlots();
+    }
+
+    function enterSetupDigit(d) {
+      MMSound.click();
+      setupSecret[setupSlotIdx] = d;
+      if (setupSlotIdx < 3) setupSlotIdx++;
+      renderSetupSlots();
+    }
+
+    function backspaceSetupDigit() {
+      MMSound.backspace();
+      if (setupSecret[setupSlotIdx] !== '') {
+        setupSecret[setupSlotIdx] = '';
+      } else if (setupSlotIdx > 0) {
+        setupSlotIdx--;
+        setupSecret[setupSlotIdx] = '';
+      }
+      renderSetupSlots();
+    }
+
+    function multiConfirmSecret() {
+      const code = setupSecret.join('');
+      if (code.length !== 4) {
+        if (window.KramlatUI) window.KramlatUI.toast('يرجى ملء جميع الخانات الـ 4 بالأرقام! ⚠️');
+        return;
+      }
+
+      MMSound.submit();
+      ws.send(JSON.stringify({
+        type: 'set_secret',
+        roomId: currentRoomId,
+        secret: code
+      }));
+
+      document.getElementById('setupStatusBadge').innerHTML = `
+        <span style="color:#10b981; font-weight:800">✅ تم قفل شفرتك السرية (${code}) بنجاح!</span><br>
+        في انتظار اختيار منافسك لشفرته...
+      `;
+    }
+
+    function updateSetupReadiness() {
+      if (roomState?.me?.hasChosenSecret && !roomState?.opponent?.hasChosenSecret) {
+        document.getElementById('setupStatusBadge').innerHTML = `
+          <span style="color:#10b981; font-weight:800">✅ أنت جاهز!</span> في انتظار منافسك...
+        `;
+      }
+    }
+
+    // -------------------------------------------------------------
+    // MULTIPLAYER BATTLE PHASE
+    // -------------------------------------------------------------
+    function showBattleScreen() {
+      document.getElementById('multiSetupView').style.display = 'none';
+      document.getElementById('multiBattleView').style.display = 'block';
+
+      duelGuess = ['', '', '', ''];
+      duelSlotIdx = 0;
+      renderDuelSlots();
+      renderDuelState();
+
+      // Show my locked secret in badge
+      const mySecret = roomState?.me?.mySecret || setupSecret.join('');
+      const badgeContainer = document.getElementById('mySecretBadgeDisplay');
+      badgeContainer.innerHTML = mySecret.split('').map(d => `
+        <span style="display:inline-flex; width:34px; height:40px; align-items:center; justify-content:center; background:rgba(255,215,0,0.15); border:1px solid var(--k-gold); border-radius:6px; font-family:var(--k-font-tech); font-weight:900; font-size:1.3rem; color:#fff">${d}</span>
+      `).join('');
+    }
+
+    function renderDuelSlots() {
+      for (let i = 0; i < 4; i++) {
+        const el = document.getElementById(`dSlot${i}`);
+        if (!el) continue;
+        el.className = `mm-slot ${i === duelSlotIdx ? 'active' : ''} ${duelGuess[i] ? 'filled' : ''}`;
+        el.innerText = duelGuess[i] || '';
+      }
+      document.getElementById('duelFocusHint').innerText = `الخانة ${duelSlotIdx + 1}`;
+    }
+
+    function selectDuelSlot(idx) {
+      duelSlotIdx = idx;
+      MMSound.click();
+      renderDuelSlots();
+    }
+
+    function enterDuelDigit(d) {
+      MMSound.click();
+      duelGuess[duelSlotIdx] = d;
+      if (duelSlotIdx < 3) duelSlotIdx++;
+      renderDuelSlots();
+    }
+
+    function backspaceDuelDigit() {
+      MMSound.backspace();
+      if (duelGuess[duelSlotIdx] !== '') {
+        duelGuess[duelSlotIdx] = '';
+      } else if (duelSlotIdx > 0) {
+        duelSlotIdx--;
+        duelGuess[duelSlotIdx] = '';
+      }
+      renderDuelSlots();
+    }
+
+    function submitDuelGuess() {
+      const code = duelGuess.join('');
+      if (code.length !== 4) {
+        if (window.KramlatUI) window.KramlatUI.toast('يرجى ملء الخانات الأربعة بالتخمين! ⚠️');
+        return;
+      }
+
+      MMSound.submit();
+      ws.send(JSON.stringify({
+        type: 'submit_guess',
+        roomId: currentRoomId,
+        guess: code
+      }));
+
+      duelGuess = ['', '', '', ''];
+      duelSlotIdx = 0;
+      renderDuelSlots();
+    }
+
+    function renderDuelState() {
+      if (!roomState) return;
+
+      const myName = roomState.me?.name || 'أنت';
+      const opponentName = roomState.opponent?.name || 'المنافس';
+      const myGuesses = roomState.me?.guesses || [];
+      const oppGuessCount = roomState.opponent?.guessCount || 0;
+      const oppLastFeedback = roomState.opponent?.lastFeedback;
+
+      document.getElementById('duelMyName').innerText = myName;
+      document.getElementById('duelOpponentName').innerText = opponentName;
+      document.getElementById('duelOpponentNameTitle').innerText = opponentName;
+
+      document.getElementById('duelMyStatus').innerText = `محاولاتك: ${myGuesses.length}`;
+      document.getElementById('duelOpponentStatus').innerText = `محاولاته: ${oppGuessCount}`;
+      document.getElementById('duelMyTriesCount').innerText = myGuesses.length;
+
+      // Opponent Live feedback & radar
+      if (oppLastFeedback) {
+        const oppRadar = Math.round(((oppLastFeedback.greens * 1.0 + oppLastFeedback.yellows * 0.4) / 4) * 100);
+        document.getElementById('opponentRadarTag').innerText = `${oppRadar}%`;
+        document.getElementById('opponentRadarFill').style.width = `${oppRadar}%`;
+        document.getElementById('opponentLiveFeedbackText').innerHTML = `
+          آخر إشارة لمنافسك: <b style="color:#10b981">${oppLastFeedback.greens} أخضر</b> · <b style="color:#f59e0b">${oppLastFeedback.yellows} أصفر</b>
+        `;
+      }
+
+      // My history & radar
+      const histEl = document.getElementById('duelHistoryList');
+      if (myGuesses.length === 0) {
+        histEl.innerHTML = `<div style="text-align:center; padding:16px; color:var(--k-text-muted); font-size:0.85rem">لم تبدأ أي محاولة بعد. أدخل أرقامك واضغط "اختبار الشفرة"!</div>`;
+        document.getElementById('duelRadarFill').style.width = '0%';
+        document.getElementById('duelRadarPercent').innerText = '0%';
+      } else {
+        const lastMyGuess = myGuesses[myGuesses.length - 1];
+        const myRadar = Math.round(((lastMyGuess.greens * 1.0 + lastMyGuess.yellows * 0.4) / 4) * 100);
+        document.getElementById('duelRadarFill').style.width = `${myRadar}%`;
+        document.getElementById('duelRadarPercent').innerText = `${myRadar}%`;
+
+        histEl.innerHTML = [...myGuesses].reverse().map(item => `
+          <div class="mm-history-row">
+            <div class="mm-row-attempt">#${item.attemptNumber}</div>
+            <div class="mm-row-digits">
+              ${item.guess.map((d, i) => `<span class="mm-digit-badge ${item.clues[i]}">${d}</span>`).join('')}
+            </div>
+            <div class="mm-feedback-dots">
+              ${Array.from({length: item.greens}).map(() => `<span class="mm-dot dot-green" title="مكان صحيح"></span>`).join('')}
+              ${Array.from({length: item.yellows}).map(() => `<span class="mm-dot dot-yellow" title="مكان مختلف"></span>`).join('')}
+              ${Array.from({length: 4 - item.greens - item.yellows}).map(() => `<span class="mm-dot dot-gray" title="غير موجود"></span>`).join('')}
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function sendTaunt(emoji, text) {
+      if (!ws || ws.readyState !== WebSocket.OPEN) return;
+      ws.send(JSON.stringify({
+        type: 'chat_reaction',
+        roomId: currentRoomId,
+        emoji,
+        text
+      }));
+    }
+
+    function showTauntReaction(sender, emoji, text) {
+      MMSound.click();
+      const el = document.getElementById('tauntDisplayMsg');
+      el.innerHTML = `<span><b>${sender}</b>: ${emoji} ${text}</span>`;
+      setTimeout(() => { el.innerHTML = ''; }, 3500);
+    }
+
+    function handleMultiGameOver(msg) {
+      const isWinner = msg.winner === roomState?.me?.role;
+      if (isWinner) {
+        MMSound.win();
+        if (window.KramlatUI) window.KramlatUI.confetti();
+        document.getElementById('modalIcon').innerText = '👑';
+        document.getElementById('modalTitle').innerText = 'أنت الفائز بالمعركة!';
+        document.getElementById('modalDesc').innerHTML = `
+          مبروك يا أسطورة! فككت شفرة منافسك <b style="color:var(--k-secondary)">${roomState?.opponent?.name}</b> أولاً!<br>
+          ${msg.message}
+        `;
+      } else {
+        MMSound.lose();
+        document.getElementById('modalIcon').innerText = '💀';
+        document.getElementById('modalTitle').innerText = 'فاز منافسك بالمعركة!';
+        document.getElementById('modalDesc').innerHTML = `
+          تمكن <b style="color:var(--k-accent)">${msg.winnerName}</b> من فك شفرتك السرية أولاً.<br>
+          ${msg.message}
+        `;
+      }
+
+      // Reveal Opponent's secret code
+      const opponentSecret = roomState?.opponent?.mySecret || '????';
+      const revealEl = document.getElementById('modalCodeReveal');
+      revealEl.innerHTML = opponentSecret.split('').map(d => `<div class="mm-code-digit-big">${d}</div>`).join('');
+      document.getElementById('modalCodesSection').style.display = 'block';
+
+      document.getElementById('modalPlayAgainBtn').innerHTML = `<i class="fas fa-rotate"></i> <span>طلب جولة تانية مع صاحبك ⚔️</span>`;
+      document.getElementById('modalPlayAgainBtn').onclick = () => {
+        closeResultModal();
+        ws.send(JSON.stringify({ type: 'rematch', roomId: currentRoomId }));
+      };
+
+      openResultModal();
+    }
+
+    function openResultModal() {
+      document.getElementById('resultModal').classList.add('open');
+    }
+
+    function closeResultModal() {
+      document.getElementById('resultModal').classList.remove('open');
+    }
+
+    // -------------------------------------------------------------
+    // SECTION 2: SOLO MODE (Training against Random AI Space Code)
+    // -------------------------------------------------------------
+    let soloSecret = [];
+    let soloDigits = 4;
+    let soloMaxAttempts = 6;
+    let soloAttemptsLeft = 6;
+    let soloGuess = [];
+    let soloSlotIdx = 0;
+    let soloHistory = [];
+    let soloGameOver = false;
+
+    function initSoloGame() {
+      soloDigits = parseInt(document.getElementById('soloDifficulty').value, 10) || 4;
+      soloMaxAttempts = soloDigits === 3 ? 8 : (soloDigits === 5 ? 7 : 6);
+      soloAttemptsLeft = soloMaxAttempts;
+      soloGameOver = false;
+      soloGuess = new Array(soloDigits).fill('');
+      soloSlotIdx = 0;
+      soloHistory = [];
+
+      // Generate random code
+      const allowDupes = document.getElementById('soloDuplicates').checked;
+      const pool = ['0','1','2','3','4','5','6','7','8','9'];
+      soloSecret = [];
+      if (allowDupes) {
+        for (let i = 0; i < soloDigits; i++) {
+          soloSecret.push(pool[Math.floor(Math.random() * pool.length)]);
         }
       } else {
         const shuffled = [...pool].sort(() => 0.5 - Math.random());
-        for (let i = 0; i < digitsCount; i++) {
-          code.push(shuffled[i]);
-        }
+        soloSecret = shuffled.slice(0, soloDigits);
       }
 
-      console.log('Galactic Secret Cipher Initialized (Random)');
-      return code;
+      document.getElementById('soloAttemptsLeft').innerText = `${soloAttemptsLeft} / ${soloMaxAttempts}`;
+      document.getElementById('soloStatusMsg').innerText = `تم توليد شفرة عشوائية من ${soloDigits} أرقام! ابدأ التدريب.`;
+      document.getElementById('soloClueOutput').style.display = 'none';
+      document.getElementById('soloRadarFill').style.width = '0%';
+      document.getElementById('soloRadarPercent').innerText = '0%';
+      document.getElementById('soloHistoryList').innerHTML = `<div style="text-align:center; padding:16px; color:var(--k-text-muted); font-size:0.85rem">لم تبدأ أي محاولة بعد.</div>`;
+
+      renderSoloSlots();
     }
 
-    function initGame() {
-      digitsCount = parseInt(document.getElementById('mmDifficulty').value, 10) || 4;
-      maxAttempts = digitsCount === 3 ? 8 : (digitsCount === 5 ? 7 : 6);
-      attemptsLeft = maxAttempts;
-      isGameOver = false;
-      currentGuess = new Array(digitsCount).fill('');
-      activeSlotIndex = 0;
-      history = [];
-
-      // Generate FRESH Random Code every time!
-      secretCode = generateRandomSecretCode();
-
-      // UI Reset
-      document.getElementById('mmAttemptsLeft').innerText = `${attemptsLeft} / ${maxAttempts}`;
-      document.getElementById('historyCountTag').innerText = `0 محاولات`;
-      document.getElementById('mmStatusMsg').innerText = `تم توليد شفرة عشوائية جديدة من ${digitsCount} أرقام! ابدأ الآن.`;
-      document.getElementById('mmStatusMsg').style.color = 'var(--k-text-muted)';
-      document.getElementById('clueOutput').style.display = 'none';
-      document.getElementById('radarFill').style.width = '0%';
-      document.getElementById('radarPercent').innerText = '0%';
-      document.getElementById('mmHistoryList').innerHTML = `
-        <div style="text-align:center; padding:20px; color:var(--k-text-muted); font-size:0.85rem">
-          لم تبدأ أي محاولة بعد. أدخل أرقامك واضغط "اختبار الشفرة" لكشف الإشارات الضوئية.
-        </div>
-      `;
-
-      renderSlots();
-    }
-
-    function renderSlots() {
-      const container = document.getElementById('slotsContainer');
+    function renderSoloSlots() {
+      const container = document.getElementById('soloSlotsContainer');
       container.innerHTML = '';
-
-      for (let i = 0; i < digitsCount; i++) {
+      for (let i = 0; i < soloDigits; i++) {
         const slot = document.createElement('div');
-        slot.className = `mm-slot ${i === activeSlotIndex ? 'active' : ''} ${currentGuess[i] ? 'filled' : ''}`;
-        slot.innerText = currentGuess[i] || '';
-        slot.onclick = () => selectSlot(i);
+        slot.className = `mm-slot ${i === soloSlotIdx ? 'active' : ''} ${soloGuess[i] ? 'filled' : ''}`;
+        slot.innerText = soloGuess[i] || '';
+        slot.onclick = () => { soloSlotIdx = i; MMSound.click(); renderSoloSlots(); };
         container.appendChild(slot);
       }
-
-      document.getElementById('slotFocusHint').innerText = `الخانة ${activeSlotIndex + 1} جاهزة`;
+      document.getElementById('soloSlotFocusHint').innerText = `الخانة ${soloSlotIdx + 1} جاهزة`;
     }
 
-    function selectSlot(idx) {
-      if (isGameOver) return;
-      activeSlotIndex = idx;
+    function enterSoloDigit(d) {
+      if (soloGameOver) return;
       MMSound.click();
-      renderSlots();
+      soloGuess[soloSlotIdx] = d;
+      if (soloSlotIdx < soloDigits - 1) soloSlotIdx++;
+      renderSoloSlots();
     }
 
-    function enterDigit(digit) {
-      if (isGameOver) return;
-      MMSound.click();
-
-      currentGuess[activeSlotIndex] = digit;
-
-      // Advance to next slot if available
-      if (activeSlotIndex < digitsCount - 1) {
-        activeSlotIndex++;
-      }
-
-      renderSlots();
-    }
-
-    function backspaceDigit() {
-      if (isGameOver) return;
+    function backspaceSoloDigit() {
+      if (soloGameOver) return;
       MMSound.backspace();
-
-      if (currentGuess[activeSlotIndex] !== '') {
-        currentGuess[activeSlotIndex] = '';
-      } else if (activeSlotIndex > 0) {
-        activeSlotIndex--;
-        currentGuess[activeSlotIndex] = '';
+      if (soloGuess[soloSlotIdx] !== '') {
+        soloGuess[soloSlotIdx] = '';
+      } else if (soloSlotIdx > 0) {
+        soloSlotIdx--;
+        soloGuess[soloSlotIdx] = '';
       }
-
-      renderSlots();
+      renderSoloSlots();
     }
 
-    function clearSlots() {
-      if (isGameOver) return;
-      MMSound.backspace();
-      currentGuess = new Array(digitsCount).fill('');
-      activeSlotIndex = 0;
-      renderSlots();
-    }
-
-    // -----------------------------------------------------------
-    // EVALUATE GUESS (Exact Mastermind Logic)
-    // -----------------------------------------------------------
-    function submitGuess() {
-      if (isGameOver) return;
-
-      // Validate all slots filled
-      for (let i = 0; i < digitsCount; i++) {
-        if (!currentGuess[i] || currentGuess[i] === '') {
-          MMSound.backspace();
-          if (window.KramlatUI) window.KramlatUI.toast(`يرجى ملء جميع الخانات (${digitsCount} أرقام)! ⚠️`);
-          document.getElementById('mmStatusMsg').innerText = `⚠️ يرجى ملء الخانة ${i + 1} قبل الاختبار.`;
-          document.getElementById('mmStatusMsg').style.color = '#ff6b6b';
-          activeSlotIndex = i;
-          renderSlots();
+    function submitSoloGuess() {
+      if (soloGameOver) return;
+      for (let i = 0; i < soloDigits; i++) {
+        if (!soloGuess[i]) {
+          if (window.KramlatUI) window.KramlatUI.toast(`يرجى ملء جميع الخانات (${soloDigits} أرقام)! ⚠️`);
           return;
         }
       }
 
       MMSound.submit();
+      const secretCopy = [...soloSecret];
+      const guessCopy = [...soloGuess];
+      const clues = new Array(soloDigits).fill('red');
+      let greens = 0;
+      let yellows = 0;
 
-      // Mastermind Feedback Calculation (Bulls and Cows with duplicate handling)
-      const secretCopy = [...secretCode];
-      const guessCopy = [...currentGuess];
-      const clues = new Array(digitsCount).fill('red');
-
-      let greens = 0; // Exact match (digit & position)
-      let yellows = 0; // Partial match (digit exists, wrong position)
-
-      // Pass 1: find greens
-      for (let i = 0; i < digitsCount; i++) {
+      for (let i = 0; i < soloDigits; i++) {
         if (guessCopy[i] === secretCopy[i]) {
           clues[i] = 'green';
           greens++;
@@ -921,8 +1665,7 @@
         }
       }
 
-      // Pass 2: find yellows
-      for (let i = 0; i < digitsCount; i++) {
+      for (let i = 0; i < soloDigits; i++) {
         if (guessCopy[i] !== null) {
           const matchIdx = secretCopy.indexOf(guessCopy[i]);
           if (matchIdx !== -1) {
@@ -933,189 +1676,163 @@
         }
       }
 
-      attemptsLeft--;
-      document.getElementById('mmAttemptsLeft').innerText = `${attemptsLeft} / ${maxAttempts}`;
+      soloAttemptsLeft--;
+      document.getElementById('soloAttemptsLeft').innerText = `${soloAttemptsLeft} / ${soloMaxAttempts}`;
 
-      // Calculate Radar Progress
-      const radarScore = Math.round(((greens * 1.0 + yellows * 0.4) / digitsCount) * 100);
-      document.getElementById('radarFill').style.width = `${radarScore}%`;
-      document.getElementById('radarPercent').innerText = `${radarScore}%`;
+      const radarScore = Math.round(((greens * 1.0 + yellows * 0.4) / soloDigits) * 100);
+      document.getElementById('soloRadarFill').style.width = `${radarScore}%`;
+      document.getElementById('soloRadarPercent').innerText = `${radarScore}%`;
 
-      // Save to history
-      history.unshift({
-        attemptNumber: maxAttempts - attemptsLeft,
-        guess: [...currentGuess],
-        clues: clues,
-        greens: greens,
-        yellows: yellows
+      soloHistory.unshift({
+        attemptNumber: soloMaxAttempts - soloAttemptsLeft,
+        guess: [...soloGuess],
+        clues,
+        greens,
+        yellows
       });
 
-      renderHistory();
+      renderSoloHistory();
 
-      // Status message
-      document.getElementById('mmStatusMsg').innerHTML = `
-        الإشارة: <b style="color:#10b981">${greens} مكان صحيح</b> · <b style="color:#f59e0b">${yellows} رقم بمكان آخر</b>
-      `;
-      document.getElementById('mmStatusMsg').style.color = '#fff';
-
-      // Check WIN condition
-      if (greens === digitsCount) {
-        handleWin();
+      if (greens === soloDigits) {
+        soloGameOver = true;
+        MMSound.win();
+        if (window.KramlatUI) window.KramlatUI.confetti();
+        document.getElementById('modalIcon').innerText = '🎉';
+        document.getElementById('modalTitle').innerText = 'تم فك الشفرة بنجاح!';
+        document.getElementById('modalDesc').innerHTML = `فوز أسطوري في <b>${soloMaxAttempts - soloAttemptsLeft} محاولات</b>!`;
+        document.getElementById('modalCodeReveal').innerHTML = soloSecret.map(d => `<div class="mm-code-digit-big">${d}</div>`).join('');
+        document.getElementById('modalPlayAgainBtn').innerHTML = `<i class="fas fa-play"></i> <span>تدريب جديد 🎲</span>`;
+        document.getElementById('modalPlayAgainBtn').onclick = () => { closeResultModal(); restartSoloGame(); };
+        openResultModal();
         return;
       }
 
-      // Check LOSE condition
-      if (attemptsLeft <= 0) {
-        handleLose();
+      if (soloAttemptsLeft <= 0) {
+        soloGameOver = true;
+        MMSound.lose();
+        document.getElementById('modalIcon').innerText = '💀';
+        document.getElementById('modalTitle').innerText = 'نفدت المحاولات!';
+        document.getElementById('modalDesc').innerText = 'استنفدت جميع محاولاتك الفضائية.';
+        document.getElementById('modalCodeReveal').innerHTML = soloSecret.map(d => `<div class="mm-code-digit-big">${d}</div>`).join('');
+        document.getElementById('modalPlayAgainBtn').onclick = () => { closeResultModal(); restartSoloGame(); };
+        openResultModal();
         return;
       }
 
-      // Clear slots for next attempt
-      currentGuess = new Array(digitsCount).fill('');
-      activeSlotIndex = 0;
-      renderSlots();
+      soloGuess = new Array(soloDigits).fill('');
+      soloSlotIdx = 0;
+      renderSoloSlots();
     }
 
-    function renderHistory() {
-      const listEl = document.getElementById('mmHistoryList');
-      document.getElementById('historyCountTag').innerText = `${history.length} محاولات`;
-
-      listEl.innerHTML = history.map(item => `
+    function renderSoloHistory() {
+      const container = document.getElementById('soloHistoryList');
+      container.innerHTML = soloHistory.map(item => `
         <div class="mm-history-row">
           <div class="mm-row-attempt">#${item.attemptNumber}</div>
           <div class="mm-row-digits">
-            ${item.guess.map((d, i) => `
-              <span class="mm-digit-badge ${item.clues[i]}">${d}</span>
-            `).join('')}
+            ${item.guess.map((d, i) => `<span class="mm-digit-badge ${item.clues[i]}">${d}</span>`).join('')}
           </div>
           <div class="mm-feedback-dots">
-            ${Array.from({length: item.greens}).map(() => `<span class="mm-dot dot-green" title="رقم ومكان صحيح"></span>`).join('')}
-            ${Array.from({length: item.yellows}).map(() => `<span class="mm-dot dot-yellow" title="مكان خاطئ"></span>`).join('')}
-            ${Array.from({length: digitsCount - item.greens - item.yellows}).map(() => `<span class="mm-dot dot-gray" title="غير موجود"></span>`).join('')}
+            ${Array.from({length: item.greens}).map(() => `<span class="mm-dot dot-green"></span>`).join('')}
+            ${Array.from({length: item.yellows}).map(() => `<span class="mm-dot dot-yellow"></span>`).join('')}
+            ${Array.from({length: soloDigits - item.greens - item.yellows}).map(() => `<span class="mm-dot dot-gray"></span>`).join('')}
           </div>
         </div>
       `).join('');
     }
 
-    function handleWin() {
-      isGameOver = true;
-      MMSound.win();
-      if (window.KramlatUI) window.KramlatUI.confetti();
-
-      stats.played++;
-      stats.won++;
-      const usedAttempts = maxAttempts - attemptsLeft;
-      if (stats.best === null || usedAttempts < stats.best) {
-        stats.best = usedAttempts;
-      }
-      saveStats();
-
-      // Show Modal
-      document.getElementById('modalIcon').innerText = '👑';
-      document.getElementById('modalTitle').innerText = 'تم فك الشفرة بنجاح!';
-      document.getElementById('modalDesc').innerHTML = `
-        أنت أسطورة! فككت الشفرة الكونية في <b>${usedAttempts} محاولات</b> فقط!<br>
-        تم ترقيتك إلى رتبة: <b style="color:var(--k-gold)">مفكك شفرات المجرة الأسطوري 🌟</b>
-      `;
-
-      renderModalCode(secretCode);
-      openModal();
+    function restartSoloGame() {
+      initSoloGame();
+      if (window.KramlatUI) window.KramlatUI.toast('تم توليد شفرة عشوائية جديدة! 🎲');
     }
 
-    function handleLose() {
-      isGameOver = true;
-      MMSound.lose();
-
-      stats.played++;
-      saveStats();
-
-      document.getElementById('modalIcon').innerText = '💀';
-      document.getElementById('modalTitle').innerText = 'نفدت المحاولات الفضائية!';
-      document.getElementById('modalDesc').innerText = 'لقد استنفدت جميع محاولاتك الفضائية. لا تقلق، يمكنك المحاولة مرة أخرى بشفرة عشوائية جديدة!';
-
-      renderModalCode(secretCode);
-      openModal();
+    function changeSoloDifficulty() {
+      initSoloGame();
     }
 
-    function renderModalCode(code) {
-      const container = document.getElementById('modalCodeReveal');
-      container.innerHTML = code.map(d => `<div class="mm-code-digit-big">${d}</div>`).join('');
-    }
-
-    function openModal() {
-      document.getElementById('resultModal').classList.add('open');
-    }
-
-    function closeModalAndPlayAgain() {
-      document.getElementById('resultModal').classList.remove('open');
-      restartRandomGame();
-    }
-
-    function restartRandomGame() {
-      initGame();
-      if (window.KramlatUI) window.KramlatUI.toast('تم توليد شفرة عشوائية جديدة! 🎲✨', 'fa-solid fa-rotate');
-    }
-
-    function changeDifficulty() {
-      initGame();
-    }
-
-    // Mathematical Clue Assistant
-    function revealClue() {
-      if (isGameOver) return;
+    function revealSoloClue() {
+      if (soloGameOver) return;
       MMSound.click();
-      const sum = secretCode.reduce((acc, cur) => acc + parseInt(cur, 10), 0);
-      const evens = secretCode.filter(n => parseInt(n, 10) % 2 === 0).length;
-      const odds = digitsCount - evens;
-
+      const sum = soloSecret.reduce((a, c) => a + parseInt(c, 10), 0);
+      const evens = soloSecret.filter(n => parseInt(n, 10) % 2 === 0).length;
       const hints = [
-        `مجموع كل أرقام الشفرة يساوي <b>${sum}</b>.`,
-        `تحتوي الشفرة على <b>${evens} أرقام زوجية</b> و <b>${odds} أرقام فردية</b>.`,
-        `الرقم الأول في الشفرة ${parseInt(secretCode[0], 10) > 4 ? 'أكبر من 4' : 'أقل من أو يساوي 4'}.`
+        `مجموع كل أرقام الشفرة = <b>${sum}</b>.`,
+        `تحتوي الشفرة على <b>${evens} أرقام زوجية</b> و <b>${soloDigits - evens} أرقام فردية</b>.`
       ];
-
-      const hintText = hints[Math.floor(Math.random() * hints.length)];
-      const out = document.getElementById('clueOutput');
-      out.innerHTML = `<i class="fas fa-lightbulb"></i> تلميح فضائي: ${hintText}`;
+      const h = hints[Math.floor(Math.random() * hints.length)];
+      const out = document.getElementById('soloClueOutput');
+      out.innerHTML = `<i class="fas fa-lightbulb"></i> تلميح: ${h}`;
       out.style.display = 'block';
     }
 
-    function shareVictory() {
-      const used = maxAttempts - attemptsLeft;
-      const text = `🔮 فككت الشفرة الكونية في موقع كرملات بـ ${used} محاولات فقط! هل تقدر تتحداني؟\n${window.location.href}`;
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(text);
-        if (window.KramlatUI) window.KramlatUI.toast('تم نسخ رسالة التحدي بنجاح! شاركها مع أصدقائك 🚀');
+    // -------------------------------------------------------------
+    // MAIN TAB SWITCHER
+    // -------------------------------------------------------------
+    function switchMainMode(mode) {
+      MMSound.click();
+      const tabMulti = document.getElementById('tabMultiplayer');
+      const tabSolo = document.getElementById('tabSolo');
+      const secMulti = document.getElementById('sectionMultiplayer');
+      const secSolo = document.getElementById('sectionSolo');
+
+      if (mode === 'multiplayer') {
+        tabMulti.classList.add('active');
+        tabSolo.classList.remove('active');
+        secMulti.style.display = 'block';
+        secSolo.style.display = 'none';
+        initWebSocket();
+      } else {
+        tabSolo.classList.add('active');
+        tabMulti.classList.remove('active');
+        secSolo.style.display = 'block';
+        secMulti.style.display = 'none';
+        initSoloGame();
       }
     }
 
-    // Keyboard Listeners
-    window.addEventListener('keydown', (e) => {
-      if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
-
-      if (e.key >= '0' && e.key <= '9') {
-        enterDigit(e.key);
-      } else if (e.key === 'Backspace') {
-        backspaceDigit();
-      } else if (e.key === 'Enter') {
-        submitGuess();
-      } else if (e.key === 'ArrowLeft' && activeSlotIndex > 0) {
-        selectSlot(activeSlotIndex - 1);
-      } else if (e.key === 'ArrowRight' && activeSlotIndex < digitsCount - 1) {
-        selectSlot(activeSlotIndex + 1);
-      }
-    });
-
-    // Mobile nav toggle
     function toggleNav() {
       const links = document.getElementById('kNavLinks');
       if (links) links.classList.toggle('open');
     }
 
-    // Initialize on load
+    // Physical Keyboard support
+    window.addEventListener('keydown', (e) => {
+      if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
+
+      const isMultiBattle = document.getElementById('multiBattleView').style.display === 'block';
+      const isMultiSetup = document.getElementById('multiSetupView').style.display === 'block';
+      const isSolo = document.getElementById('sectionSolo').style.display === 'block';
+
+      if (e.key >= '0' && e.key <= '9') {
+        if (isMultiBattle) enterDuelDigit(e.key);
+        else if (isMultiSetup) enterSetupDigit(e.key);
+        else if (isSolo) enterSoloDigit(e.key);
+      } else if (e.key === 'Backspace') {
+        if (isMultiBattle) backspaceDuelDigit();
+        else if (isMultiSetup) backspaceSetupDigit();
+        else if (isSolo) backspaceSoloDigit();
+      } else if (e.key === 'Enter') {
+        if (isMultiBattle) submitDuelGuess();
+        else if (isMultiSetup) multiConfirmSecret();
+        else if (isSolo) submitSoloGuess();
+      }
+    });
+
+    // Initialize on page load
     document.addEventListener('DOMContentLoaded', () => {
-      loadStats();
-      initGame();
+      // Saved name
+      const savedName = localStorage.getItem('kramlat_player_name');
+      if (savedName) {
+        document.getElementById('multiPlayerName').value = savedName;
+      }
+
+      // Check if URL has ?mode=solo or ?room=XYZ
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('mode') === 'solo') {
+        switchMainMode('solo');
+      } else {
+        switchMainMode('multiplayer');
+      }
     });
   </script>
 </body>

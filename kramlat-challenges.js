@@ -275,7 +275,7 @@
             </div>
             <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap">
               <a href="mastermind.html" class="k-btn k-btn-accent k-btn-sm" style="box-shadow:0 0 14px rgba(255,0,128,0.4)">
-                <i class="fas fa-expand"></i> <span>الصفحة المخصصة (شفرات عشوائية) 🔮</span>
+                <i class="fas fa-swords"></i> <span>العب أونلاين 1 ضد 1 مع صاحبك ⚔️</span>
               </a>
               <div class="k-hud-item"><span class="k-hud-label">المحاولات:</span> <span id="codAttempts" class="k-hud-val k-num">6 / 6</span></div>
             </div>
