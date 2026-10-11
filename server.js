@@ -204,9 +204,17 @@ app.post('/api/admin/logout', (req, res) => {
 });
 
 // ----------------------------------------------------
-// MULTIPLAYER MASTERMIND ENGINE (WebSocket & Rooms)
+// MULTIPLAYER MASTERMIND ENGINE (REST API + WebSocket)
 // ----------------------------------------------------
 const multiplayerRooms = new Map();
+
+function normalizeDigits(str) {
+  if (!str) return '';
+  return str.toString()
+    .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d))
+    .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+    .replace(/\s+/g, '');
+}
 
 function generateRoomId() {
   let id = '';
@@ -218,8 +226,10 @@ function generateRoomId() {
 
 // Evaluate Mastermind Guess against Secret
 function evaluateMastermind(guess, secret, digits = 4) {
-  const secretCopy = secret.split('');
-  const guessCopy = guess.split('');
+  const normGuess = normalizeDigits(guess);
+  const normSecret = normalizeDigits(secret);
+  const secretCopy = normSecret.split('');
+  const guessCopy = normGuess.split('');
   const clues = new Array(digits).fill('red');
 
   let greens = 0;
@@ -262,11 +272,13 @@ function sanitizeRoomForPlayer(room, role) {
     status: room.status,
     winner: room.winner,
     winnerName: room.winner ? (room.winner === 'player1' ? room.player1?.name : room.player2?.name) : null,
+    lastReaction: room.lastReaction || null,
     me: me ? {
+      id: me.id,
       name: me.name,
       role: isP1 ? 'player1' : 'player2',
       hasChosenSecret: !!me.secret,
-      mySecret: me.secret, // Player can see the secret they chose for their opponent
+      mySecret: me.secret,
       guesses: me.guesses,
       won: me.won,
       ready: me.ready
@@ -275,7 +287,7 @@ function sanitizeRoomForPlayer(room, role) {
       name: opponent.name,
       role: isP1 ? 'player2' : 'player1',
       hasChosenSecret: !!opponent.secret,
-      // my opponent's secret is HIDDEN until game over
+      // Opponent's secret is strictly hidden until game_over
       mySecret: room.status === 'game_over' ? opponent.secret : null,
       guessCount: opponent.guesses.length,
       lastFeedback: opponent.guesses.length > 0 ? {
@@ -291,23 +303,342 @@ function sanitizeRoomForPlayer(room, role) {
 // Broadcast message to room players
 function broadcastToRoom(room, messageObj) {
   if (room.player1?.ws && room.player1.ws.readyState === WebSocket.OPEN) {
-    const payload = Object.assign({}, messageObj, {
-      room: sanitizeRoomForPlayer(room, 'player1')
-    });
-    room.player1.ws.send(JSON.stringify(payload));
+    try {
+      const payload = Object.assign({}, messageObj, {
+        room: sanitizeRoomForPlayer(room, 'player1')
+      });
+      room.player1.ws.send(JSON.stringify(payload));
+    } catch(e) {}
   }
 
   if (room.player2?.ws && room.player2.ws.readyState === WebSocket.OPEN) {
-    const payload = Object.assign({}, messageObj, {
-      room: sanitizeRoomForPlayer(room, 'player2')
-    });
-    room.player2.ws.send(JSON.stringify(payload));
+    try {
+      const payload = Object.assign({}, messageObj, {
+        room: sanitizeRoomForPlayer(room, 'player2')
+      });
+      room.player2.ws.send(JSON.stringify(payload));
+    } catch(e) {}
   }
 }
 
-// REST route to inspect room
+// ----------------------------------------------------
+// REST API ENDPOINTS FOR MULTIPLAYER (100% Reliable Fallback)
+// ----------------------------------------------------
+
+// 1. Create Room via REST
+app.post('/api/multiplayer/room/create', (req, res) => {
+  const roomId = generateRoomId();
+  const playerName = (req.body.playerName || 'القائد').trim().slice(0, 20);
+  const digits = parseInt(req.body.digits, 10) || 4;
+  const token = crypto.randomUUID();
+
+  const room = {
+    id: roomId,
+    digits: digits,
+    status: 'waiting',
+    player1: {
+      id: token,
+      ws: null,
+      name: playerName,
+      secret: null,
+      guesses: [],
+      won: false,
+      ready: false
+    },
+    player2: null,
+    winner: null,
+    lastReaction: null,
+    createdAt: Date.now(),
+    lastActivity: Date.now()
+  };
+
+  multiplayerRooms.set(roomId, room);
+
+  return res.json({
+    success: true,
+    roomId: roomId,
+    playerToken: token,
+    role: 'player1',
+    room: sanitizeRoomForPlayer(room, 'player1')
+  });
+});
+
+// 2. Join Room via REST
+app.post('/api/multiplayer/room/join', (req, res) => {
+  const roomId = normalizeDigits(req.body.roomId);
+  const playerName = (req.body.playerName || 'المتحدي').trim().slice(0, 20);
+  const room = multiplayerRooms.get(roomId);
+
+  if (!room) {
+    return res.status(404).json({
+      success: false,
+      error: `الغرفة رقم #${roomId} غير موجودة أو انتهت صلاحيتها! ⚠️`
+    });
+  }
+
+  // Check if player is re-joining with existing token
+  const existingToken = req.body.token || req.headers['x-player-token'];
+  if (existingToken) {
+    if (room.player1?.id === existingToken) {
+      return res.json({
+        success: true,
+        roomId: room.id,
+        playerToken: existingToken,
+        role: 'player1',
+        room: sanitizeRoomForPlayer(room, 'player1')
+      });
+    }
+    if (room.player2?.id === existingToken) {
+      return res.json({
+        success: true,
+        roomId: room.id,
+        playerToken: existingToken,
+        role: 'player2',
+        room: sanitizeRoomForPlayer(room, 'player2')
+      });
+    }
+  }
+
+  if (room.player2) {
+    return res.status(400).json({
+      success: false,
+      error: 'عذراً! الغرفة ممتلئة بالفعل باثنين من اللاعبين ⚠️'
+    });
+  }
+
+  const token = crypto.randomUUID();
+  room.player2 = {
+    id: token,
+    ws: null,
+    name: playerName,
+    secret: null,
+    guesses: [],
+    won: false,
+    ready: false
+  };
+  room.status = 'setup';
+  room.lastActivity = Date.now();
+
+  broadcastToRoom(room, {
+    type: 'room_ready_for_setup',
+    message: `انضم ${playerName}! الآن اختاروا أرقامكم السرية لمنافسكم 🔐`
+  });
+
+  return res.json({
+    success: true,
+    roomId: room.id,
+    playerToken: token,
+    role: 'player2',
+    room: sanitizeRoomForPlayer(room, 'player2')
+  });
+});
+
+// 3. Get Room State via REST (Polling / State fetch)
+app.get('/api/multiplayer/room/:id/state', (req, res) => {
+  const roomId = normalizeDigits(req.params.id);
+  const token = req.query.token || req.headers['x-player-token'];
+  const room = multiplayerRooms.get(roomId);
+
+  if (!room) {
+    return res.status(404).json({ success: false, error: 'الغرفة غير موجودة' });
+  }
+
+  let role = 'spectator';
+  if (token && room.player1?.id === token) role = 'player1';
+  else if (token && room.player2?.id === token) role = 'player2';
+
+  return res.json({
+    success: true,
+    role: role,
+    room: sanitizeRoomForPlayer(room, role)
+  });
+});
+
+// 4. Set Secret via REST
+app.post('/api/multiplayer/room/secret', (req, res) => {
+  const roomId = normalizeDigits(req.body.roomId);
+  const token = req.body.token || req.headers['x-player-token'];
+  const secret = normalizeDigits(req.body.secret);
+  const room = multiplayerRooms.get(roomId);
+
+  if (!room) {
+    return res.status(404).json({ success: false, error: 'الغرفة غير موجودة' });
+  }
+
+  let player = null;
+  let role = null;
+  if (room.player1?.id === token) { player = room.player1; role = 'player1'; }
+  else if (room.player2?.id === token) { player = room.player2; role = 'player2'; }
+
+  if (!player) {
+    return res.status(403).json({ success: false, error: 'غير مصرح لك في هذه الغرفة' });
+  }
+
+  if (secret.length !== room.digits) {
+    return res.status(400).json({ success: false, error: `يجب أن تتكون الشفرة من ${room.digits} أرقام!` });
+  }
+
+  player.secret = secret;
+  player.ready = true;
+  room.lastActivity = Date.now();
+
+  if (room.player1?.ready && room.player2?.ready) {
+    room.status = 'playing';
+    broadcastToRoom(room, {
+      type: 'game_started',
+      message: '🚀 تم قفل الشفرات السرية! بدأت المواجهة المباشرة الآن، خمن شفرة منافسك!'
+    });
+  } else {
+    broadcastToRoom(room, {
+      type: 'secret_locked',
+      message: `${player.name} قفل شفرته السرية! في انتظار الطرف الآخر...`
+    });
+  }
+
+  return res.json({
+    success: true,
+    room: sanitizeRoomForPlayer(room, role)
+  });
+});
+
+// 5. Submit Guess via REST
+app.post('/api/multiplayer/room/guess', (req, res) => {
+  const roomId = normalizeDigits(req.body.roomId);
+  const token = req.body.token || req.headers['x-player-token'];
+  const guess = normalizeDigits(req.body.guess);
+  const room = multiplayerRooms.get(roomId);
+
+  if (!room || room.status !== 'playing') {
+    return res.status(400).json({ success: false, error: 'اللعبة ليست جارية حالياً' });
+  }
+
+  let player = null;
+  let opponent = null;
+  let role = null;
+
+  if (room.player1?.id === token) {
+    player = room.player1;
+    opponent = room.player2;
+    role = 'player1';
+  } else if (room.player2?.id === token) {
+    player = room.player2;
+    opponent = room.player1;
+    role = 'player2';
+  }
+
+  if (!player || !opponent || !opponent.secret) {
+    return res.status(403).json({ success: false, error: 'بيانات التحدي غير مكتملة' });
+  }
+
+  if (guess.length !== room.digits) {
+    return res.status(400).json({ success: false, error: `التخمين يجب أن يتكون من ${room.digits} أرقام!` });
+  }
+
+  const evalResult = evaluateMastermind(guess, opponent.secret, room.digits);
+  const guessRecord = {
+    attemptNumber: player.guesses.length + 1,
+    guess: guess.split(''),
+    clues: evalResult.clues,
+    greens: evalResult.greens,
+    yellows: evalResult.yellows,
+    timestamp: Date.now()
+  };
+
+  player.guesses.push(guessRecord);
+  room.lastActivity = Date.now();
+
+  if (evalResult.greens === room.digits) {
+    player.won = true;
+    room.status = 'game_over';
+    room.winner = role;
+
+    broadcastToRoom(room, {
+      type: 'game_over',
+      winner: role,
+      winnerName: player.name,
+      message: `🎉 فاز ${player.name} بفك الشفرة السرية أولاً في ${player.guesses.length} محاولات!`
+    });
+  } else {
+    broadcastToRoom(room, {
+      type: 'guess_recorded',
+      whoGuessed: role,
+      whoGuessedName: player.name
+    });
+  }
+
+  return res.json({
+    success: true,
+    room: sanitizeRoomForPlayer(room, role),
+    won: evalResult.greens === room.digits
+  });
+});
+
+// 6. Chat / Taunt via REST
+app.post('/api/multiplayer/room/taunt', (req, res) => {
+  const roomId = normalizeDigits(req.body.roomId);
+  const token = req.body.token || req.headers['x-player-token'];
+  const room = multiplayerRooms.get(roomId);
+  if (!room) return res.status(404).json({ success: false });
+
+  let senderName = 'لاعب';
+  let role = 'spectator';
+  if (room.player1?.id === token) { senderName = room.player1.name; role = 'player1'; }
+  else if (room.player2?.id === token) { senderName = room.player2.name; role = 'player2'; }
+
+  room.lastReaction = {
+    sender: senderName,
+    role: role,
+    emoji: req.body.emoji || '🔥',
+    text: req.body.text || '',
+    time: Date.now()
+  };
+
+  broadcastToRoom(room, {
+    type: 'chat_reaction',
+    sender: senderName,
+    role: role,
+    emoji: req.body.emoji || '🔥',
+    text: req.body.text || ''
+  });
+
+  res.json({ success: true });
+});
+
+// 7. Rematch via REST
+app.post('/api/multiplayer/room/rematch', (req, res) => {
+  const roomId = normalizeDigits(req.body.roomId);
+  const room = multiplayerRooms.get(roomId);
+  if (!room) return res.status(404).json({ success: false });
+
+  room.status = 'setup';
+  room.winner = null;
+  room.lastReaction = null;
+  if (room.player1) {
+    room.player1.secret = null;
+    room.player1.guesses = [];
+    room.player1.won = false;
+    room.player1.ready = false;
+  }
+  if (room.player2) {
+    room.player2.secret = null;
+    room.player2.guesses = [];
+    room.player2.won = false;
+    room.player2.ready = false;
+  }
+  room.lastActivity = Date.now();
+
+  broadcastToRoom(room, {
+    type: 'rematch_accepted',
+    message: '🔄 تم بدء جولة جديدة! اختاروا شفراتكم السرية مرة أخرى.'
+  });
+
+  res.json({ success: true, room: sanitizeRoomForPlayer(room, 'player1') });
+});
+
+// 8. Public Room Info
 app.get('/api/multiplayer/room/:id', (req, res) => {
-  const room = multiplayerRooms.get(req.params.id);
+  const roomId = normalizeDigits(req.params.id);
+  const room = multiplayerRooms.get(roomId);
   if (!room) {
     return res.json({ exists: false });
   }
@@ -321,29 +652,76 @@ app.get('/api/multiplayer/room/:id', (req, res) => {
   });
 });
 
-// WebSocket Server
+// ----------------------------------------------------
+// WEBSOCKET SERVER (Instant real-time updates)
+// ----------------------------------------------------
 const wss = new WebSocketServer({ server });
 
 wss.on('connection', (ws) => {
-  let currentRoomId = null;
-  let currentRole = null;
+  let boundRoomId = null;
+  let boundToken = null;
+  let boundRole = null;
+
+  // Setup ping/pong
+  ws.isAlive = true;
+  ws.on('pong', () => { ws.isAlive = true; });
 
   ws.on('message', (messageRaw) => {
     try {
       const data = JSON.parse(messageRaw.toString());
 
-      // 1. CREATE ROOM
+      // Ping
+      if (data.type === 'ping') {
+        ws.send(JSON.stringify({ type: 'pong' }));
+        return;
+      }
+
+      // AUTH / RECONNECT
+      if (data.type === 'auth') {
+        const roomId = normalizeDigits(data.roomId);
+        const token = data.token;
+        const room = multiplayerRooms.get(roomId);
+        if (room && token) {
+          if (room.player1?.id === token) {
+            room.player1.ws = ws;
+            boundRoomId = roomId;
+            boundToken = token;
+            boundRole = 'player1';
+            ws.send(JSON.stringify({
+              type: 'authenticated',
+              role: 'player1',
+              roomId: roomId,
+              room: sanitizeRoomForPlayer(room, 'player1')
+            }));
+          } else if (room.player2?.id === token) {
+            room.player2.ws = ws;
+            boundRoomId = roomId;
+            boundToken = token;
+            boundRole = 'player2';
+            ws.send(JSON.stringify({
+              type: 'authenticated',
+              role: 'player2',
+              roomId: roomId,
+              room: sanitizeRoomForPlayer(room, 'player2')
+            }));
+          }
+        }
+        return;
+      }
+
+      // CREATE ROOM
       if (data.type === 'create_room') {
         const roomId = generateRoomId();
         const playerName = (data.playerName || 'القائد').trim().slice(0, 20);
         const digits = parseInt(data.digits, 10) || 4;
+        const token = crypto.randomUUID();
 
         const room = {
           id: roomId,
           digits: digits,
-          status: 'waiting', // waiting for player 2
+          status: 'waiting',
           player1: {
-            id: crypto.randomUUID(),
+            id: token,
             ws: ws,
             name: playerName,
             secret: null,
@@ -358,32 +736,35 @@ wss.on('connection', (ws) => {
         };
 
         multiplayerRooms.set(roomId, room);
-        currentRoomId = roomId;
-        currentRole = 'player1';
+        boundRoomId = roomId;
+        boundToken = token;
+        boundRole = 'player1';
 
         ws.send(JSON.stringify({
           type: 'room_created',
           roomId: roomId,
+          playerToken: token,
           role: 'player1',
           room: sanitizeRoomForPlayer(room, 'player1')
         }));
+        return;
       }
 
-      // 2. JOIN ROOM
-      else if (data.type === 'join_room') {
-        const roomId = (data.roomId || '').trim();
+      // JOIN ROOM
+      if (data.type === 'join_room') {
+        const roomId = normalizeDigits(data.roomId);
         const playerName = (data.playerName || 'المتحدي').trim().slice(0, 20);
         const room = multiplayerRooms.get(roomId);
 
         if (!room) {
           ws.send(JSON.stringify({
             type: 'error',
-            message: 'رقم الغرفة غير موجود أو انتهت صلاحيتها! ⚠️'
+            message: `الغرفة #${roomId} غير موجودة أو انتهت صلاحيتها! ⚠️`
           }));
           return;
         }
 
-        if (room.player2 && room.player2.ws && room.player2.ws.readyState === WebSocket.OPEN) {
+        if (room.player2 && room.player2.ws && room.player2.ws.readyState === WebSocket.OPEN && room.player2.id !== data.token) {
           ws.send(JSON.stringify({
             type: 'error',
             message: 'الغرفة ممتلئة بالفعل باثنين من اللاعبين! ⚠️'
@@ -391,9 +772,9 @@ wss.on('connection', (ws) => {
           return;
         }
 
-        // Join as Player 2
+        const token = data.token || crypto.randomUUID();
         room.player2 = {
-          id: crypto.randomUUID(),
+          id: token,
           ws: ws,
           name: playerName,
           secret: null,
@@ -401,27 +782,36 @@ wss.on('connection', (ws) => {
           won: false,
           ready: false
         };
-        room.status = 'setup'; // Both now set their secrets!
+        room.status = 'setup';
         room.lastActivity = Date.now();
 
-        currentRoomId = roomId;
-        currentRole = 'player2';
+        boundRoomId = roomId;
+        boundToken = token;
+        boundRole = 'player2';
 
-        // Notify both players
+        ws.send(JSON.stringify({
+          type: 'joined_room',
+          roomId: roomId,
+          playerToken: token,
+          role: 'player2',
+          room: sanitizeRoomForPlayer(room, 'player2')
+        }));
+
         broadcastToRoom(room, {
           type: 'room_ready_for_setup',
           message: `انضم ${playerName}! الآن اختاروا أرقامكم السرية لمنافسكم 🔐`
         });
+        return;
       }
 
-      // 3. SET SECRET NUMBER (Custom chosen by each player for their opponent to guess)
-      else if (data.type === 'set_secret') {
-        const roomId = data.roomId || currentRoomId;
-        const secret = (data.secret || '').trim();
+      // SET SECRET
+      if (data.type === 'set_secret') {
+        const roomId = normalizeDigits(data.roomId || boundRoomId);
+        const secret = normalizeDigits(data.secret);
         const room = multiplayerRooms.get(roomId);
-
         if (!room) return;
-        const player = currentRole === 'player1' ? room.player1 : room.player2;
+
+        const player = (boundRole === 'player1' || room.player1?.id === boundToken) ? room.player1 : room.player2;
         if (!player) return;
 
         if (secret.length !== room.digits) {
@@ -436,7 +826,6 @@ wss.on('connection', (ws) => {
         player.ready = true;
         room.lastActivity = Date.now();
 
-        // Check if both players have set their secrets
         if (room.player1?.ready && room.player2?.ready) {
           room.status = 'playing';
           broadcastToRoom(room, {
@@ -444,25 +833,25 @@ wss.on('connection', (ws) => {
             message: '🚀 تم قفل الشفرات السرية! بدأت المواجهة المباشرة الآن، خمن شفرة منافسك!'
           });
         } else {
-          // Inform both of the readiness status
           broadcastToRoom(room, {
             type: 'secret_locked',
             message: `${player.name} قفل شفرته السرية! في انتظار الطرف الآخر...`
           });
         }
+        return;
       }
 
-      // 4. SUBMIT GUESS IN REAL-TIME
-      else if (data.type === 'submit_guess') {
-        const roomId = data.roomId || currentRoomId;
-        const guess = (data.guess || '').trim();
+      // SUBMIT GUESS
+      if (data.type === 'submit_guess') {
+        const roomId = normalizeDigits(data.roomId || boundRoomId);
+        const guess = normalizeDigits(data.guess);
         const room = multiplayerRooms.get(roomId);
-
         if (!room || room.status !== 'playing') return;
 
-        const isP1 = currentRole === 'player1';
+        const isP1 = (boundRole === 'player1' || room.player1?.id === boundToken);
         const player = isP1 ? room.player1 : room.player2;
         const opponent = isP1 ? room.player2 : room.player1;
+        const role = isP1 ? 'player1' : 'player2';
 
         if (!player || !opponent || !opponent.secret) return;
 
@@ -474,9 +863,7 @@ wss.on('connection', (ws) => {
           return;
         }
 
-        // Evaluate guess against OPPONENT'S secret
         const evalResult = evaluateMastermind(guess, opponent.secret, room.digits);
-
         const guessRecord = {
           attemptNumber: player.guesses.length + 1,
           guess: guess.split(''),
@@ -489,51 +876,53 @@ wss.on('connection', (ws) => {
         player.guesses.push(guessRecord);
         room.lastActivity = Date.now();
 
-        // Check if this player WON!
         if (evalResult.greens === room.digits) {
           player.won = true;
           room.status = 'game_over';
-          room.winner = currentRole;
+          room.winner = role;
 
           broadcastToRoom(room, {
             type: 'game_over',
-            winner: currentRole,
+            winner: role,
             winnerName: player.name,
             message: `🎉 فاز ${player.name} بفك الشفرة السرية أولاً في ${player.guesses.length} محاولات!`
           });
         } else {
-          // Broadcast progress
           broadcastToRoom(room, {
             type: 'guess_recorded',
-            whoGuessed: currentRole,
+            whoGuessed: role,
             whoGuessedName: player.name
           });
         }
+        return;
       }
 
-      // 5. CHAT & QUICK REACTIONS
-      else if (data.type === 'chat_reaction') {
-        const roomId = data.roomId || currentRoomId;
+      // CHAT / REACTION
+      if (data.type === 'chat_reaction') {
+        const roomId = normalizeDigits(data.roomId || boundRoomId);
         const room = multiplayerRooms.get(roomId);
         if (!room) return;
 
-        const senderName = currentRole === 'player1' ? room.player1?.name : room.player2?.name;
+        const isP1 = (boundRole === 'player1' || room.player1?.id === boundToken);
+        const senderName = isP1 ? room.player1?.name : room.player2?.name;
+        const role = isP1 ? 'player1' : 'player2';
+
         broadcastToRoom(room, {
           type: 'chat_reaction',
           sender: senderName,
-          role: currentRole,
+          role: role,
           emoji: data.emoji || '🔥',
           text: data.text || ''
         });
+        return;
       }
 
-      // 6. REMATCH REQUEST
-      else if (data.type === 'rematch') {
-        const roomId = data.roomId || currentRoomId;
+      // REMATCH
+      if (data.type === 'rematch') {
+        const roomId = normalizeDigits(data.roomId || boundRoomId);
         const room = multiplayerRooms.get(roomId);
         if (!room) return;
 
-        // Reset room state for rematch
         room.status = 'setup';
         room.winner = null;
         if (room.player1) {
@@ -553,6 +942,7 @@ wss.on('connection', (ws) => {
           type: 'rematch_accepted',
           message: '🔄 تم بدء جولة جديدة! اختاروا شفراتكم السرية مرة أخرى.'
         });
+        return;
       }
 
     } catch (err) {
@@ -561,27 +951,30 @@ wss.on('connection', (ws) => {
   });
 
   ws.on('close', () => {
-    if (currentRoomId && multiplayerRooms.has(currentRoomId)) {
-      const room = multiplayerRooms.get(currentRoomId);
+    // Graceful disconnect: do NOT destroy room immediately
+    if (boundRoomId && multiplayerRooms.has(boundRoomId)) {
+      const room = multiplayerRooms.get(boundRoomId);
       if (room) {
-        broadcastToRoom(room, {
-          type: 'opponent_disconnected',
-          role: currentRole,
-          message: '⚠️ انقطع اتصال المنافس بالغرفة.'
-        });
-
-        // Clean up empty rooms after 10 minutes
+        // Clean up empty rooms after 30 minutes of inactivity
         setTimeout(() => {
-          const r = multiplayerRooms.get(currentRoomId);
-          if (r && (!r.player1?.ws || r.player1.ws.readyState !== WebSocket.OPEN) &&
-                   (!r.player2?.ws || r.player2.ws.readyState !== WebSocket.OPEN)) {
-            multiplayerRooms.delete(currentRoomId);
+          const r = multiplayerRooms.get(boundRoomId);
+          if (r && Date.now() - r.lastActivity > 1800000) {
+            multiplayerRooms.delete(boundRoomId);
           }
-        }, 600000);
+        }, 1800000);
       }
     }
   });
 });
+
+// Heartbeat Interval to keep connections alive through Cloud Run & Proxies
+setInterval(() => {
+  wss.clients.forEach((ws) => {
+    if (ws.isAlive === false) return ws.terminate();
+    ws.isAlive = false;
+    ws.ping();
+  });
+}, 20000);
 
 // ----------------------------------------------------
 // STATIC & ROUTE HANDLING

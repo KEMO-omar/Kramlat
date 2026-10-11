@@ -583,52 +583,74 @@
         <h2 style="font-size:1.8rem; font-weight:900; color:#fff; margin-bottom:8px">
           غرفة التحدي المباشر 1v1
         </h2>
-        <p style="color:var(--k-text-muted); max-width:540px; margin:0 auto 24px">
+        <p style="color:var(--k-text-muted); max-width:540px; margin:0 auto 16px">
           اختر اسمك، ثم أنشئ غرفة وشارك الرابط مع صاحبك لتبدآ فوراً، أو أدخل كود غرفة شاركها معك صديقك!
         </p>
+
+        <!-- Live Status -->
+        <div style="margin-bottom:20px">
+          <div id="multiConnBadge" style="display:inline-flex; align-items:center; gap:8px; font-size:0.82rem; font-weight:700; padding:5px 14px; border-radius:999px; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.3); color:#34d399">
+            <span style="width:8px; height:8px; border-radius:50%; background:#10b981; box-shadow:0 0 8px #10b981; display:inline-block"></span>
+            <span id="multiConnText">الخادم متصل وجاهز للعب الأونلاين 🚀</span>
+          </div>
+        </div>
+
+        <!-- Invite Notice (When visiting via shared link ?room=...) -->
+        <div id="multiInviteBanner" style="display:none; max-width:540px; margin:0 auto 20px; padding:14px 18px; border-radius:var(--k-radius-md); background:linear-gradient(135deg, rgba(0,240,255,0.15), rgba(255,0,128,0.12)); border:1px solid var(--k-secondary); color:#fff; text-align:center; animation:fadeInRow 0.3s ease">
+          <div style="font-weight:800; font-size:1.05rem; margin-bottom:4px; color:var(--k-secondary)">
+            <i class="fas fa-envelope-open-text"></i> وصلتك دعوة تحدي للغرفة <span id="inviteRoomBadge" style="font-family:var(--k-font-tech); color:var(--k-gold); font-size:1.2rem">#----</span>!
+          </div>
+          <div style="font-size:0.85rem; color:var(--k-text-muted)">
+            اكتب اسمك أدناه ثم اضغط <b>"دخول الغرفة"</b> لبدء اختيار الشفرة ومنازلة صاحبك.
+          </div>
+        </div>
 
         <!-- Player Name -->
         <div class="k-form-group" style="max-width:380px; margin:0 auto 24px">
           <label class="k-label" style="text-align:right">اسمك في المعركة:</label>
-          <input type="text" id="multiPlayerName" class="k-input" placeholder="اكتب اسمك..." value="كريم عمر" style="text-align:center; font-size:1.1rem; font-weight:800">
+          <input type="text" id="multiPlayerName" class="k-input" placeholder="اكتب اسمك..." value="كريم عمر" style="text-align:center; font-size:1.1rem; font-weight:800" onkeydown="if(event.key==='Enter') { const c = document.getElementById('multiJoinCode').value.trim(); if(c) multiJoinRoom(); else multiCreateRoom(); }">
         </div>
 
         <!-- 2 Big Action Columns -->
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:20px; max-width:720px; margin:0 auto">
           <!-- Create Room -->
-          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(0,240,255,0.3); border-radius:var(--k-radius-lg); padding:24px">
-            <div style="font-size:1.8rem; color:var(--k-secondary); margin-bottom:10px">
-              <i class="fas fa-plus-circle"></i>
+          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(0,240,255,0.3); border-radius:var(--k-radius-lg); padding:24px; display:flex; flex-direction:column; justify-content:space-between">
+            <div>
+              <div style="font-size:1.8rem; color:var(--k-secondary); margin-bottom:10px">
+                <i class="fas fa-plus-circle"></i>
+              </div>
+              <h3 style="color:#fff; font-size:1.2rem; font-weight:800; margin-bottom:6px">إنشاء غرفة جديدة</h3>
+              <p style="color:var(--k-text-muted); font-size:0.85rem; margin-bottom:16px">
+                أنشئ غرفة خاصة فوراً وشارك الرابط مع صاحبك عبر واتساب أو تليجرام للتحدي المباشر.
+              </p>
             </div>
-            <h3 style="color:#fff; font-size:1.2rem; font-weight:800; margin-bottom:6px">إنشاء غرفة جديدة</h3>
-            <p style="color:var(--k-text-muted); font-size:0.85rem; margin-bottom:16px">
-              أنشئ غرفة خاصة واحصل على رابط مباشر ترسله لصاحبك عبر واتساب أو تليجرام.
-            </p>
-            <button type="button" class="k-btn k-btn-accent" style="width:100%" onclick="multiCreateRoom()">
+            <button type="button" id="multiCreateBtn" class="k-btn k-btn-accent" style="width:100%" onclick="multiCreateRoom()">
               <i class="fas fa-sparkles"></i>
               <span>إنشاء الغرفة الآن 🚀</span>
             </button>
           </div>
 
           <!-- Join Room -->
-          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,0,128,0.3); border-radius:var(--k-radius-lg); padding:24px">
-            <div style="font-size:1.8rem; color:var(--k-accent); margin-bottom:10px">
-              <i class="fas fa-door-open"></i>
+          <div id="multiJoinCard" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,0,128,0.3); border-radius:var(--k-radius-lg); padding:24px; display:flex; flex-direction:column; justify-content:space-between">
+            <div>
+              <div style="font-size:1.8rem; color:var(--k-accent); margin-bottom:10px">
+                <i class="fas fa-door-open"></i>
+              </div>
+              <h3 style="color:#fff; font-size:1.2rem; font-weight:800; margin-bottom:6px">الانضمام لغرفة صديق</h3>
+              <p style="color:var(--k-text-muted); font-size:0.85rem; margin-bottom:12px">
+                صاحبك بعتلك كود الغرفة؟ اكتبه هنا للدخول معه مباشرة.
+              </p>
             </div>
-            <h3 style="color:#fff; font-size:1.2rem; font-weight:800; margin-bottom:6px">الانضمام لغرفة صديق</h3>
-            <p style="color:var(--k-text-muted); font-size:0.85rem; margin-bottom:12px">
-              صاحبك بعتلك كود الغرفة؟ اكتبه هنا للدخول معه مباشرة.
-            </p>
             <div style="display:flex; gap:8px">
-              <input type="text" id="multiJoinCode" class="k-input" placeholder="كود الغرفة (4 أرقام)" maxlength="4" style="text-align:center; font-family:var(--k-font-tech); font-size:1.2rem; font-weight:900">
-              <button type="button" class="k-btn k-btn-cyan" onclick="multiJoinRoom()">
+              <input type="text" id="multiJoinCode" class="k-input" placeholder="كود الغرفة (4 أرقام)" maxlength="6" inputmode="numeric" style="text-align:center; font-family:var(--k-font-tech); font-size:1.2rem; font-weight:900" onkeydown="if(event.key==='Enter') multiJoinRoom()">
+              <button type="button" id="multiJoinBtn" class="k-btn k-btn-cyan" style="min-width:90px" onclick="multiJoinRoom()">
                 <span>دخول</span>
               </button>
             </div>
           </div>
         </div>
 
-        <div id="multiLobbyError" style="margin-top:16px; color:#ff6b6b; font-size:0.9rem; display:none"></div>
+        <div id="multiLobbyError" style="margin-top:16px; color:#ff6b6b; font-size:0.95rem; font-weight:700; display:none; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); border-radius:var(--k-radius-md); padding:10px 14px; max-width:540px; margin-left:auto; margin-right:auto"></div>
       </div>
 
       <!-- Step 2: Waiting for Opponent View -->
@@ -1098,12 +1120,15 @@
     };
 
     // -------------------------------------------------------------
-    // WEBSOCKET & MULTIPLAYER REAL-TIME STATE
+    // WEBSOCKET & MULTIPLAYER REAL-TIME DUAL-ENGINE
+    // (REST API + WebSocket + Auto-Polling Fallback)
     // -------------------------------------------------------------
     let ws = null;
     let myRole = null; // 'player1' or 'player2'
     let currentRoomId = null;
+    let playerToken = null;
     let roomState = null;
+    let pollInterval = null;
 
     // Setup Phase State (Choosing secret for opponent)
     let setupSecret = ['', '', '', ''];
@@ -1113,49 +1138,141 @@
     let duelGuess = ['', '', '', ''];
     let duelSlotIdx = 0;
 
+    function normalizeDigits(str) {
+      if (!str) return '';
+      return str.toString()
+        .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d))
+        .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+        .replace(/\s+/g, '');
+    }
+
+    function updateConnStatus(status, text) {
+      const textEl = document.getElementById('multiConnText');
+      const badgeEl = document.getElementById('multiConnBadge');
+      if (!textEl || !badgeEl) return;
+      if (status === 'connected') {
+        badgeEl.style.background = 'rgba(16,185,129,0.15)';
+        badgeEl.style.borderColor = 'rgba(16,185,129,0.4)';
+        badgeEl.style.color = '#34d399';
+        textEl.innerText = text || 'متصل لحظياً بالخادم الفضائي 🟢';
+      } else if (status === 'polling') {
+        badgeEl.style.background = 'rgba(0,240,255,0.12)';
+        badgeEl.style.borderColor = 'rgba(0,240,255,0.4)';
+        badgeEl.style.color = 'var(--k-secondary)';
+        textEl.innerText = text || 'متصل عبر رادار التزامن السريع 🔄';
+      } else {
+        badgeEl.style.background = 'rgba(245,158,11,0.12)';
+        badgeEl.style.borderColor = 'rgba(245,158,11,0.4)';
+        badgeEl.style.color = '#fbbf24';
+        textEl.innerText = text || 'جاري مزامنة الاتصال... ⏳';
+      }
+    }
+
     function initWebSocket() {
       if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) {
         return;
       }
 
-      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const wsUrl = `${protocol}//${window.location.host}`;
+      try {
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const wsUrl = `${protocol}//${window.location.host}`;
+        ws = new WebSocket(wsUrl);
 
-      ws = new WebSocket(wsUrl);
+        ws.onopen = () => {
+          updateConnStatus('connected');
+          // If we have an active room and player token, authenticate immediately
+          if (currentRoomId && playerToken) {
+            ws.send(JSON.stringify({
+              type: 'auth',
+              token: playerToken,
+              roomId: currentRoomId
+            }));
+          }
+        };
 
-      ws.onopen = () => {
-        console.log('Connected to Kramlat Multiplayer WebSocket');
-        // Check URL for ?room=... auto join
-        const params = new URLSearchParams(window.location.search);
-        const autoRoom = params.get('room');
-        if (autoRoom && !currentRoomId) {
-          document.getElementById('multiJoinCode').value = autoRoom;
-          if (window.KramlatUI) window.KramlatUI.toast(`تم العثور على رابط دعوة للغرفة #${autoRoom}! اضغط دخول أو أدخل اسمك.`);
-        }
-      };
+        ws.onmessage = (event) => {
+          try {
+            const msg = JSON.parse(event.data);
+            handleServerMessage(msg);
+          } catch(e) {
+            console.error('Error parsing WS message:', e);
+          }
+        };
 
-      ws.onmessage = (event) => {
+        ws.onclose = () => {
+          updateConnStatus('polling', 'متصل عبر رادار التزامن السريع 🔄');
+          setTimeout(initWebSocket, 2500);
+        };
+
+        ws.onerror = (err) => {
+          console.warn('WebSocket notice (falling back gracefully to REST sync):', err);
+          updateConnStatus('polling', 'متصل عبر رادار التزامن السريع 🔄');
+        };
+      } catch (e) {
+        console.warn('WS Init exception:', e);
+        updateConnStatus('polling', 'متصل عبر رادار التزامن السريع 🔄');
+      }
+    }
+
+    // Auto-Polling Loop (Guarantees updates even if WS is blocked)
+    function startMultiPolling() {
+      if (pollInterval) clearInterval(pollInterval);
+
+      async function checkState() {
+        if (!currentRoomId || !playerToken) return;
         try {
-          const msg = JSON.parse(event.data);
-          handleServerMessage(msg);
+          const res = await fetch(`/api/multiplayer/room/${currentRoomId}/state?token=${playerToken}`);
+          if (!res.ok) return;
+          const data = await res.json();
+          if (data.success && data.room) {
+            const prevStatus = roomState?.status;
+            const prevReady = roomState?.opponent?.ready;
+            const prevGuessesCount = roomState?.opponent?.guessCount || 0;
+            const prevMyGuessesCount = roomState?.me?.guesses?.length || 0;
+
+            roomState = data.room;
+            if (data.role) myRole = data.role;
+
+            // Trigger appropriate view transitions based on state progression
+            if (roomState.status === 'setup' && prevStatus === 'waiting') {
+              showSetupScreen();
+              if (window.KramlatUI) window.KramlatUI.toast('انضم منافسك! اختاروا أرقامكم السرية الآن 🔐');
+              MMSound.click();
+            } else if (roomState.status === 'playing' && prevStatus !== 'playing') {
+              showBattleScreen();
+              if (window.KramlatUI) window.KramlatUI.toast('بدأت المعركة المباشرة! خمن شفرة منافسك الآن ⚔️🔥');
+              MMSound.click();
+            } else if (roomState.status === 'game_over' && prevStatus !== 'game_over') {
+              handleMultiGameOver({
+                winner: roomState.winner,
+                winnerName: roomState.winnerName,
+                message: roomState.winner === myRole ? 'فزت بفك الشفرة أولاً!' : 'فاز منافسك بالمعركة!'
+              });
+            } else if (roomState.status === 'setup') {
+              updateSetupReadiness();
+            } else if (roomState.status === 'playing') {
+              if (roomState.opponent?.guessCount !== prevGuessesCount || (roomState.me?.guesses?.length || 0) !== prevMyGuessesCount) {
+                renderDuelState();
+              }
+            }
+
+            // Sync reaction if new
+            if (roomState.lastReaction && (!window._lastReactionTime || roomState.lastReaction.time > window._lastReactionTime)) {
+              window._lastReactionTime = roomState.lastReaction.time;
+              showTauntReaction(roomState.lastReaction.sender, roomState.lastReaction.emoji, roomState.lastReaction.text);
+            }
+          }
         } catch(e) {
-          console.error('Error parsing WS message:', e);
+          // Network hiccup ignored safely
         }
-      };
+      }
 
-      ws.onclose = () => {
-        console.log('WS disconnected, reconnecting in 2s...');
-        setTimeout(initWebSocket, 2000);
-      };
-
-      ws.onerror = (err) => {
-        console.error('WS Error:', err);
-      };
+      // Quick poll every 1000ms
+      pollInterval = setInterval(checkState, 1000);
+      checkState();
     }
 
     function handleServerMessage(msg) {
-      console.log('Server message:', msg);
-
       if (msg.type === 'error') {
         if (window.KramlatUI) window.KramlatUI.toast(msg.message);
         const errEl = document.getElementById('multiLobbyError');
@@ -1171,16 +1288,33 @@
       }
 
       switch (msg.type) {
+        case 'authenticated':
+          myRole = msg.role;
+          currentRoomId = msg.roomId;
+          break;
+
         case 'room_created':
           myRole = msg.role;
           currentRoomId = msg.roomId;
+          playerToken = msg.playerToken;
+          saveSession();
           showWaitingScreen(msg.roomId);
+          startMultiPolling();
           if (window.KramlatUI) window.KramlatUI.toast(`تم إنشاء الغرفة #${msg.roomId}! شارك الرابط مع منافسك.`);
+          break;
+
+        case 'joined_room':
+          myRole = msg.role;
+          currentRoomId = msg.roomId;
+          playerToken = msg.playerToken;
+          saveSession();
+          showSetupScreen();
+          startMultiPolling();
           break;
 
         case 'room_ready_for_setup':
           if (!myRole) myRole = msg.role || (roomState?.me?.role);
-          currentRoomId = roomState.id;
+          currentRoomId = roomState?.id || currentRoomId;
           showSetupScreen();
           if (window.KramlatUI) window.KramlatUI.toast(msg.message || 'انضم منافسك! اختاروا أرقامكم السرية الآن 🔐');
           MMSound.click();
@@ -1222,64 +1356,157 @@
       }
     }
 
-    // -------------------------------------------------------------
-    // MULTIPLAYER LOBBY ACTIONS
-    // -------------------------------------------------------------
-    function multiCreateRoom() {
-      const name = document.getElementById('multiPlayerName').value.trim() || 'كريم';
-      localStorage.setItem('kramlat_player_name', name);
-      MMSound.click();
-
-      if (!ws || ws.readyState !== WebSocket.OPEN) {
-        initWebSocket();
-        setTimeout(multiCreateRoom, 400);
-        return;
-      }
-
-      ws.send(JSON.stringify({
-        type: 'create_room',
-        playerName: name,
-        digits: 4
-      }));
+    function saveSession() {
+      try {
+        sessionStorage.setItem('kramlat_multi_room', currentRoomId || '');
+        sessionStorage.setItem('kramlat_multi_token', playerToken || '');
+        sessionStorage.setItem('kramlat_multi_role', myRole || '');
+      } catch(e) {}
     }
 
-    function multiJoinRoom() {
-      const code = document.getElementById('multiJoinCode').value.trim();
-      const name = document.getElementById('multiPlayerName').value.trim() || 'المتحدي';
+    // -------------------------------------------------------------
+    // MULTIPLAYER LOBBY ACTIONS (REST-FIRST FOR 100% RELIABILITY)
+    // -------------------------------------------------------------
+    async function multiCreateRoom() {
+      const nameInput = document.getElementById('multiPlayerName');
+      const name = (nameInput ? nameInput.value.trim() : '') || 'كريم عمر';
+      localStorage.setItem('kramlat_player_name', name);
+      MMSound.click();
+
+      const btn = document.getElementById('multiCreateBtn');
+      const errEl = document.getElementById('multiLobbyError');
+      if (errEl) errEl.style.display = 'none';
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> <span>جاري إنشاء الغرفة... ⏳</span>`;
+      }
+
+      try {
+        const response = await fetch('/api/multiplayer/room/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ playerName: name, digits: 4 })
+        });
+
+        const data = await response.json();
+
+        if (!data.success) {
+          throw new Error(data.error || 'تعذر إنشاء الغرفة!');
+        }
+
+        currentRoomId = data.roomId;
+        playerToken = data.playerToken;
+        myRole = data.role;
+        roomState = data.room;
+        saveSession();
+
+        showWaitingScreen(data.roomId);
+        initWebSocket();
+        startMultiPolling();
+
+        if (window.KramlatUI) window.KramlatUI.toast(`تم إنشاء الغرفة #${data.roomId}! شارك الرابط مع صاحبك 🚀`);
+      } catch (err) {
+        console.error('Create room error:', err);
+        if (errEl) {
+          errEl.innerText = err.message || 'حدث خطأ في الاتصال بالسيرفر! يرجى المحاولة ثانية.';
+          errEl.style.display = 'block';
+        }
+        if (window.KramlatUI) window.KramlatUI.toast('فشل إنشاء الغرفة! تحقق من الاتصال.', 'fa-solid fa-triangle-exclamation');
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<i class="fas fa-sparkles"></i> <span>إنشاء الغرفة الآن 🚀</span>`;
+        }
+      }
+    }
+
+    async function multiJoinRoom() {
+      const codeInput = document.getElementById('multiJoinCode');
+      const rawCode = codeInput ? codeInput.value : '';
+      const code = normalizeDigits(rawCode);
+      const nameInput = document.getElementById('multiPlayerName');
+      const name = (nameInput ? nameInput.value.trim() : '') || 'المتحدي';
       localStorage.setItem('kramlat_player_name', name);
 
+      const errEl = document.getElementById('multiLobbyError');
+      if (errEl) errEl.style.display = 'none';
+
       if (!code || code.length < 4) {
-        if (window.KramlatUI) window.KramlatUI.toast('يرجى إدخال كود الغرفة المكون من 4 أرقام! ⚠️');
+        if (errEl) {
+          errEl.innerText = 'يرجى كتابة كود الغرفة المكون من 4 أرقام! ⚠️';
+          errEl.style.display = 'block';
+        }
+        if (window.KramlatUI) window.KramlatUI.toast('يرجى كتابة كود الغرفة المكون من 4 أرقام! ⚠️');
+        if (codeInput) codeInput.focus();
         return;
       }
 
       MMSound.click();
-
-      if (!ws || ws.readyState !== WebSocket.OPEN) {
-        initWebSocket();
-        setTimeout(multiJoinRoom, 400);
-        return;
+      const btn = document.getElementById('multiJoinBtn');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i>`;
       }
 
-      ws.send(JSON.stringify({
-        type: 'join_room',
-        roomId: code,
-        playerName: name
-      }));
+      try {
+        const response = await fetch('/api/multiplayer/room/join', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ roomId: code, playerName: name })
+        });
+
+        const data = await response.json();
+
+        if (!data.success) {
+          throw new Error(data.error || 'تعذر الانضمام للغرفة');
+        }
+
+        currentRoomId = data.roomId;
+        playerToken = data.playerToken;
+        myRole = data.role;
+        roomState = data.room;
+        saveSession();
+
+        showSetupScreen();
+        initWebSocket();
+        startMultiPolling();
+
+        if (window.KramlatUI) window.KramlatUI.toast(`تم الانضمام للغرفة #${data.roomId}! اختر شفرتك السرية الآن 🔐`);
+      } catch (err) {
+        console.error('Join room error:', err);
+        if (errEl) {
+          errEl.innerText = err.message || 'تعذر الدخول للغرفة! تأكد من صحة الكود.';
+          errEl.style.display = 'block';
+        }
+        if (window.KramlatUI) window.KramlatUI.toast(err.message || 'فشل الانضمام للغرفة!', 'fa-solid fa-triangle-exclamation');
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<span>دخول</span>`;
+        }
+      }
     }
 
     function showWaitingScreen(roomId) {
       document.getElementById('multiLobbyView').style.display = 'none';
       document.getElementById('multiWaitingView').style.display = 'block';
+      document.getElementById('multiSetupView').style.display = 'none';
+      document.getElementById('multiBattleView').style.display = 'none';
       document.getElementById('waitingRoomCode').innerText = roomId;
     }
 
     function multiCopyInviteLink() {
       const url = `${window.location.origin}/mastermind.html?room=${currentRoomId}`;
       const text = `🔮 تعال اتحداني في لعبة فك الشفرة الكونية (Mastermind 1v1)! ادخل من الرابط ده والعب معايا أونلاين:\n${url}`;
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(text);
-        if (window.KramlatUI) window.KramlatUI.toast('تم نسخ رابط التحدي بنجاح! أرسله لصاحبك الآن 🚀📋');
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(() => {
+          if (window.KramlatUI) window.KramlatUI.toast('تم نسخ رابط التحدي بنجاح! أرسله لصاحبك الآن 🚀📋');
+        }).catch(() => {
+          prompt('انسخ رابط الغرفة وشاركه مع صاحبك:', url);
+        });
+      } else {
+        prompt('انسخ رابط الغرفة وشاركه مع صاحبك:', url);
       }
     }
 
@@ -1290,6 +1517,12 @@
     }
 
     function multiLeaveRoom() {
+      if (pollInterval) clearInterval(pollInterval);
+      try {
+        sessionStorage.removeItem('kramlat_multi_room');
+        sessionStorage.removeItem('kramlat_multi_token');
+        sessionStorage.removeItem('kramlat_multi_role');
+      } catch(e) {}
       window.location.href = 'mastermind.html';
     }
 
@@ -1307,9 +1540,14 @@
       renderSetupSlots();
 
       const opponentName = roomState?.opponent?.name || 'المنافس';
-      document.getElementById('setupOpponentName').innerText = opponentName;
-      document.getElementById('setupStatusBadge').innerText = `اختر 4 أرقام سيحاول ${opponentName} فكها.`;
-      document.getElementById('setupStatusBadge').style.color = 'var(--k-text-muted)';
+      const oppTitle = document.getElementById('setupOpponentName');
+      if (oppTitle) oppTitle.innerText = opponentName;
+
+      const badge = document.getElementById('setupStatusBadge');
+      if (badge) {
+        badge.innerText = `اختر 4 أرقام سيحاول ${opponentName} فكها.`;
+        badge.style.color = 'var(--k-text-muted)';
+      }
     }
 
     function renderSetupSlots() {
@@ -1319,7 +1557,8 @@
         el.className = `mm-slot ${i === setupSlotIdx ? 'active' : ''} ${setupSecret[i] ? 'filled' : ''}`;
         el.innerText = setupSecret[i] || '';
       }
-      document.getElementById('setupSlotHint').innerText = `الخانة ${setupSlotIdx + 1}`;
+      const hint = document.getElementById('setupSlotHint');
+      if (hint) hint.innerText = `الخانة ${setupSlotIdx + 1}`;
     }
 
     function selectSetupSlot(idx) {
@@ -1346,29 +1585,60 @@
       renderSetupSlots();
     }
 
-    function multiConfirmSecret() {
-      const code = setupSecret.join('');
+    async function multiConfirmSecret() {
+      const rawCode = setupSecret.join('');
+      const code = normalizeDigits(rawCode);
       if (code.length !== 4) {
         if (window.KramlatUI) window.KramlatUI.toast('يرجى ملء جميع الخانات الـ 4 بالأرقام! ⚠️');
         return;
       }
 
       MMSound.submit();
-      ws.send(JSON.stringify({
-        type: 'set_secret',
-        roomId: currentRoomId,
-        secret: code
-      }));
 
-      document.getElementById('setupStatusBadge').innerHTML = `
-        <span style="color:#10b981; font-weight:800">✅ تم قفل شفرتك السرية (${code}) بنجاح!</span><br>
-        في انتظار اختيار منافسك لشفرته...
-      `;
+      // Send via WS
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({
+          type: 'set_secret',
+          roomId: currentRoomId,
+          secret: code
+        }));
+      }
+
+      // Also call REST endpoint for 100% guarantee
+      try {
+        const res = await fetch('/api/multiplayer/room/secret', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            roomId: currentRoomId,
+            token: playerToken,
+            secret: code
+          })
+        });
+        const data = await res.json();
+        if (data.success && data.room) {
+          roomState = data.room;
+          if (roomState.status === 'playing') {
+            showBattleScreen();
+            return;
+          }
+        }
+      } catch(e) {}
+
+      const badge = document.getElementById('setupStatusBadge');
+      if (badge) {
+        badge.innerHTML = `
+          <span style="color:#10b981; font-weight:800">✅ تم قفل شفرتك السرية (${code}) بنجاح!</span><br>
+          في انتظار اختيار منافسك لشفرته...
+        `;
+      }
     }
 
     function updateSetupReadiness() {
+      const badge = document.getElementById('setupStatusBadge');
+      if (!badge) return;
       if (roomState?.me?.hasChosenSecret && !roomState?.opponent?.hasChosenSecret) {
-        document.getElementById('setupStatusBadge').innerHTML = `
+        badge.innerHTML = `
           <span style="color:#10b981; font-weight:800">✅ أنت جاهز!</span> في انتظار منافسك...
         `;
       }
@@ -1379,6 +1649,8 @@
     // -------------------------------------------------------------
     function showBattleScreen() {
       document.getElementById('multiSetupView').style.display = 'none';
+      document.getElementById('multiLobbyView').style.display = 'none';
+      document.getElementById('multiWaitingView').style.display = 'none';
       document.getElementById('multiBattleView').style.display = 'block';
 
       duelGuess = ['', '', '', ''];
@@ -1389,9 +1661,11 @@
       // Show my locked secret in badge
       const mySecret = roomState?.me?.mySecret || setupSecret.join('');
       const badgeContainer = document.getElementById('mySecretBadgeDisplay');
-      badgeContainer.innerHTML = mySecret.split('').map(d => `
-        <span style="display:inline-flex; width:34px; height:40px; align-items:center; justify-content:center; background:rgba(255,215,0,0.15); border:1px solid var(--k-gold); border-radius:6px; font-family:var(--k-font-tech); font-weight:900; font-size:1.3rem; color:#fff">${d}</span>
-      `).join('');
+      if (badgeContainer && mySecret) {
+        badgeContainer.innerHTML = mySecret.split('').map(d => `
+          <span style="display:inline-flex; width:34px; height:40px; align-items:center; justify-content:center; background:rgba(255,215,0,0.15); border:1px solid var(--k-gold); border-radius:6px; font-family:var(--k-font-tech); font-weight:900; font-size:1.3rem; color:#fff">${d}</span>
+        `).join('');
+      }
     }
 
     function renderDuelSlots() {
@@ -1401,7 +1675,8 @@
         el.className = `mm-slot ${i === duelSlotIdx ? 'active' : ''} ${duelGuess[i] ? 'filled' : ''}`;
         el.innerText = duelGuess[i] || '';
       }
-      document.getElementById('duelFocusHint').innerText = `الخانة ${duelSlotIdx + 1}`;
+      const hint = document.getElementById('duelFocusHint');
+      if (hint) hint.innerText = `الخانة ${duelSlotIdx + 1}`;
     }
 
     function selectDuelSlot(idx) {
@@ -1428,23 +1703,54 @@
       renderDuelSlots();
     }
 
-    function submitDuelGuess() {
-      const code = duelGuess.join('');
+    async function submitDuelGuess() {
+      const rawCode = duelGuess.join('');
+      const code = normalizeDigits(rawCode);
       if (code.length !== 4) {
         if (window.KramlatUI) window.KramlatUI.toast('يرجى ملء الخانات الأربعة بالتخمين! ⚠️');
         return;
       }
 
       MMSound.submit();
-      ws.send(JSON.stringify({
-        type: 'submit_guess',
-        roomId: currentRoomId,
-        guess: code
-      }));
 
+      // Send over WS
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({
+          type: 'submit_guess',
+          roomId: currentRoomId,
+          guess: code
+        }));
+      }
+
+      // Reset input slots
       duelGuess = ['', '', '', ''];
       duelSlotIdx = 0;
       renderDuelSlots();
+
+      // Call REST endpoint
+      try {
+        const res = await fetch('/api/multiplayer/room/guess', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            roomId: currentRoomId,
+            token: playerToken,
+            guess: code
+          })
+        });
+        const data = await res.json();
+        if (data.success && data.room) {
+          roomState = data.room;
+          renderDuelState();
+          if (data.won) {
+            handleMultiGameOver({
+              winner: myRole,
+              winnerName: roomState.me?.name,
+              message: `🎉 فزت بفك الشفرة السرية أولاً في ${roomState.me?.guesses?.length} محاولات!`
+            });
+          }
+        }
+      } catch(e) {}
     }
 
     function renderDuelState() {
@@ -1456,101 +1762,163 @@
       const oppGuessCount = roomState.opponent?.guessCount || 0;
       const oppLastFeedback = roomState.opponent?.lastFeedback;
 
-      document.getElementById('duelMyName').innerText = myName;
-      document.getElementById('duelOpponentName').innerText = opponentName;
-      document.getElementById('duelOpponentNameTitle').innerText = opponentName;
+      const dMyName = document.getElementById('duelMyName');
+      if (dMyName) dMyName.innerText = myName;
 
-      document.getElementById('duelMyStatus').innerText = `محاولاتك: ${myGuesses.length}`;
-      document.getElementById('duelOpponentStatus').innerText = `محاولاته: ${oppGuessCount}`;
-      document.getElementById('duelMyTriesCount').innerText = myGuesses.length;
+      const dOppName = document.getElementById('duelOpponentName');
+      if (dOppName) dOppName.innerText = opponentName;
+
+      const dOppTitle = document.getElementById('duelOpponentNameTitle');
+      if (dOppTitle) dOppTitle.innerText = opponentName;
+
+      const dMyStatus = document.getElementById('duelMyStatus');
+      if (dMyStatus) dMyStatus.innerText = `محاولاتك: ${myGuesses.length}`;
+
+      const dOppStatus = document.getElementById('duelOpponentStatus');
+      if (dOppStatus) dOppStatus.innerText = `محاولاته: ${oppGuessCount}`;
+
+      const dMyTries = document.getElementById('duelMyTriesCount');
+      if (dMyTries) dMyTries.innerText = myGuesses.length;
 
       // Opponent Live feedback & radar
       if (oppLastFeedback) {
         const oppRadar = Math.round(((oppLastFeedback.greens * 1.0 + oppLastFeedback.yellows * 0.4) / 4) * 100);
-        document.getElementById('opponentRadarTag').innerText = `${oppRadar}%`;
-        document.getElementById('opponentRadarFill').style.width = `${oppRadar}%`;
-        document.getElementById('opponentLiveFeedbackText').innerHTML = `
-          آخر إشارة لمنافسك: <b style="color:#10b981">${oppLastFeedback.greens} أخضر</b> · <b style="color:#f59e0b">${oppLastFeedback.yellows} أصفر</b>
-        `;
+        const oppTag = document.getElementById('opponentRadarTag');
+        if (oppTag) oppTag.innerText = `${oppRadar}%`;
+        const oppFill = document.getElementById('opponentRadarFill');
+        if (oppFill) oppFill.style.width = `${oppRadar}%`;
+        const oppFeedback = document.getElementById('opponentLiveFeedbackText');
+        if (oppFeedback) {
+          oppFeedback.innerHTML = `
+            آخر إشارة لمنافسك: <b style="color:#10b981">${oppLastFeedback.greens} أخضر</b> · <b style="color:#f59e0b">${oppLastFeedback.yellows} أصفر</b>
+          `;
+        }
       }
 
       // My history & radar
       const histEl = document.getElementById('duelHistoryList');
-      if (myGuesses.length === 0) {
-        histEl.innerHTML = `<div style="text-align:center; padding:16px; color:var(--k-text-muted); font-size:0.85rem">لم تبدأ أي محاولة بعد. أدخل أرقامك واضغط "اختبار الشفرة"!</div>`;
-        document.getElementById('duelRadarFill').style.width = '0%';
-        document.getElementById('duelRadarPercent').innerText = '0%';
-      } else {
-        const lastMyGuess = myGuesses[myGuesses.length - 1];
-        const myRadar = Math.round(((lastMyGuess.greens * 1.0 + lastMyGuess.yellows * 0.4) / 4) * 100);
-        document.getElementById('duelRadarFill').style.width = `${myRadar}%`;
-        document.getElementById('duelRadarPercent').innerText = `${myRadar}%`;
+      if (histEl) {
+        if (myGuesses.length === 0) {
+          histEl.innerHTML = `<div style="text-align:center; padding:16px; color:var(--k-text-muted); font-size:0.85rem">لم تبدأ أي محاولة بعد. أدخل أرقامك واضغط "اختبار الشفرة"!</div>`;
+          const rFill = document.getElementById('duelRadarFill');
+          if (rFill) rFill.style.width = '0%';
+          const rPerc = document.getElementById('duelRadarPercent');
+          if (rPerc) rPerc.innerText = '0%';
+        } else {
+          const lastMyGuess = myGuesses[myGuesses.length - 1];
+          const myRadar = Math.round(((lastMyGuess.greens * 1.0 + lastMyGuess.yellows * 0.4) / 4) * 100);
+          const rFill = document.getElementById('duelRadarFill');
+          if (rFill) rFill.style.width = `${myRadar}%`;
+          const rPerc = document.getElementById('duelRadarPercent');
+          if (rPerc) rPerc.innerText = `${myRadar}%`;
 
-        histEl.innerHTML = [...myGuesses].reverse().map(item => `
-          <div class="mm-history-row">
-            <div class="mm-row-attempt">#${item.attemptNumber}</div>
-            <div class="mm-row-digits">
-              ${item.guess.map((d, i) => `<span class="mm-digit-badge ${item.clues[i]}">${d}</span>`).join('')}
+          histEl.innerHTML = [...myGuesses].reverse().map(item => `
+            <div class="mm-history-row">
+              <div class="mm-row-attempt">#${item.attemptNumber}</div>
+              <div class="mm-row-digits">
+                ${item.guess.map((d, i) => `<span class="mm-digit-badge ${item.clues[i]}">${d}</span>`).join('')}
+              </div>
+              <div class="mm-feedback-dots">
+                ${Array.from({length: item.greens}).map(() => `<span class="mm-dot dot-green" title="مكان صحيح"></span>`).join('')}
+                ${Array.from({length: item.yellows}).map(() => `<span class="mm-dot dot-yellow" title="مكان مختلف"></span>`).join('')}
+                ${Array.from({length: 4 - item.greens - item.yellows}).map(() => `<span class="mm-dot dot-gray" title="غير موجود"></span>`).join('')}
+              </div>
             </div>
-            <div class="mm-feedback-dots">
-              ${Array.from({length: item.greens}).map(() => `<span class="mm-dot dot-green" title="مكان صحيح"></span>`).join('')}
-              ${Array.from({length: item.yellows}).map(() => `<span class="mm-dot dot-yellow" title="مكان مختلف"></span>`).join('')}
-              ${Array.from({length: 4 - item.greens - item.yellows}).map(() => `<span class="mm-dot dot-gray" title="غير موجود"></span>`).join('')}
-            </div>
-          </div>
-        `).join('');
+          `).join('');
+        }
       }
     }
 
-    function sendTaunt(emoji, text) {
-      if (!ws || ws.readyState !== WebSocket.OPEN) return;
-      ws.send(JSON.stringify({
-        type: 'chat_reaction',
-        roomId: currentRoomId,
-        emoji,
-        text
-      }));
+    async function sendTaunt(emoji, text) {
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({
+          type: 'chat_reaction',
+          roomId: currentRoomId,
+          emoji,
+          text
+        }));
+      }
+      try {
+        await fetch('/api/multiplayer/room/taunt', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            roomId: currentRoomId,
+            token: playerToken,
+            emoji,
+            text
+          })
+        });
+      } catch(e) {}
     }
 
     function showTauntReaction(sender, emoji, text) {
       MMSound.click();
       const el = document.getElementById('tauntDisplayMsg');
-      el.innerHTML = `<span><b>${sender}</b>: ${emoji} ${text}</span>`;
-      setTimeout(() => { el.innerHTML = ''; }, 3500);
+      if (el) {
+        el.innerHTML = `<span><b>${sender}</b>: ${emoji} ${text}</span>`;
+        setTimeout(() => { el.innerHTML = ''; }, 3500);
+      }
     }
 
     function handleMultiGameOver(msg) {
-      const isWinner = msg.winner === roomState?.me?.role;
+      const isWinner = msg.winner === myRole;
       if (isWinner) {
         MMSound.win();
         if (window.KramlatUI) window.KramlatUI.confetti();
-        document.getElementById('modalIcon').innerText = '👑';
-        document.getElementById('modalTitle').innerText = 'أنت الفائز بالمعركة!';
-        document.getElementById('modalDesc').innerHTML = `
-          مبروك يا أسطورة! فككت شفرة منافسك <b style="color:var(--k-secondary)">${roomState?.opponent?.name}</b> أولاً!<br>
-          ${msg.message}
-        `;
+        const mIcon = document.getElementById('modalIcon');
+        if (mIcon) mIcon.innerText = '👑';
+        const mTitle = document.getElementById('modalTitle');
+        if (mTitle) mTitle.innerText = 'أنت الفائز بالمعركة!';
+        const mDesc = document.getElementById('modalDesc');
+        if (mDesc) {
+          mDesc.innerHTML = `
+            مبروك يا أسطورة! فككت شفرة منافسك <b style="color:var(--k-secondary)">${roomState?.opponent?.name || 'صاحبك'}</b> أولاً!<br>
+            ${msg.message || ''}
+          `;
+        }
       } else {
         MMSound.lose();
-        document.getElementById('modalIcon').innerText = '💀';
-        document.getElementById('modalTitle').innerText = 'فاز منافسك بالمعركة!';
-        document.getElementById('modalDesc').innerHTML = `
-          تمكن <b style="color:var(--k-accent)">${msg.winnerName}</b> من فك شفرتك السرية أولاً.<br>
-          ${msg.message}
-        `;
+        const mIcon = document.getElementById('modalIcon');
+        if (mIcon) mIcon.innerText = '💀';
+        const mTitle = document.getElementById('modalTitle');
+        if (mTitle) mTitle.innerText = 'فاز منافسك بالمعركة!';
+        const mDesc = document.getElementById('modalDesc');
+        if (mDesc) {
+          mDesc.innerHTML = `
+            تمكن <b style="color:var(--k-accent)">${msg.winnerName || roomState?.opponent?.name || 'منافسك'}</b> من فك شفرتك السرية أولاً.<br>
+            ${msg.message || ''}
+          `;
+        }
       }
 
       // Reveal Opponent's secret code
       const opponentSecret = roomState?.opponent?.mySecret || '????';
       const revealEl = document.getElementById('modalCodeReveal');
-      revealEl.innerHTML = opponentSecret.split('').map(d => `<div class="mm-code-digit-big">${d}</div>`).join('');
-      document.getElementById('modalCodesSection').style.display = 'block';
+      if (revealEl) {
+        revealEl.innerHTML = opponentSecret.split('').map(d => `<div class="mm-code-digit-big">${d}</div>`).join('');
+      }
+      const mCodes = document.getElementById('modalCodesSection');
+      if (mCodes) mCodes.style.display = 'block';
 
-      document.getElementById('modalPlayAgainBtn').innerHTML = `<i class="fas fa-rotate"></i> <span>طلب جولة تانية مع صاحبك ⚔️</span>`;
-      document.getElementById('modalPlayAgainBtn').onclick = () => {
-        closeResultModal();
-        ws.send(JSON.stringify({ type: 'rematch', roomId: currentRoomId }));
-      };
+      const playAgainBtn = document.getElementById('modalPlayAgainBtn');
+      if (playAgainBtn) {
+        playAgainBtn.innerHTML = `<i class="fas fa-rotate"></i> <span>طلب جولة تانية مع صاحبك ⚔️</span>`;
+        playAgainBtn.onclick = async () => {
+          closeResultModal();
+          if (ws && ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({ type: 'rematch', roomId: currentRoomId }));
+          }
+          try {
+            await fetch('/api/multiplayer/room/rematch', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ roomId: currentRoomId, token: playerToken })
+            });
+          } catch(e) {}
+          showSetupScreen();
+        };
+      }
 
       openResultModal();
     }
@@ -1768,8 +2136,8 @@
     // -------------------------------------------------------------
     // MAIN TAB SWITCHER
     // -------------------------------------------------------------
-    function switchMainMode(mode) {
-      MMSound.click();
+    function switchMainMode(mode, playSound = true) {
+      if (playSound) MMSound.click();
       const tabMulti = document.getElementById('tabMultiplayer');
       const tabSolo = document.getElementById('tabSolo');
       const secMulti = document.getElementById('sectionMultiplayer');
@@ -1818,20 +2186,94 @@
       }
     });
 
+    // Check existing room session to recover game if page was refreshed
+    async function tryRecoverSession() {
+      try {
+        const storedRoom = sessionStorage.getItem('kramlat_multi_room');
+        const storedToken = sessionStorage.getItem('kramlat_multi_token');
+        if (!storedRoom || !storedToken) return false;
+
+        const res = await fetch(`/api/multiplayer/room/${storedRoom}/state?token=${storedToken}`);
+        if (!res.ok) return false;
+        const data = await res.json();
+        if (data.success && data.room && data.role !== 'spectator') {
+          currentRoomId = storedRoom;
+          playerToken = storedToken;
+          myRole = data.role;
+          roomState = data.room;
+
+          initWebSocket();
+          startMultiPolling();
+
+          if (roomState.status === 'waiting') {
+            showWaitingScreen(storedRoom);
+          } else if (roomState.status === 'setup') {
+            showSetupScreen();
+          } else if (roomState.status === 'playing') {
+            showBattleScreen();
+          } else if (roomState.status === 'game_over') {
+            showBattleScreen();
+            handleMultiGameOver({
+              winner: roomState.winner,
+              winnerName: roomState.winnerName,
+              message: roomState.winner === myRole ? 'فزت بهذه الجولة!' : 'فاز منافسك بهذه الجولة!'
+            });
+          }
+          if (window.KramlatUI) window.KramlatUI.toast(`تمت استعادة جلستك في الغرفة #${storedRoom} بنجاح! 🚀`);
+          return true;
+        }
+      } catch(e) {}
+      return false;
+    }
+
     // Initialize on page load
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       // Saved name
       const savedName = localStorage.getItem('kramlat_player_name');
       if (savedName) {
-        document.getElementById('multiPlayerName').value = savedName;
+        const pName = document.getElementById('multiPlayerName');
+        if (pName) pName.value = savedName;
       }
 
-      // Check if URL has ?mode=solo or ?room=XYZ
+      // Check URL parameters
       const params = new URLSearchParams(window.location.search);
-      if (params.get('mode') === 'solo') {
-        switchMainMode('solo');
+      const urlMode = params.get('mode');
+      const urlRoomRaw = params.get('room') || params.get('code');
+      const urlRoom = normalizeDigits(urlRoomRaw);
+
+      if (urlMode === 'solo') {
+        switchMainMode('solo', false);
+        return;
+      }
+
+      // Default to multiplayer
+      switchMainMode('multiplayer', false);
+
+      // If ?room=XYZ in URL
+      if (urlRoom) {
+        const joinInput = document.getElementById('multiJoinCode');
+        if (joinInput) joinInput.value = urlRoom;
+
+        const banner = document.getElementById('multiInviteBanner');
+        const roomBadge = document.getElementById('inviteRoomBadge');
+        if (banner) banner.style.display = 'block';
+        if (roomBadge) roomBadge.innerText = `#${urlRoom}`;
+
+        const joinCard = document.getElementById('multiJoinCard');
+        if (joinCard) {
+          joinCard.style.borderColor = 'var(--k-secondary)';
+          joinCard.style.boxShadow = '0 0 20px rgba(0,240,255,0.3)';
+        }
+
+        // Check if we can recover or join
+        const recovered = await tryRecoverSession();
+        if (!recovered) {
+          const nameInput = document.getElementById('multiPlayerName');
+          if (nameInput) nameInput.focus();
+        }
       } else {
-        switchMainMode('multiplayer');
+        // Try recovering previous session
+        await tryRecoverSession();
       }
     });
   </script>
